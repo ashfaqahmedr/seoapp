@@ -1,6 +1,7 @@
 
 // let sectiontoshow ='AllDatatoshow'
 
+
 let success = document.getElementById('success');
 let error = document.getElementById('error');
 let warning = document.getElementById('warning');
@@ -61,7 +62,7 @@ async function fetchAPI() {
     showLoader();
   
     try {
-      const response = await fetch('https://script.google.com/macros/s/AKfycbxgyT3rHw0zc7xeF_HWP3fxiy9VjaBcwzE18b6eA7HzFejEvCQEJewrJSzDFkeaUa4m/exec?action=getData&sheetName=Projects');
+      const response = await fetch(`${seourl}?action=getData&sheetName=Projects`);
         const responseData = await response.json();
             // Task 6: Generate the table based on the final formattedData object
             createTableFromData(responseData);
@@ -82,64 +83,26 @@ async function fetchAPI() {
   //Function to show Aricle Creator Projects
   async function fetchArticleCreator() {
     sectiontoshow = 'articleCreator'
-    // Show Animation
-    showLoader();
+     // Show Animation
+     showLoader();
   
-    // Task 1: Fetch all projects and store the required keys in an object
-    fetch(`${seourl}/all-projects?type=article%20creator`)
-      .then((response) => response.json())
-      .then(async (data) => {
-        const formattedData = {};
-        // Extract the required keys from each project
-        data.result.forEach((project) => {
-          const { id, status } = project;
-          formattedData[id] = { projectId: id, articleStatus: status };
-        });
-  
-        // Task 2: Fetch additional data for each project and update the object
-        const projectPromises = Object.keys(formattedData).map(async (id) => {
-          const response = await fetch(`${apiurl}/data/${id}`);
-          const projectData = await response.json();
-  
-          // const categoryInsertdata = projectData.categoryInsert.CategoryInsertFile;
-
-          const {
-            jobName,
-            // articleCategories,
-            // categoryInsertFile,
-            articleKeywordsFile,
-            chainJobId,
-          } = projectData.result;
-
-          const categoryInsertFile = projectData.result.categoryInsert.CategoryInsertFile;
-
-          formattedData[id] = {
-            ...formattedData[id],
-            articleProjectName: jobName,
-            // articleCategories,
-            categoryInsertFile,
-            articleKeywordsFile,
-            postProjectId: chainJobId,
-          };
-        });
-
-  
-        // Wait for all promises to resolve
-        await Promise.all(projectPromises);
-
-        // Task 6: Generate the table based on the final formattedData object
-        createTableFromData(formattedData);
-      })
-      .catch((error) => {
-        console.error(error);
-            // Call createToast function after error
-      let type = 'error';
-      let icon = 'fa-solid fa-circle-exclamation';
-      let title = 'Error';
-      let text = 'An error occurred while fetching projects.';
-      createToast(type, icon, title, text);
-      hideLoader();
-      });
+     try {
+       const response = await fetch(`${seourl}?action=getCreatorProjects&sheetName=Projects`);
+         const responseData = await response.json();
+             // Task 6: Generate the table based on the final formattedData object
+             createTableFromData(responseData);
+             console.table(responseData);
+ 
+   
+     } catch (error) {
+       console.error('Error fetching projects data:', error);
+       let type = 'error';
+       let icon = 'fa-solid fa-circle-exclamation';
+       let title = 'Error';
+       let text = 'An error occurred while fetching projects.';
+       createToast(type, icon, title, text);
+       hideLoader();
+     }
   
   }
 
@@ -147,70 +110,26 @@ async function fetchAPI() {
 async function fetchPostUploader() {
 
   sectiontoshow = 'postuploader'
-    // Show Animation
-    showLoader();
+     // Show Animation
+     showLoader();
   
-     // Task 1: Fetch all projects and store the required keys in an object
-     fetch(`${seourl}/all-projects?type=post%20uploader`)
-     .then((response) => response.json())
-     .then(async (data) => {
-       const formattedData = {};
-       // Extract the required keys from each project
-       data.result.forEach((project) => {
-         const { id, status } = project;
-         formattedData[id] = { projectId: id, articleStatus: status };
-       });
+     try {
+       const response = await fetch(`${seourl}?action=getPostProjects&sheetName=Projects`);
+         const responseData = await response.json();
+             // Task 6: Generate the table based on the final formattedData object
+             createTableFromData(responseData);
+             console.table(responseData);
  
-       // Task 2: Fetch additional data for each project and update the object
-       const projectpostPromises = Object.keys(formattedData).map(async (id) => {
-         const response = await fetch(`${apiurl}/data/${id}`);
-         const projectData = await response.json();
-         console.table(projectData);
-
-        const {
-          jobName,
-          postStartDate,
-          postsPerDay,
-          postIntervalFrom,
-          postIntervalTo,
-          articleTitle,
-          articleCategory,
-          articleTags,
-          blogIds,
-        } = projectData.result;
-        formattedData[id] = {
-          ...formattedData[id],
-          articleProjectName: jobName,
-        //   articleFolder,
-          postStartDate,
-          postsPerDay,
-          postIntervalFrom,
-          postIntervalTo,
-          articleTitle,
-          articleCategory,
-          articleTags,
-          blogPostId: blogIds,
-        };
-      });
-
-      // Wait for all promises to resolve
-      await Promise.all(projectpostPromises);
-
-      // Task 6: Generate the table based on the final formattedData object
-      createTableFromData(formattedData);
-      console.table(formattedData);
-    
-    })
-    .catch((error) => {
-      console.error(error);
-          // Call createToast function after error
-          let type = 'error';
-          let icon = 'fa-solid fa-circle-exclamation';
-          let title = 'Error';
-          let text = 'An error occurred while fetching projects.';
-          createToast(type, icon, title, text);
-          ideLoader();
-    });
+   
+     } catch (error) {
+       console.error('Error fetching projects data:', error);
+       let type = 'error';
+       let icon = 'fa-solid fa-circle-exclamation';
+       let title = 'Error';
+       let text = 'An error occurred while fetching projects.';
+       createToast(type, icon, title, text);
+       hideLoader();
+     }
 
 }
 
@@ -221,41 +140,27 @@ async function ReadJsonFile() {
 
   // Show Animation
   showLoader();
-  try {
-    const response = await fetch(`${appurl}/data`);
-    const data = await response.json();
+   // Show Animation
+   showLoader();
+  
+   try {
+     const response = await fetch(`${seourl}?action=getJSON&sheetName=Projects`);
+       const responseData = await response.json();
+           // Task 6: Generate the table based on the final formattedData object
+           createTableFromData(responseData);
+           console.table(responseData);
 
-    const formattedData = [];
-
-    // Restructure the data into an array of objects
-    data.forEach((item) => {
-      const formattedItem = {
-        blogPostId: item.id,
-        blogUserName: item.username,
-        blogPassword: item.password,
-        blogUrl: item.url,
-        blogGroup: item.group,
-      };
-      formattedData.push(formattedItem);
-    });
-
-    // Task 6: Generate the table based on the final formattedData object
-    createTableFromData(formattedData);
-    updateStatusCounts();
-  } catch (error) {
-    console.error(error);
-
-    // Call createToast function after error
-    let type = 'error';
-    let icon = 'fa-solid fa-circle-exclamation';
-    let title = 'Error';
-    let text = 'An error occurred while fetching projects.';
-    createToast(type, icon, title, text);
-
-    hideLoader();
-  }
+ 
+   } catch (error) {
+     console.error('Error fetching projects data:', error);
+     let type = 'error';
+     let icon = 'fa-solid fa-circle-exclamation';
+     let title = 'Error';
+     let text = 'An error occurred while fetching projects.';
+     createToast(type, icon, title, text);
+     hideLoader();
+   }
 }
-
 
 // Function to show Article Creator Projects
 async function fetchArticleCreatorbyStatus(articleStatus) {
