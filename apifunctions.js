@@ -54,136 +54,30 @@ function createToast(type, icon, title, text){
 // }
 
 
-
 //Main DashBoard Function to Create Dashboard.
 async function fetchAPI() {
   sectiontoshow='AllDatatoshow'
     // Show Animation
     showLoader();
   
-    // Task 1: Fetch all projects and store the required keys in an object
-    fetch(`${seourl}/all-projects?type=article%20creator`)
-      .then((response) => response.json())
-      .then(async (data) => {
-        const formattedData = {};
-        // Extract the required keys from each project
-        data.result.forEach((project) => {
-          const { id, status } = project;
-          formattedData[id] = { projectId: id, articleStatus: status };
-        });
-  
-        // Task 2: Fetch additional data for each project and update the object
-        const projectPromises = Object.keys(formattedData).map(async (id) => {
-          const response = await fetch(`${apiurl}/data/${id}`);
-          const projectData = await response.json();
-  
-          const {
-            jobName,
-            // articleCategories,
-            // categoryInsertFile,
-            articleKeywordsFile,
-            chainJobId,
-          } = projectData.result;
+    try {
+      const response = await fetch('https://script.google.com/macros/s/AKfycbxgyT3rHw0zc7xeF_HWP3fxiy9VjaBcwzE18b6eA7HzFejEvCQEJewrJSzDFkeaUa4m/exec?action=getData&sheetName=Projects');
+        const responseData = await response.json();
+            // Task 6: Generate the table based on the final formattedData object
+            createTableFromData(responseData);
+            console.table(responseData);
 
-          const categoryInsertFile = projectData.result.categoryInsert.CategoryInsertFile;
-
-          formattedData[id] = {
-            ...formattedData[id],
-            articleProjectName: jobName,
-            // articleCategories,
-            categoryInsertFile,
-            articleKeywordsFile,
-            postProjectId: chainJobId,
-          };
-        });
   
-        // Wait for all promises to resolve
-        await Promise.all(projectPromises);
-  
-        // Task 3: Fetch more data based on chainJobId and update the object
-        const chainJobPromises = Object.values(formattedData).map(async (project) => {
-          if (project.postProjectId) {
-            const response = await fetch(
-              `${apiurl}/data/${project.postProjectId}`
-            );
-            const chainJobData = await response.json();
-            const { jobName, blogIds, postStartDate } = chainJobData.result;
-            formattedData[project.projectId] = {
-              ...formattedData[project.projectId],
-              postDate: postStartDate,
-              PostJobName: jobName,
-              blogId: Array.isArray(blogIds) ? blogIds.join(', ') : blogIds,
-            };
-          }
-        });
-  
-        // Wait for all promises to resolve
-        await Promise.all(chainJobPromises);
-  
-        // Task 4: Fetch status and name based on projectID and update the object
-        const statusPromises = Object.values(formattedData).map(async (project) => {
-          if (project.postProjectId) {
-            const response = await fetch(
-              `${apiurl}/status/${project.postProjectId}`
-            );
-            const statusData = await response.json();
-            project.postUploaderStatus = statusData.result[0].status;
-          }
-        });
-  
-        // Wait for all promises to resolve
-        await Promise.all(statusPromises);
-  
-        // Task 5: Make a request to the server-side function to get data for the specified ID
-        const fetchDataById = async (id) => {
-          const response = await fetch(`${appurl}/data/${id}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          });
-          return response.json();
-        };
-  
-        // Collect all promises for fetching data by ID
-        const fetchPromises = Object.values(formattedData).map(async (project) => {
-          const blogId = project.blogId;
-          if (blogId) {
-            const data = await fetchDataById(blogId);
-            const { id, username, password, url, group } = data;
-            formattedData[project.projectId] = {
-              ...formattedData[project.projectId],
-              blogPostId: id,
-              blogUserName: username,
-              blogPassword: password,
-              blogUrl: url,
-              blogGroup: group,
-            };
-          }
-        });
-  
-        // Wait for all promises to resolve
-        await Promise.all(fetchPromises);
-  
-        // Task 6: Generate the table based on the final formattedData object
-        createTableFromData(formattedData);
-        console.table(formattedData);
-         
-      })
-      .catch((error) => {
-        console.error(error);
-            // Call createToast function after error
+    } catch (error) {
+      console.error('Error fetching projects data:', error);
       let type = 'error';
       let icon = 'fa-solid fa-circle-exclamation';
       let title = 'Error';
       let text = 'An error occurred while fetching projects.';
       createToast(type, icon, title, text);
       hideLoader();
-        
-      });
-  
+    }
   }
-
 
   //Function to show Aricle Creator Projects
   async function fetchArticleCreator() {
@@ -244,7 +138,7 @@ async function fetchAPI() {
       let title = 'Error';
       let text = 'An error occurred while fetching projects.';
       createToast(type, icon, title, text);
-      ideLoader();
+      hideLoader();
       });
   
   }
