@@ -18,40 +18,18 @@ const appurl ='http://localhost:3000'
 
 //Load the Events on Load
 
-//Check the Server
-async function testServer() {
-  try {
-    const response = await fetch(`${seourl}/test`, {
-      method: 'GET'
-    });
-
-    const data = await response.json();
-
-    if (data.success)  {
-      updateHeader(data.success);
-    }
-  } catch (error) {
-    console.error('Error:', error);
-    updateHeader(false);
-  }
-}
-
 
 window.onload = async () =>{
 
-
   document.getElementById('popupContainer').style.display = 'none';
 
-  testServer();
-  
   const sidebar = document.querySelector(".sidebar");
   const closeBtn = document.querySelector("#btn");
   
   closeBtn.addEventListener("click", function(){
       sidebar.classList.toggle("open");
-      menuBtnChange();
+  menuBtnChange();
 
-  
   });
   
   
@@ -68,7 +46,6 @@ window.onload = async () =>{
 
   //Show Toast after table Loading
   createToast('success', 'fa-solid fa-circle-check', 'Success', 'Fetching projects completed successfully.');
-  startMonitoring();
   
   }
 
@@ -104,31 +81,6 @@ const toggleNotificationPanel = () => {
     });
     }
 
-    //Update the Header based on Result
-function updateHeader(status) {
-  const headerElement = document.getElementById('header');
-  if (status) {
-    // console.log(true)
-    headerElement.classList.remove('disconnected');
-    headerElement.classList.add('connected');
-    headerElement.innerText = 'SEO Content Machine Web App (Connected)';
-    const linkcontainer = document.getElementById('LinkHost');
-    linkcontainer.innerHTML=""
-    const link = document.createElement('a');
-    link.href=`${seourl}/`
-    link.textContent="SEO API"
-    link.target="_blank"
-    linkcontainer.appendChild(link)
-    // headerElement.appendChild(linkcontainer)
-  } 
-  
-  else  {
-    headerElement.classList.remove('connected');
-    headerElement.classList.add('disconnected');
-    headerElement.innerText = 'SEO Content Machine Web App (Cannot Connect)';
-  }
-  
-  }
 
   function menuBtnChange(){
       if(sidebar.classList.contains("open")){
@@ -359,6 +311,7 @@ function applyConditionalFormatting() {
     });
   }
 }
+
 
 
 
