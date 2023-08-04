@@ -11,25 +11,36 @@ let sectiontoshow = null;
 let titleID = null;
 let confirmDialogUse = false;
 
-const seourl ='http://localhost:8008'
-const apiurl = `${seourl}/project`
+const seourl ='https://script.google.com/macros/s/AKfycbxgyT3rHw0zc7xeF_HWP3fxiy9VjaBcwzE18b6eA7HzFejEvCQEJewrJSzDFkeaUa4m/exec'
+const apiurl = `${seourl}/?`
 
 const appurl ='http://localhost:3000'
 
 //Load the Events on Load
 
+//Check the Server
+async function testServer() {
+ 
+updateHeader(true);
+  
+}
+
 
 window.onload = async () =>{
 
+
   document.getElementById('popupContainer').style.display = 'none';
 
+  testServer();
+  
   const sidebar = document.querySelector(".sidebar");
   const closeBtn = document.querySelector("#btn");
   
   closeBtn.addEventListener("click", function(){
       sidebar.classList.toggle("open");
-  menuBtnChange();
+      menuBtnChange();
 
+  
   });
   
   
@@ -46,6 +57,7 @@ window.onload = async () =>{
 
   //Show Toast after table Loading
   createToast('success', 'fa-solid fa-circle-check', 'Success', 'Fetching projects completed successfully.');
+  startMonitoring();
   
   }
 
@@ -81,6 +93,23 @@ const toggleNotificationPanel = () => {
     });
     }
 
+    //Update the Header based on Result
+function updateHeader(status) {
+  const headerElement = document.getElementById('header');
+  if (status) {
+    // console.log(true)
+    headerElement.classList.remove('disconnected');
+    headerElement.classList.add('connected');
+    headerElement.innerText = 'SEO Content Machine Web App (Connected to Google Sheet)';
+  } 
+  
+  else  {
+    headerElement.classList.remove('connected');
+    headerElement.classList.add('disconnected');
+    headerElement.innerText = 'SEO Content Machine Web App (Cannot Connect)';
+  }
+  
+  }
 
   function menuBtnChange(){
       if(sidebar.classList.contains("open")){
@@ -311,7 +340,6 @@ function applyConditionalFormatting() {
     });
   }
 }
-
 
 
 
