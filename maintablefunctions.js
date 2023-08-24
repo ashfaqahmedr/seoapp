@@ -18,6 +18,7 @@ const appurl ='http://localhost:3000'
 
 //Load the Events on Load
 
+
 //Check the Server
 async function testServer() {
  
@@ -25,21 +26,26 @@ updateHeader(true);
   
 }
 
-
 window.onload = async () =>{
 
 
   document.getElementById('popupContainer').style.display = 'none';
+  document.getElementById('loadingOverlay').style.display = 'none';
+
 
   testServer();
-  
+  showAdminPanel();
+
+  }
+
+  function showAdminPanel() {
+    
   const sidebar = document.querySelector(".sidebar");
   const closeBtn = document.querySelector("#btn");
   
   closeBtn.addEventListener("click", function(){
       sidebar.classList.toggle("open");
       menuBtnChange();
-
   
   });
   
@@ -57,10 +63,10 @@ window.onload = async () =>{
 
   //Show Toast after table Loading
   createToast('success', 'fa-solid fa-circle-check', 'Success', 'Fetching projects completed successfully.');
-  startMonitoring();
+
+  // startMonitoring();
   
   }
-
 
   // Function to toggle the visibility of the notification panel
 const toggleNotificationPanel = () => {

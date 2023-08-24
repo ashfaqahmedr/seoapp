@@ -30,8 +30,8 @@ body {
   flex-direction: column;
   position: relative;
   min-height: 93dvh;
-  width: 75px;
-  margin-left: 10px;
+  width: 70px;
+  margin-left: 2px;
   padding: 5px 14px;
   z-index: 99;
   margin-top: 50px;
