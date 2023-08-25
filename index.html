@@ -12,62 +12,65 @@
   <link rel="stylesheet" href="sidebarcss.css">
   <link rel="stylesheet" href="tablecss.css">
   
-
 </head>
 <body>
  
-  <section id="loginPanel"> 
-    
-    <div id="login" class="container">
-      
-      
-      <div class="screen">
+  <header>
+
+    <span id="header" class="header">SEO Content Machine Web App (Connected to Google Sheet) </span>
+      <div id="profile" class="btnLogout">
+     <span class="btnLogout"> <i class="fas fa-user"></i><a id="fullName"></a> </span>
+     <button class="btnLogout header" onclick="logout()">Logout</button> 
+      </div>
      
-      <div class="screen__content login">
-      
-        <h1 class="title">Welcome Back!</h1> 
+  </header>
   
+
+   <!-- //Loader Animation -->
+   <div id="loadingOverlay">
+    <div class="loader-container" id="loader-container">
+      <div class="loader"></div>
+    </div>
+</div>
+
+  <section id="loginPanel"> 
+    <div class="userIcon"><i class="fas fa-user"></i></div>
+      <div class="screen">
+   
+      <div class="screen__content login">
+       
+        <div class="title">Sign In</div> 
+
                   <div class="login__field">
-                    <input type="text" placeholder=" "class=" login__input" name="username" autocomplete="on" required id="username">
-                    <label class="login__label">User name / Email</label>
+                    <i class="fas fa-user"></i>
+                     <input type="text" placeholder=" "class=" login__input" name="username" autocomplete="on" required id="username">
+                    <label class="login__label">User name</label>
                   </div>
                   <div class="login__field">
+                    <i class="fas fa-lock"></i>
                     <input id="password" type="password"name="password"class="login__input" placeholder=" " autocomplete="on" required>
                        <label class="login__label">Password</label>
                   </div>
-                <button onclick="loginUser()" class="button login__submit button__text"> Login</button>
-        
+               
           </div>
+         
         
+          
                <div class="screen__background">
            
               <span class="screen__background__shape screen__background__shape4"></span>
               <span class="screen__background__shape screen__background__shape3"></span>        
               <span class="screen__background__shape screen__background__shape2"></span>
               <span class="screen__background__shape screen__background__shape1"></span>
+
              
           </div>    
       </div>
-  </div>
+      <button onclick="loginUser()" class="button login__submit button__text"> Sign In  ></button>
   </section>
-  <!-- //Loader Animation -->
-  <div id="loadingOverlay">
-      <div class="loader-container" id="loader-container">
-        <div class="loader"></div>
-      </div>
-  </div>
-
-  <!-- //Toast Notification -->
-  <div class="notifications"> 
-  </div>
-
-
-  <header>
-    <span id="header" class="header" >SEO WEB APP</span>
-  </header>
-  
 
  
+
   <div class="sidebar" id="sidebar">
     <div class="logo_details">
       <i class="bx bxl-audible icon"></i>
@@ -75,12 +78,10 @@
       <i class="bx bx-menu" id="btn"></i>
     </div>
 
-      <h2>Hello <span id="fullName"></span></h2>
-      <p>User Type: <span id="userType"></span></p>
-      <!-- <p>User Token: <span id="userToken"></span></p> -->
-      <button onclick="logout()">Logout</button>
 
     <ul class="nav-list">
+
+  
     <ul>
         <li class="divider">
         <a href="#" id="dashboard-link"  onclick="fetchAPI()">
@@ -266,7 +267,7 @@
   </div>
 
   <!-- <section class="home-section"> -->
-    <main class="table" id="mainSectionTable">
+    <main id="mainSectionTable">
       <section  class="table__header">
        
           <span id="recordCount"></span>
@@ -602,6 +603,10 @@
 
   </dialog>
 
+ <!-- //Toast Notification -->
+ <div class="notifications"> 
+</div>
+
 
 <!--Closing of Custom Dialog Box for Showing and updating the default Project Settings-->
 <script src="./login.js"></script>
@@ -613,4 +618,3 @@
 
 </body>
 </html>
-

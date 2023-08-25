@@ -16,25 +16,8 @@ const apiurl = `${seourl}/?`
 
 const appurl ='http://localhost:3000'
 
-//Load the Events on Load
-
-
-//Check the Server
-async function testServer() {
- 
-updateHeader(true);
-  
-}
 
 window.onload = async () =>{
-
-
-  document.getElementById('popupContainer').style.display = 'none';
-  document.getElementById('loadingOverlay').style.display = 'none';
-
-
-  testServer();
-  // showAdminPanel();
 
   }
 
@@ -49,7 +32,7 @@ window.onload = async () =>{
   
   });
   
-  
+
   sidebar.classList.toggle("open");
   //Call Main Function to Fetch  the Data
   fetchAPI();
@@ -62,8 +45,8 @@ window.onload = async () =>{
   ActivateElementClick();
 
   //Show Toast after table Loading
-  createToast('success', 'fa-solid fa-circle-check', 'Success', 'Logged in Succesfuly.');
-
+  createToast('success', 'fa-solid fa-circle-check', 'Success', 'Fetching projects completed successfully.');
+  hideLoader();
   // startMonitoring();
   
   }
@@ -99,23 +82,7 @@ const toggleNotificationPanel = () => {
     });
     }
 
-    //Update the Header based on Result
-function updateHeader(status) {
-  const headerElement = document.getElementById('header');
-  if (status) {
-    // console.log(true)
-    headerElement.classList.remove('disconnected');
-    headerElement.classList.add('connected');
-    headerElement.innerText = 'SEO Content Machine Web App (Connected to Google Sheet)';
-  } 
-  
-  else  {
-    headerElement.classList.remove('connected');
-    headerElement.classList.add('disconnected');
-    headerElement.innerText = 'SEO Content Machine Web App (Cannot Connect)';
-  }
-  
-  }
+
 
   function menuBtnChange(){
       if(sidebar.classList.contains("open")){
