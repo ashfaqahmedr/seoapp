@@ -18,7 +18,9 @@
 
 body {
   min-height: 100vh;
-  background: url(html_table.jpg) center / cover;
+  /* background: url(html_table.jpg) center / cover; */
+  background-image: linear-gradient(to right, #afddfc , #174a7cd3 50%);
+  background-blend-mode: multiply;
   display: flex;
   justify-content: center;
   align-items: center;

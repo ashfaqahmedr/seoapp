@@ -1,321 +1,616 @@
-<!-- index.html -->
 
 <!DOCTYPE html>
-<html>
+<html lang="en"></html>
 <head>
-  <title>Login Page</title>
-  <style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEO Content Machine App</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+  <link rel="stylesheet" href="login.css">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="sidebarcss.css">
+  <link rel="stylesheet" href="tablecss.css">
   
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;    
-        font-family: Raleway, sans-serif;
-    }
 
-/* @keyframes colorChange {
-  0% { background: linear-gradient(90deg, #ED508F, #FF6B9D); }
-  10% { background: linear-gradient(90deg, #ED508F, #FF6B9D); }
-  30% { background: linear-gradient(90deg, #C2517D, #FFF); }
-  50% { background: linear-gradient(90deg, #FF4F8E, #ED508F); }
-  70% { background: linear-gradient(90deg, #F1609A, #FF81A4); }
-  90% { background: linear-gradient(90deg, #ED508F, #FF6B9D); }
-  100% { background: linear-gradient(90deg, #ED508F, #FF6B9D); }
-}
-
- */
-
-body {
-  /* animation: colorChange 10s infinite;  */
-   background: linear-gradient(360deg, #adf7f7  , #534f4b  );
-}
-
-    .container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        overflow: hidden;
-     /* background: linear-gradient(90deg, #ED508F, #F1609A);  */
-      }
-
-    .screen {       
-        background: linear-gradient(90deg, #228B22     , #D35400  );        
-        position: relative;    
-        height: 500px; /* Adjusted height */
-        width: 320px; /* Adjusted width */
-        box-shadow: 0px 0px 24px #33976d;
-        overflow: hidden;
-    }
-
-    .screen__content {
-        z-index: 1;
-        position: relative;    
-        height: 100%;
-    }
-
-    .screen__background {        
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 0;
-        -webkit-clip-path: inset(0 0 0 0);
-        clip-path: inset(0 0 0 0);    
-    }
-
-    .screen__background__shape {
-        transform: rotate(45deg);
-        position: absolute;
-    }
-
-    .screen__background__shape1 {
-        height: 420px; /* Adjusted height */
-        width: 420px; /* Adjusted width */
-        background: #0494ad     ;    
-        top: -50px;
-        right: 90px;    
-        border-radius: 0 72px 0 0;
-    }
-
-    .screen__background__shape2 {
-        height: 180px; /* Adjusted height */
-        width: 180px; /* Adjusted width */
-        background: #b6a599  ;    
-        top: -152px;
-        right: 0;    
-        border-radius: 32px;
-    }
-
-    .screen__background__shape3 {
-        height: 500px; /* Adjusted height */
-        width: 160px; /* Adjusted width */
-        background: linear-gradient(270deg, #55ec55     , #75706d  );   
-        /* background: linear-gradient(270deg, #ED508F, #F1609A); */
-        top: -14px;
-        right: 0;    
-        border-radius: 32px;
-    }
-
-    .screen__background__shape4 {
-        height: 360px; /* Adjusted height */
-        width: 180px; /* Adjusted width */
-        background: #88e488     ;    
-        top: 380px;
-        right: 40px;    
-        border-radius: 60px;
-    }
-
-    .login {
-        width: 280px; /* Adjusted width */
-        padding: 30px;
-        padding-top: 126px; /* Adjusted padding-top */
-    }
-
-    .login__field {
-        padding: 16px 0px; /* Adjusted padding */
-        position: relative;    
-    }
-
-    .title {
-      /* top: -300px !important; */
-      margin-top: -50px !important;
-      /* border-bottom: 2px solid #6e655d; */
-      background: none;
-      /* font-weight: 700; */
-      font-weight: bold;
-      width: 100%;
-	    font-size: 20px;
-      text-align: center;
-      color: rgb(238, 224, 224);
-      padding-bottom: 50px;
-    }
-
-    .login__input {
-        border: none;
-        border-bottom: 2px solid #6e655d;
-        background: none;
-        padding: 8px;
-        padding-left: 16px;
-        font-weight: 700;
-        font-weight: bold;
-        width: 90%;
-	    font-size: 14px;
-        transition: .2s;
-        color: rgb(248, 241, 241);
-    }
-
-    .login__input:active,
-    .login__input:focus,
-    .login__input:hover {
-        outline: none;
-        border-bottom-color: #fdfdfd;
-    }
-
-    .login__input:focus ~ .login__label,
-    .login__input:not(:placeholder-shown) ~ .login__label {
-        top: -3px; /* Adjusted top position */
-        font-size: 14px; /* Adjusted font-size */
-        font-weight: bold;
-        color: #050505;
-	     transition: .5s;
-    }
-
-    .login__label {
-        position: absolute;
-        top: 16px; /* Adjusted top position */
-        left: 16px; /* Adjusted left position */
-        color: #050505;
-        pointer-events: none;
-        transition: 1s;
-        font-weight: bold;
-        font-size: 14px; /* Adjusted font-size */
-    }
-
-    .message__lable{
-       position: relative;
-        top: 16px; /* Adjusted top position */
-        left: 16px; /* Adjusted left position */
-        color: #050505;
-        pointer-events: none;
-        transition: .2s;
-        font-weight: bold;
-        text-transform: uppercase;
-        font-weight: bold;
-        font-weight: 700;
-        font-size: 12px; /* Adjusted font-size */
-    }
-
-    .login__submit {
-        background: #fff;
-        position: relative;
-        font-size: 12px; /* Updated font-size */
-        margin-top: 20px; /* Updated margin-top */
-        padding: 12px 16px; /* Updated padding */
-        border-radius: 26px;
-        border: 1px solid #050505;
-        text-transform: uppercase;
-        font-weight: 700;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-	      max-width: 120px;
-        color: #050505;
-        box-shadow: 0px 2px 2px #C2517D;
-        cursor: pointer;
-        transition: .2s;
-    }
-
-    .login__submit:active,
-    .login__submit:focus,
-    .login__submit:hover {
-        border-color: #050505;
-	box-shadow: 0px 2px 2px #C2517D;
-	background:  #D35400;
-	color: #fff;
-
-    }
-  </style>
 </head>
 <body>
-
-
-
+ 
+  <section id="loginPanel"> 
+    
     <div id="login" class="container">
       
       
-    <div class="screen">
-   
-    <div class="screen__content login">
-    
-      <h1 class="title">Welcome Back!</h1> 
-
-                <div class="login__field">
-                  <input type="text" placeholder=" "class=" login__input" name="username" autocomplete="on" required id="username">
-                  <label class="login__label">User name / Email</label>
-                </div>
-                <div class="login__field">
-                  <input id="password" type="password"name="password"class="login__input" placeholder=" " autocomplete="on" required>
-                     <label class="login__label">Password</label>
-                </div>
-              <button onclick="loginUser()" class="button login__submit button__text"> Login</button>
+      <div class="screen">
+     
+      <div class="screen__content login">
       
-        </div>
-      
-             <div class="screen__background">
-         
-            <span class="screen__background__shape screen__background__shape4"></span>
-            <span class="screen__background__shape screen__background__shape3"></span>        
-            <span class="screen__background__shape screen__background__shape2"></span>
-            <span class="screen__background__shape screen__background__shape1"></span>
+        <h1 class="title">Welcome Back!</h1> 
+  
+                  <div class="login__field">
+                    <input type="text" placeholder=" "class=" login__input" name="username" autocomplete="on" required id="username">
+                    <label class="login__label">User name / Email</label>
+                  </div>
+                  <div class="login__field">
+                    <input id="password" type="password"name="password"class="login__input" placeholder=" " autocomplete="on" required>
+                       <label class="login__label">Password</label>
+                  </div>
+                <button onclick="loginUser()" class="button login__submit button__text"> Login</button>
+        
+          </div>
+        
+               <div class="screen__background">
            
-        </div>    
-    </div>
-</div>
-
-  <div id="welcome" style="display: none;">
-    <h2>Hello <span id="fullName"></span></h2>
-    <p>User Type: <span id="userType"></span></p>
-    <p>User Token: <span id="userToken"></span></p>
-    <button onclick="logout()">Logout</button>
+              <span class="screen__background__shape screen__background__shape4"></span>
+              <span class="screen__background__shape screen__background__shape3"></span>        
+              <span class="screen__background__shape screen__background__shape2"></span>
+              <span class="screen__background__shape screen__background__shape1"></span>
+             
+          </div>    
+      </div>
+  </div>
+  </section>
+  <!-- //Loader Animation -->
+  <div id="loadingOverlay">
+      <div class="loader-container" id="loader-container">
+        <div class="loader"></div>
+      </div>
   </div>
 
-  <script>
-async function loginUser() {
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
+  <!-- //Toast Notification -->
+  <div class="notifications"> 
+  </div>
 
-  const response = await fetch('https://script.google.com/macros/s/AKfycbxgyT3rHw0zc7xeF_HWP3fxiy9VjaBcwzE18b6eA7HzFejEvCQEJewrJSzDFkeaUa4m/exec?sheetName=Users', {
-    method: 'POST',
-    body: JSON.stringify({ action: 'login', username, password }), // Include the action
-  });
 
-  if (response.ok) {
-  const { success, fullName, userType, token, error } = await response.json();
+  <header>
+    <span id="header" class="header" >SEO WEB APP</span>
+  </header>
+  
 
-  if (success) {
+ 
+  <div class="sidebar" id="sidebar">
+    <div class="logo_details">
+      <i class="bx bxl-audible icon"></i>
+      <div class="logo_name">SEO App</div>
+      <i class="bx bx-menu" id="btn"></i>
+    </div>
 
-    // Set the cookie with a 30-second expiration // expires=${now.toUTCString()}; path=/
+      <h2>Hello <span id="fullName"></span></h2>
+      <p>User Type: <span id="userType"></span></p>
+      <!-- <p>User Token: <span id="userToken"></span></p> -->
+      <button onclick="logout()">Logout</button>
 
-  var cookieName = 'userToken';
-  var maxAge = 60;
-  console.log('Original Token: ' + token);
-  console.log('Original Time: ' + maxAge);
+    <ul class="nav-list">
+    <ul>
+        <li class="divider">
+        <a href="#" id="dashboard-link"  onclick="fetchAPI()">
+          <i class="fa fa-home sidebar-option-icon"> </i><span class="link_name">Dashboard</span>
+        <span class="tooltip">Dashboard</span>
+        </a> 
+      </li> 
+    </ul> 
 
-  // Set the cookie
-  document.cookie = `${cookieName}=${encodeURIComponent(token)}; Max-Age=${maxAge}; Secure;  SameSite=Lax`;
+      <li class="divider">
+      <!-- <a href="#" id="project-link"  onclick="fetchAPI()"> -->
+        <i class="fas fa-project-diagram sidebar-option-icon"></i>
+      <span class="link_name">All Projects</span>
+      <span class="count" id="allproject-count"></span>
+      <span class="tooltip">All Projects</span>
+      <!-- </a> -->
+    </li>
 
-  // Get the value of the cookie and display it
-  var cookieValue = getCookie('userToken');
-  console.log("userToken: , Cookie Value:"+ cookieValue);
+      <li>
+        <a href="#" id="article-link"  onclick="fetchArticleCreator()">
+          <i class="fas fa-pencil-alt sidebar-option-icon"></i>
+            <span class="link_name">Article Creator</span>
+            <span class="count" id="creator-count"></span>
+            <span class="tooltip">Article Creator</span>
+          </a>
+        </a>
+      </li>
 
-    // // Redirect after 30 seconds
-    // setTimeout(() => {
+      <li>
+        <a href="#" id="post-link"  onclick="fetchPostUploader()">
+          <i class="fas fa-cloud-upload sidebar-option-icon"></i>
+        <span class="link_name">Post Uploader </span>
+        <span class="count" id="poster-count"></span>
+        <span class="tooltip">Post Uploader</span>
+      </a>
+    </li>
 
-    window.location.href = 'home.html'; // Replace with your login page URL
+    <li>
+      <a href="#" id="read-json-link"  onclick="ReadJsonFile()">
+        <i class="fas fa-file-code"></i>
+      <span class="link_name">Read JSON </span>
+      <span class="count" id="json-count"></span>
+      <span class="tooltip">Read JSON File</span>
+    </a>
+   </li>
 
-    // }, 30000); // 30 seconds
-  } else {
-    alert(`Login failed. ${error}`);
-  }
-} else {
-  alert('Network error. Please try again later.');
-}
-}
+      <li class="divider">
+          <!-- <a href="#" id="status-link" onclick="fetchAPI()"> -->
+          <i class="fas fa-chart-bar sidebar-option-icon"></i>
+          <span class="link_name">Status</span>
+          <span class="tooltip">Status</span>
+          <!-- </a> -->
+     </li>
 
-// Function to get the value of a cookie
-function getCookie(name) {
-  var nameEQ = name + "=";
-  var ca = document.cookie.split(';');
-  for (var i = 0; i < ca.length; i++) {
-    var c = ca[i];
-    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-    if (c.indexOf(nameEQ) == 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
-  }
-  return null;
-}
 
-  </script>
+     <li class="count-wrapper">
+      <a href="#" class="sidebar-link"  onclick="fetchArticleCreatorbyStatus('draft')">
+      <i class="fas fa-file sidebar-option-icon"></i>
+      <span class="link_name">Draft</span>
+      <span class="count" id="draft-count"></span>
+      <span class="tooltip">Draft</span>
+      </a> 
+    </li>     
+
+    <li class="count-wrapper">
+      <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('waiting')">
+       <i class="fas fa-hourglass sidebar-option-icon"></i>
+      <span class="link_name">Waiting</span>
+      <span class="count" id="waiting-count"></span>
+      <span class="tooltip">Waiting</span>
+      </a>
+    </li>    
+
+        <li class="count-wrapper">
+          
+          <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('failed')">
+          <i class="fas fa-exclamation sidebar-option-icon"></i> 
+          <span class="link_name"> Failed </span>
+          <span class="count" id="failed-count"></span>
+          <span class="tooltip">Failed</span>
+          </a>
+          
+      </li>
+
+      <li class="count-wrapper">
+
+        <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('aborted')">
+          <i class="fas fa-ban sidebar-option-icon"></i>
+        <span class="link_name">Aborted</span>
+        <span class="count" id="aborted-count"></span>
+        <span class="tooltip">Aborted</span>
+        </a>
+      
+      </li>
+
+
+
+      <li class="count-wrapper">
+        <a href="#" class="sidebar-link"  onclick="fetchArticleCreatorbyStatus('complete')">
+        <i class="fas fa-check sidebar-option-icon"></i>
+        <span class="link_name">Completed</span>
+        <span class="count" id="complete-count"></span>
+        <span class="tooltip">Completed</span>
+        </a>
+      </li>
+
+
+      <li class="count-wrapper">
+
+        <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('running')">
+        <i class="fas fa-play sidebar-option-icon"></i>
+        <span class="link_name">Running</span>
+        <span class="count" id="running-count"></span>
+        <span class="tooltip">Running</span>
+        </a>
+      
+      </li>
+
+     
+      <li class="count-wrapper">
+        <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('aborting...')">
+        <i class="fas fa-stop sidebar-option-icon"></i>
+        <span class="link_name">Aborting...</span>
+        <span class="count" id="aborting-count"></span>
+        <span class="tooltip">Aborting...</span>
+        </a> 
+      </li>
+
+          <li class="divider">
+        <!-- <a href="#" id="setting-link"  onclick="fetchAPI()"> -->
+          <i class="fas fa-cog sidebar-option-icon"></i>
+          <span class="link_name"></i>Setting</span>
+          <span class="tooltip">Setting</span>
+       <!-- </a>    -->
+        </li>
+
+          <li>
+            <a href="#" id="project-setting-link" onclick="openSettingDialog()">
+              <i class="fas fa-cogs"></i>
+          <span class="link_name">Project Setting</span>
+          <span class="tooltip">Project Setting</span>
+        </a>
+        </li>
+
+          <ul>
+          <li class="profile">
+            <a href="#" id="project-reload-link" onclick="location.reload()">
+              <i class="fas fa-sync-alt"></i> 
+          <span class="link_name">Re-Load App</span>
+          <span class="tooltip">Re-Load App</span>
+        </a>
+          </li>
+        </ul>
+
+        <ul>
+        <li class="profile">
+          <a href="#" id="project-close-link" onclick="window.close()"> 
+            <i class="fas fa-times"></i>
+        <span class="link_name">Close App</span>
+      <span class="tooltip">Close App</span>
+        </a> 
+        </li>
+      </ul>
+
+
+      <ul class="nav-list">
+        <li class="divider">
+          <a href="#" id="project-reload-link" onclick="location.reload()">
+            <i class="fas fa-sync-alt"></i> 
+            <span class="link_name">Re-Load App</span>
+            <span class="tooltip">Re-Load App</span>
+          </a>
+        </li>
+        <li class="divider">
+          <a href="#" id="project-close-link" onclick="window.close()"> 
+            <i class="fas fa-times"></i>
+            <span class="link_name">Close App</span>
+            <span class="tooltip">Close App</span>
+          </a>
+        </li>
+      </ul>
+       
+  </div>
+
+  <!-- <section class="home-section"> -->
+    <main class="table" id="mainSectionTable">
+      <section  class="table__header">
+       
+          <span id="recordCount"></span>
+          <div class="input-group">
+              <!-- <input type="text" placeholder="Search Data..." id="search-input"> -->
+              <input type="search" id="search-input" placeholder="Search...">
+              <!-- <img src="images/search.png" alt=""> -->
+              <i class="fas fa-search"></i>
+          </div>
+            <select id="table-filter">
+              <option value="" selected>All Projects</option>
+              <option value="running">Running</option>
+              <option value="complete">Complete</option>
+              <option value="failed">Failed</option>
+              <option value="aborted">Aborted</option>
+              <option value="draft">Draft</option>
+            </select>
+          
+          
+          <button id="Run-Buton" class="New-Buton" onclick=" toggleNotificationPanel()"> <i class="fas fa-play"></i>  Running </button>
+        
+      </section >
+      <section class="table__body">  
+        <table id="main" class="customers_table"></table>
+      </section >
+    </main> 
+
+
+ <!-- Custom Context Menu -->
+
+  <div class="wrapper">
+    <div class="content">
+      <ul class="menu">
+        <li class="item" onclick=" fetchAndPopulateDialog()">
+          <i class="far fa-edit"></i>
+          <span>Edit</span>
+        </li>
+
+        <li class="item" onclick="deleteUsingAPI()">
+          <i class="fas fa-trash-alt"></i>
+          <span>Delete</span>
+        </li>
+
+        <li class="item" onclick=" createnewJobID()">
+          <i class="fas fa-plus"></i>
+          <span>Create Project</span>
+        </li>
+
+        <li class="item" onclick="runProjectById()">
+          <i class="fas fa-play"></i>
+          <span>Run Project</span>
+        </li>
+
+
+        <li class="item share">
+          <div>
+            <i class="fas fa-file-export"></i>
+            <span>Export</span>
+          </div>
+          <i class="fas fa-angle-right"></i>
+          <ul class="share-menu">
+
+            <li class="item" id="pdfBtn">
+              <i class="far fa-file-pdf"></i>
+              <span>PDF</span>
+            </li>
+
+            <li class="item" id="excelBtn">
+              <i class="far fa-file-excel"></i> 
+              <span>Excel</span>
+            </li>
+            <li class="item" id="csvBtn">
+              <i class="fas fa-file-csv"></i>
+              <span>CSV</span>
+            </li>
+          
+            <li class="item" id="jsonBtn">
+              <i class="fas fa-code"></i>
+              <span>JSON</span>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!-- End of Custom Context Menu -->
+
+  <!-- Custom Dialog Box for Updating the All Projects data-->
+  <dialog id="myDialog">
+
+    <div id="dialogTitle"></div>
+
+    <div id="articlecreator" class="subheading"></div>
+
+    <div id="articleCreatorSection" class="dialog-section section1">
+
+      <label for="articleProjectName">Article Project Name:</label>
+      
+      <input type="text" id="articleProjectName">
+
+        <label for="articleKeywordsFile">Article Keywords: </label>
+        <input type="text" id="articleKeywordsFile">
+    
+      <label for="articleCategories">Article Categories: </label>
+      
+      <input type="text" id="articleCategories">
+
+    </div>
+
+    <div class="subheading" id="postuploader"></div>
+
+    <div id="postUploaderSection" class="dialog-section section2">
+      
+      <label for="postJobName">Post Job Name:</label>
+      <input type="text" id="postJobName">
+
+      <label for="postDate">Post Date:</label>
+      <input type="date" id="postDate">
+    
+      <label for="postsPerDay">Post Per Day:</label>
+      <input type="number" id="postsPerDay">
+
+      <label for="postIntervalFrom">Post Interval From:</label>
+      <input type="number" id="postIntervalFrom">
+    
+      <label for="postIntervalTo">Post Interval To:</label>
+      <input type="number" id="postIntervalTo">
+
+      <label for="articleTitle">Article Title:</label>
+      <input type="text" id="articleTitle">
+
+      <label for="articleFolder">article Folder Path:</label>
+      <input type="text" id="articleFolder">
+
+
+    </div>
+
+    <div class="subheading" id="blogIdNo">Blog Setting</div>
+
+    <div id="blogSettingSection" class="dialog-section section3">
+    
+      <label for="blogUserName">Blog User Name:</label>
+      <input type="text" id="blogUserName">
+    
+      <label for="blogPassword">Blog Password:</label>
+      <input type="text" id="blogPassword">
+
+      <label for="blogUrl">Blog URL:</label>
+      <input type="text" id="blogUrl">
+
+      <label for="blogGroup">Blog Group:</label>
+      <input type="text" id="blogGroup">
+
+    </div>
+
+    <span class="btn">
+
+      <button class="btn closeDialog" id="updatedata" onclick="updateDataToApi()">
+        <i class="fas fa-sync"></i> Update
+      </button>
+      <button class="btn closeDialog" id="closeDialog" onclick="closeDialog('myDialog')">
+        <i class="fas fa-times-circle"></i> Cancel
+      </button>
+      
+    </span>
+    
+  </dialog>
+  <!-- Closing of Custom Dialog Box for Updating the All Projects data-->
+
+
+  <!-- Custom Dialog Box for Showing and updating the default Project Settings-->
+
+  <dialog id="fileDialog" class="dialog">
+
+    <div id="dialogTitle">Universal Porject Custom Settings</div>
+
+    <div class="subheading">Article Creator Settings</div>
+
+    <div class="dialog-section"> 
+
+      <div class="full-width-input">
+        <label for="listofContentFilter">List of Content Filter:</label>
+        <input type="text" id="listofContentFilter">
+      </div>
+      
+      <div class="subsection">
+        <label for="urlsDownloadResultLimits">URLs Download Result Limits:</label>
+        <input type="number" id="urlsDownloadResultLimits" >
+      </div>
+
+      <div class="subsection">
+        <labelfor="articleCount">Article Count:</label>
+        <input type="number" id="articleCount">
+      </div>
+      <div class="subsection">
+        <label for="insertNoofImagesFROM">Insert No of Images FROM:</label>
+        <input type="number" id="insertNoofImagesFROM">
+      </div>
+      <div class="subsection">
+        <label for="insertNoofImagesTO">Insert No of Images TO:</label>
+        <input type="number" id="insertNoofImagesTO">
+      </div>
+
+
+      <div class="subsection">
+        <div class="toggle-button">
+          <input type="checkbox" id="articleUseCategoryInsert" class="toggle-checkbox">
+          <label for="articleUseCategoryInsert" class="toggle-label"></label>
+        </div>
+        <label for="articleUseCategoryInsert">Use WordPress Catagory Insert Files</label>
+      </div>
+      
+      <div class="subsection">
+        <div class="toggle-button">
+          <input type="checkbox" id="useImages" class="toggle-checkbox">
+          <label for="useImages" class="toggle-label"></label>
+        </div>
+        <label for="useImages">Use Images</label>
+      </div>
+
+      <div class="subsection">
+        <div class="toggle-button">
+          <input type="checkbox" id="useBingImages" class="toggle-checkbox">
+          <label for="useBingImages" class="toggle-label"></label>
+        </div>
+        <label for="useBingImages">Use Bing Images</label>
+      </div>
+
+      <div class="subsection">
+        <div class="toggle-button">
+          <input type="checkbox" id="useYoutubeThumbnails" class="toggle-checkbox">
+          <label for="useYoutubeThumbnails" class="toggle-label"></label>
+        </div>
+        <label for="useYoutubeThumbnails">Use YouTube Thumbnails</label>
+      </div>
+
+      <div class="subsection">
+        <div class="toggle-button">
+          <input type="checkbox" id="useCreativeCommonsImages" class="toggle-checkbox">
+          <label for="useCreativeCommonsImages" class="toggle-label"></label>
+        </div>
+        <label for="useCreativeCommonsImages">Use Creative Commons Images</label>
+      </div>
+
+      <div class="subsection">
+        <div class="toggle-button">
+          <input type="checkbox" id="useBingCCImages" class="toggle-checkbox">
+          <label for="useBingCCImages" class="toggle-label"></label>
+        </div>
+        <label for="useBingCCImages">Use Bing CC Images</label>
+      </div>
+    </div>
+
+    <div class="subheading"> Post Uploader Settings </div>
+
+    <div class="dialog-section">
+
+    <div class="subsection">
+      <div class="toggle-button">
+        <input type="checkbox" id="postUseToday" class="toggle-checkbox">
+        <label for="postUseToday" class="toggle-label"></label>
+      </div>
+      <label for="postUseToday">Post Use Today</label>
+    </div>
+
+      <div class="subsection">
+        <label for="postsperDay">Posts per Day:</label>
+        <input type="number" id="postsperDay">
+      </div>
+      <div class="subsection">
+        <label for="postIntervaldaysFROM">Post Interval days FROM:</label>
+        <input type="number" id="postIntervaldaysFROM">
+      </div>
+      <div class="subsection">
+        <label for="postIntervaldaysTO">Post Interval days TO:</label>
+        <input type="number" id="postIntervaldaysTO">
+      </div>
+      <div class="subsection">
+        <label for="postarticleTitle">Article Title:</label>
+        <input type="text" id="postarticleTitle">
+      </div>
+    </div>
+  <span class="btn">
+    <button class="closeDialog" onclick="UpdateCustomSettig()">
+      <i class="fas fa-sync"></i>  Update
+    </button>
+    <button class="closeDialog"  onclick="closeDialog('fileDialog')">
+    <i class="fas fa-times-circle"></i>  Cancel
+  </button> 
+  </span>
+
+  </dialog>
+
+  <div id="popupContainer" style="display: none;">
+  
+    <div class="project-popup" id="notificationTableTemplate">
+      <h3 class="notification-title-container">List of Active Projects(s)</h3>
+      <button class="close-btn"> <i class="fas fa-times"></i> clear Notification</button>
+      <div class="notification-table">
+        <div class="notification-header">
+          <div class="header-cell">ID</div>
+          <div class="header-cell">Name</div>
+          <div class="header-cell">Type</div>
+          <div class="header-cell">Status</div>
+        </div>
+        <div class="notification-body" id="notificationTableBody">
+      
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <button onclick="openDialog()"> Open Confirm Dialog
+  </button> -->
+
+  <dialog id="confrimDialog" class="dialog">
+    <div class="dialogTitle" id="dialogHeader"></div>
+    <div class="confirmText">
+      <i class="fas fa-check-circle"></i>
+    <span id="confirmMessage"></span>
+  </div>
+
+    <span class="btn">
+      <button class="closeDialog" id="confirmButton">
+        <i class="fas fa-check-circle"></i>  Confirm
+      </button>
+      <button class="closeDialog" id="cancelButton">
+      <i class="fas fa-times-circle"></i>  Cancel
+    </button> 
+
+    </span>
+
+
+  </dialog>
+
+
+<!--Closing of Custom Dialog Box for Showing and updating the default Project Settings-->
+<script src="./login.js"></script>
+<script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+<script src="./maintablefunctions.js"></script>
+<script src="./apifunctions.js"></script>
+
+<!-- <script src="./toastapp.js"></script> -->
+
 </body>
 </html>
+

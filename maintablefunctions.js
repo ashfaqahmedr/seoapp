@@ -34,7 +34,7 @@ window.onload = async () =>{
 
 
   testServer();
-  showAdminPanel();
+  // showAdminPanel();
 
   }
 
@@ -62,7 +62,7 @@ window.onload = async () =>{
   ActivateElementClick();
 
   //Show Toast after table Loading
-  createToast('success', 'fa-solid fa-circle-check', 'Success', 'Fetching projects completed successfully.');
+  createToast('success', 'fa-solid fa-circle-check', 'Success', 'Logged in Succesfuly.');
 
   // startMonitoring();
   

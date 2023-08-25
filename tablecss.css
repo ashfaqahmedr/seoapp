@@ -28,6 +28,9 @@ button{
     color: var(--color);
 }
 .toast .title{
+  display: flex;
+  justify-content: center;
+  align-items: center;
     font-size: x-large;
     font-weight: bold;
 }
@@ -93,9 +96,10 @@ button{
 /* Main table CSS */
 
 main.table {
+  /* display: inline-flex; */
     position: relative;
-    width: 100dvw;
-    top: -130px;
+    width: auto;
+    /* top: -950px; */
     height: 100dvh;
     background-color: #fff5;
     backdrop-filter: blur(7px);
