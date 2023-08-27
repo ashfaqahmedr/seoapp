@@ -21,7 +21,6 @@ button{
     border-radius: 5px;
     --color: #0abf30;
     background-image: linear-gradient(to right, #0abf3055, #22242F 30%);
-    
     animation: show_toast 0.3s ease forwards;
     z-index: 999;
 }
@@ -29,9 +28,6 @@ button{
     color: var(--color);
 }
 .toast .title{
-  display: flex;
-  justify-content: center;
-  align-items: center;
     font-size: x-large;
     font-weight: bold;
 }
@@ -93,31 +89,30 @@ button{
     background-image: linear-gradient(to right, #3498db55, #22242F 10%);
 }
 
-
 /* Main table CSS */
 
-main.table {
-  /* display: inline-flex; */
-    position: relative;
-    width: auto;
-    /* top: -950px; */
-    height: 100dvh;
+.table_box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  top:var( --header-height);
     background-color: #fff5;
     backdrop-filter: blur(7px);
     box-shadow: 0 .4rem .8rem rgba(226, 125, 125, 0.333);
     border-radius: 20px;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .table__header {
-    width: 100%;
-    height: 10%;
+  top:5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+    height: 40px;
     background-color: #fff4;
     padding: .8rem 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-   
+
 }
 
 #recordCount {
@@ -133,6 +128,8 @@ main.table {
 
 
 .New-Buton {
+  display: flex;
+  align-items: center;
   background-color: var(--color-default);
   color: var(--color-white);
   padding: 10px 10px 10px 10px;
@@ -173,17 +170,13 @@ border: none;
     justify-content: center;
     align-items: center;
     transition: .2s;
+    
 }
 
 .table__header .input-group:hover {
     width: 45%;
     background-color: #fff8;
     box-shadow: 0 .1rem .4rem #0002;
-}
-
-.table__header .input-group img {
-    width: 1.2rem;
-    height: 1.2rem;
 }
 
 .table__header .input-group input {
@@ -195,10 +188,13 @@ border: none;
 }
 
 .table__body {
-    width: 99%;
-    max-height: calc(92% - 1.6rem);
+  flex: 1;
+  padding: 10px;
+  box-sizing: border-box;
+    /* width: 100%;
+    max-height: 100%; */
     background-color: #fffb;
-    margin: .8rem auto;
+    margin: .3rem auto;
     border-radius: .8rem;
     overflow: auto;
     overflow: overlay;
@@ -248,6 +244,7 @@ border: none;
 #main {
     width: 100%;
     table-layout: fixed;
+    /* border-collapse: collapse; */
     animation: revealAndSqueeze 1s ease-in-out;
 }
 
@@ -280,8 +277,8 @@ border: none;
 }
 
 #main > tbody > tr:hover {
-    background-color: #fff6 !important;
-    transform: scale(1.02);
+    background-color: rgba(218, 250, 75, 0.548) !important;
+    /* transform: scale(1.02); */
     
     /* width: 110%; */
 }
@@ -295,22 +292,41 @@ border: none;
     word-wrap: break-word;
 }
 
+#main > tbody > tr > td {
+  transition: .2s ease-in-out;
+  padding: 0.2rem;
+  border: 1px solid #ccc; 
+  text-align: left;
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis;  
+}
+
+ #main > tbody > tr > td {
+  /* transition: .2s ease-in-out; */
+  border: 1px solid #ccc; /* Add border to cells */
+  padding: 0.2rem;
+  text-align: left;
+  white-space: nowrap; /* Prevent line breaks */
+  overflow: hidden; /* Hide overflow content */
+  /* text-overflow: ellipsis;  */
+  width: auto; /* Let cell width adjust based on content */
+}
+
 #main > tbody >  tr.hide > td {
     padding: 0;
     font: 0 / 0 sans-serif;
-    transition: .2s ease-in-out .5s;
+    /* transition: .2s ease-in-out .5s; */
 }
-
-
 
 
 
 .status-pill {
   display: inline-block;
-  padding: 4px 10px;
+  padding: 2px 2px 2px 2px;
   width: 100%;
   border-radius: 20px;
-  margin: 10px, 10px, 10px, 10px;
+  margin: 2px, 2px, 2px, 2px;
   text-align: center;
 }
 
@@ -356,32 +372,38 @@ border: none;
   color: #f3eded;
 }
 
-/* Add the animation to the row with the status-updated class
-.status-row {
-  /* background-color: #65778a !important;  */
-  /* animation: statusUpdate 3s ease-in-out infinite, rowScaling 0.5s ease-in-out alternate infinite !important; ; */
-  /* animation: rowScaling 1s ease-in-out alternate infinite !important; ;
-} */
 
-/* Define the keyframes for the animation */
-/* @keyframes statusUpdate {
-  0%, 100% {
-    background-color: #22fc63ea;
-  }
-  50% {
-    background-color: #b3f1cb8f;
-  }
-} */
+ /*responsive*/
 
-/* Define the keyframes for row scaling */
-/* @keyframes rowScaling {
-  from {
-    transform: scale(0.80);
-  }
-  to {
-    transform: scale(1.1);
-  }
-} */
+ @media(max-width: 500px){
+	.table thead{
+		display: none;
+	}
+
+	.table, .table tbody, .table tr, .table td{
+		display: block;
+		width: 100%;
+	}
+	.table tr{
+		margin-bottom:15px;
+	}
+	.table td{
+		text-align: right;
+		padding-left: 50%;
+		text-align: right;
+		position: relative;
+	}
+	.table td::before{
+		content: attr(data-label);
+		position: absolute;
+		left:0;
+		width: 50%;
+		padding-left:15px;
+		font-size:15px;
+		font-weight: bold;
+		text-align: left;
+	}
+}
  
 /* Add the animation to the row with the status-updated class */
 .status-row {
@@ -404,24 +426,13 @@ border: none;
   }
 }
 
-/* Define the keyframes for row scaling */
-/* @keyframes rowScaling {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1.1);
-  }
-} */
-
-
-
 
 @media (max-width: 1000px) {
     td:not(:first-of-type) {
         min-width: 12.1rem;
     }
 }
+
 
 thead th span.icon-arrow {
     display: inline-block;
@@ -642,6 +653,10 @@ thead th.active,tbody td.active {
     padding: 8px;
     font-size: 14px;
     border-radius: 50px;
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 20px;
+    background: url("path-to-down-arrow-icon.png") no-repeat center right;
     border: 1px solid #ccc;
     background-color: #ffffffa9;
   }
@@ -1023,39 +1038,8 @@ thead th.active,tbody td.active {
   }
   
 
+ 
 
-
-  /*responsive*/
-
-@media(max-width: 500px){
-	.table thead{
-		display: none;
-	}
-
-	.table, .table tbody, .table tr, .table td{
-		display: block;
-		width: 100%;
-	}
-	.table tr{
-		margin-bottom:15px;
-	}
-	.table td{
-		text-align: right;
-		padding-left: 50%;
-		text-align: right;
-		position: relative;
-	}
-	.table td::before{
-		content: attr(data-label);
-		position: absolute;
-		left:0;
-		width: 50%;
-		padding-left:15px;
-		font-size:15px;
-		font-weight: bold;
-		text-align: left;
-	}
-}
 
 .notification-row > .data-cell > .status-pill {
   display: inline-block;

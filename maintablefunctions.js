@@ -16,41 +16,53 @@ const apiurl = `${seourl}/?`
 
 const appurl ='http://localhost:3000'
 
-//Load the Events on Load
-
-
-//Check the Server
-async function testServer() {
- 
-updateHeader(true);
-  
-}
 
 window.onload = async () =>{
-
-
-  document.getElementById('popupContainer').style.display = 'none';
-  document.getElementById('loadingOverlay').style.display = 'none';
-
-  showAdminPanel()
-  testServer();
-  // showAdminPanel();
+  // showAdminPanel()
 
   }
+
+// const menuIconButton = document.querySelector("[data-menu-icon-btn]")
+// const sidebar = document.querySelector("[data-sidebar]")
+
+// menuIconButton.addEventListener("click", () => {
+//   sidebar.classList.toggle("open")
+// })
+
 
   function showAdminPanel() {
     
   const sidebar = document.querySelector(".sidebar");
+  const tooltip = document.getElementById('tooltip');
   const closeBtn = document.querySelector("#btn");
+  const link = document.querySelectorAll('.nav-list');
   
+  // Logic to show the sidebar and tooltip on mouse over
+function showSidebar() {
+  sidebar.classList.add('open');
+  tooltip.classList.remove('open');
+}
+
+// Logic to hide the sidebar and tooltip on mouse out
+function hideSidebar() {
+  sidebar.classList.remove('open');
+  tooltip.classList.add('open');
+}
+
+// Loop through all the elements with the class 'sidebar-link' and add event listeners
+link.forEach(linkElement => {
+  linkElement.addEventListener('mouseover', showSidebar);
+  linkElement.addEventListener('mouseout', hideSidebar);
+});
+
   closeBtn.addEventListener("click", function(){
       sidebar.classList.toggle("open");
+      tooltip.classList.toggle('open');
       menuBtnChange();
-  
+
   });
   
-  
-  sidebar.classList.toggle("open");
+
   //Call Main Function to Fetch  the Data
   fetchAPI();
    // Activate the "Dashboard" link on page load
@@ -62,8 +74,8 @@ window.onload = async () =>{
   ActivateElementClick();
 
   //Show Toast after table Loading
-  createToast('success', 'fa-solid fa-circle-check', 'Success', 'Logged in Succesfuly.');
-
+  createToast('success', 'fa-solid fa-circle-check', 'Success', 'Fetching projects completed successfully.');
+  hideLoader();
   // startMonitoring();
   
   }
@@ -99,27 +111,15 @@ const toggleNotificationPanel = () => {
     });
     }
 
-    //Update the Header based on Result
-function updateHeader(status) {
-  const headerElement = document.getElementById('header');
-  if (status) {
-    // console.log(true)
-    headerElement.classList.remove('disconnected');
-    headerElement.classList.add('connected');
-    headerElement.innerText = 'SEO Content Machine Web App (Connected to Google Sheet)';
-  } 
-  
-  else  {
-    headerElement.classList.remove('connected');
-    headerElement.classList.add('disconnected');
-    headerElement.innerText = 'SEO Content Machine Web App (Cannot Connect)';
-  }
-  
-  }
+
 
   function menuBtnChange(){
+
+
       if(sidebar.classList.contains("open")){
           closeBtn.classList.replace("bx-menu","bx-menu-alt-right");
+
+
       }else{
           closeBtn.classList.replace("bx-menu-alt-right","bx-menu");
       }

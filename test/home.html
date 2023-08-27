@@ -7,254 +7,236 @@
 <title>SEO Content Machine App</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
-  <link rel="stylesheet" href="login.css">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <link rel="stylesheet" href="sidebarcss.css">
   <link rel="stylesheet" href="tablecss.css">
-  
+
+
+
 </head>
 <body>
  
+  <!-- //Loader Animation -->
+  <div id="loadingOverlay">
+      <div class="loader-container" id="loader-container">
+        <div class="loader"></div>
+      </div>
+  </div>
+
+  <!-- //Toast Notification -->
+  <div class="notifications"> 
+  </div>
+
   <header>
-   
-    <span id="header" class="header">SEO Content Machine Web App (Connected to Google Sheet) </span>
-   
+    <span id="header" class="header" >SEO WEB APP</span>
   </header>
   
-
-   <!-- //Loader Animation -->
-   <div id="loadingOverlay">
-    <div class="loader-container" id="loader-container">
-      <div class="loader"></div>
-    </div>
-</div>
-
-<section id="loginPanel" class="loginPanel">
- 
-  <div class="screen">
-    <div class="userIcon"><i class="fas fa-user"></i></div>
-    <div class="screen__content login">
-      <div class="title">Sign In</div>
-      <div class="login__field">
-        <i class="fas fa-user"></i>
-        <input type="text" placeholder=" " class="login__input" name="username" autocomplete="on" required id="username">
-        <label class="login__label">User name</label>
-      </div>
-      <div class="login__field">
-        <i class="fas fa-lock"></i>
-        <input id="password" type="password" name="password" class="login__input" placeholder=" " autocomplete="on" required>
-        <label class="login__label">Password</label>
-      </div>
-    </div>
-    <button onclick="loginUser()" class="button login__submit button__text"> Sign In  ></button>
-    <div class="screen__background">
-      <span class="screen__background__shape screen__background__shape4"></span>
-      <span class="screen__background__shape screen__background__shape3"></span>
-      <span class="screen__background__shape screen__background__shape2"></span>
-      <span class="screen__background__shape screen__background__shape1"></span>
-    </div>
-  </div>
-  
-</section>
-
-
- 
-  <div id="profile" class="btnLogout hidden">
-    <span class="btnLogout"> <i class="fas fa-user"></i><a id="fullName"></a> </span>
-    <button class="btnLogout header" onclick="logout()">Logout</button> 
-    </div>
-
-<div class="container" id="container">
-  <div class="header-spacer"></div>
- <div class="sidebar close" id="sidebar">
-  <div class="top-sidebar">
-    <ul class="nav-list">
-    <li class="divider">
+  <div class="sidebar">
     <div class="logo_details">
       <i class="bx bxl-audible icon"></i>
       <div class="logo_name">SEO App</div>
       <i class="bx bx-menu" id="btn"></i>
-      <span class="tooltip" id="btnToolTip">Show Sidebar</span>
-
     </div>
-    </li>
-    </ul>
-  </div>
 
-
-  <div class="middle-sidebar">
+      <h2>Hello <span id="fullName"></span></h2>
+      <p>User Type: <span id="userType"></span></p>
+      <!-- <p>User Token: <span id="userToken"></span></p> -->
+      <button onclick="logout()">Logout</button>
 
     <ul class="nav-list">
-
-      <ul>
-          <li class="divider">
-          <a href="#" id="dashboard-link"  onclick="fetchAPI()">
-            <i class='bx bx-grid-alt' ></i> </i><span class="link_name">Dashboard</span>
-          <span class="tooltip">Dashboard</span>
-          </a> 
-        </li> 
-      </ul> 
-
+    <ul>
         <li class="divider">
-        <!-- <a href="#" id="project-link"  onclick="fetchAPI()"> -->
-          <i class="fas fa-project-diagram "></i>
-        <span class="link_name">All Projects</span>
-        <span class="count sticky" id="allproject-count"></span>
-        <span class="tooltip">All Projects</span>
-        <!-- </a> -->
-      </li>
+        <a href="#" id="dashboard-link"  onclick="fetchAPI()">
+          <i class="fa fa-home sidebar-option-icon"> </i><span class="link_name">Dashboard</span>
+        <span class="tooltip">Dashboard</span>
+        </a> 
+      </li> 
+    </ul> 
 
-        <li > 
-          <a href="#" id="article-link"  onclick="fetchArticleCreator()">
-            <i class="fas fa-pencil-alt "></i>
-              <span class="link_name">Article Creator</span>
-              <span class="count sticky" id="creator-count"></span>
-              <span class="tooltip">Article Creator</span>
-            </a>
+      <li class="divider">
+      <!-- <a href="#" id="project-link"  onclick="fetchAPI()"> -->
+        <i class="fas fa-project-diagram sidebar-option-icon"></i>
+      <span class="link_name">All Projects</span>
+      <span class="count" id="allproject-count"></span>
+      <span class="tooltip">All Projects</span>
+      <!-- </a> -->
+    </li>
+
+      <li>
+        <a href="#" id="article-link"  onclick="fetchArticleCreator()">
+          <i class="fas fa-pencil-alt sidebar-option-icon"></i>
+            <span class="link_name">Article Creator</span>
+            <span class="count" id="creator-count"></span>
+            <span class="tooltip">Article Creator</span>
           </a>
-        </li>
-
-        <li>
-          <a href="#" id="post-link"  onclick="fetchPostUploader()">
-            <i class="fas fa-cloud-upload "></i>
-          <span class="link_name">Post Uploader </span>
-          <span class="count sticky" id="poster-count"></span>
-          <span class="tooltip">Post Uploader</span>
         </a>
       </li>
 
       <li>
-        <a href="#" id="read-json-link"  onclick="ReadJsonFile()">
-          <i class="fas fa-file-code"></i>
-        <span class="link_name">Read JSON </span>
-        <span class="count sticky" id="json-count"></span>
-        <span class="tooltip">Read JSON File</span>
+        <a href="#" id="post-link"  onclick="fetchPostUploader()">
+          <i class="fas fa-cloud-upload sidebar-option-icon"></i>
+        <span class="link_name">Post Uploader </span>
+        <span class="count" id="poster-count"></span>
+        <span class="tooltip">Post Uploader</span>
       </a>
+    </li>
+
+    <li>
+      <a href="#" id="read-json-link"  onclick="ReadJsonFile()">
+        <i class="fas fa-file-code"></i>
+      <span class="link_name">Read JSON </span>
+      <span class="count" id="json-count"></span>
+      <span class="tooltip">Read JSON File</span>
+    </a>
+   </li>
+
+      <li class="divider">
+          <!-- <a href="#" id="status-link" onclick="fetchAPI()"> -->
+          <i class="fas fa-chart-bar sidebar-option-icon"></i>
+          <span class="link_name">Status</span>
+          <span class="tooltip">Status</span>
+          <!-- </a> -->
      </li>
 
-        <li class="divider">
-            <!-- <a href="#" id="status-link" onclick="fetchAPI()"> -->
-            <i class="fas fa-chart-bar "></i>
-            <span class="link_name">Status</span>
-            <span class="tooltip">Status</span>
-            <!-- </a> -->
+
+     <li class="count-wrapper">
+      <a href="#" class="sidebar-link"  onclick="fetchArticleCreatorbyStatus('draft')">
+      <i class="fas fa-file sidebar-option-icon"></i>
+      <span class="link_name">Draft</span>
+      <span class="count" id="draft-count"></span>
+      <span class="tooltip">Draft</span>
+      </a> 
+    </li>     
+
+    <li class="count-wrapper">
+      <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('waiting')">
+       <i class="fas fa-hourglass sidebar-option-icon"></i>
+      <span class="link_name">Waiting</span>
+      <span class="count" id="waiting-count"></span>
+      <span class="tooltip">Waiting</span>
+      </a>
+    </li>    
+
+        <li class="count-wrapper">
+          
+          <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('failed')">
+          <i class="fas fa-exclamation sidebar-option-icon"></i> 
+          <span class="link_name"> Failed </span>
+          <span class="count" id="failed-count"></span>
+          <span class="tooltip">Failed</span>
+          </a>
+          
+      </li>
+
+      <li class="count-wrapper">
+
+        <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('aborted')">
+          <i class="fas fa-ban sidebar-option-icon"></i>
+        <span class="link_name">Aborted</span>
+        <span class="count" id="aborted-count"></span>
+        <span class="tooltip">Aborted</span>
+        </a>
+      
+      </li>
+
+
+
+      <li class="count-wrapper">
+        <a href="#" class="sidebar-link"  onclick="fetchArticleCreatorbyStatus('complete')">
+        <i class="fas fa-check sidebar-option-icon"></i>
+        <span class="link_name">Completed</span>
+        <span class="count" id="complete-count"></span>
+        <span class="tooltip">Completed</span>
+        </a>
       </li>
 
 
       <li class="count-wrapper">
-        <a href="#" class="sidebar-link"  onclick="fetchArticleCreatorbyStatus('draft')">
-        <i class="fas fa-file "></i>
-        <span class="link_name">Draft</span>
-        <span class="count" id="draft-count"></span>
-        <span class="tooltip">Draft</span>
-        </a> 
-      </li>     
 
-      <li class="count-wrapper">
-        <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('waiting')">
-        <i class="fas fa-hourglass "></i>
-        <span class="link_name">Waiting</span>
-        <span class="count sticky" id="waiting-count"></span>
-        <span class="tooltip">Waiting</span>
+        <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('running')">
+        <i class="fas fa-play sidebar-option-icon"></i>
+        <span class="link_name">Running</span>
+        <span class="count" id="running-count"></span>
+        <span class="tooltip">Running</span>
         </a>
-      </li>    
+      
+      </li>
 
-          <li class="count-wrapper">
-            
-            <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('failed')">
-            <i class="fas fa-exclamation "></i> 
-            <span class="link_name"> Failed </span>
-            <span class="count sticky" id="failed-count"></span>
-            <span class="tooltip">Failed</span>
-            </a>
-            
-        </li>
+     
+      <li class="count-wrapper">
+        <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('aborting...')">
+        <i class="fas fa-stop sidebar-option-icon"></i>
+        <span class="link_name">Aborting...</span>
+        <span class="count" id="aborting-count"></span>
+        <span class="tooltip">Aborting...</span>
+        </a> 
+      </li>
 
-        <li class="count-wrapper">
-
-          <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('aborted')">
-            <i class="fas fa-ban "></i>
-          <span class="link_name">Aborted</span>
-          <span class="count sticky" id="aborted-count"></span>
-          <span class="tooltip">Aborted</span>
-          </a>
-        
-        </li>
-
-        <li class="count-wrapper">
-          <a href="#" class="sidebar-link"  onclick="fetchArticleCreatorbyStatus('complete')">
-          <i class="fas fa-check "></i>
-          <span class="link_name">Completed</span>
-          <span class="count sticky" id="complete-count"></span>
-          <span class="tooltip">Completed</span>
-          </a>
-        </li>
-
-
-        <li class="count-wrapper">
-
-          <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('running')">
-          <i class="fas fa-play "></i>
-          <span class="link_name">Running</span>
-          <span class="count sticky" id="running-count"></span>
-          <span class="tooltip">Running</span>
-          </a>
-        
-        </li>
-        <li class="count-wrapper">
-          <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('aborting...')">
-          <i class="fas fa-stop "></i>
-          <span class="link_name">Aborting...</span>
-          <span class="count sticky" id="aborting-count"></span>
-          <span class="tooltip">Aborting...</span>
-          </a> 
-        </li>
-    </ul>   
-   </div>
-      <div class="bottom-sidebar">
-        <ul class="nav-list">
           <li class="divider">
-          <!-- <a href="#" id="setting-link"  onclick="fetchAPI()"> -->
-            <i class="fas fa-cog "></i>
-            <span class="link_name"></i>Setting</span>
-            <span class="tooltip">Setting</span>
-        <!-- </a>    -->
-          </li>
-            <li>
-              <a href="#" id="project-setting-link" onclick="openSettingDialog()">
-                <i class="fas fa-cogs"></i>
-            <span class="link_name">Project Setting</span>
-            <span class="tooltip">Project Setting</span>
-          </a>
-          </li>
+        <!-- <a href="#" id="setting-link"  onclick="fetchAPI()"> -->
+          <i class="fas fa-cog sidebar-option-icon"></i>
+          <span class="link_name"></i>Setting</span>
+          <span class="tooltip">Setting</span>
+       <!-- </a>    -->
+        </li>
 
-            <li class="divider">
-              <a href="#" id="project-reload-link" onclick="location.reload()">
-                <i class="fas fa-sync-alt"></i> 
+          <li>
+            <a href="#" id="project-setting-link" onclick="openSettingDialog()">
+              <i class="fas fa-cogs"></i>
+          <span class="link_name">Project Setting</span>
+          <span class="tooltip">Project Setting</span>
+        </a>
+        </li>
+
+          <ul>
+          <li class="profile">
+            <a href="#" id="project-reload-link" onclick="location.reload()">
+              <i class="fas fa-sync-alt"></i> 
+          <span class="link_name">Re-Load App</span>
+          <span class="tooltip">Re-Load App</span>
+        </a>
+          </li>
+        </ul>
+
+        <ul>
+        <li class="profile">
+          <a href="#" id="project-close-link" onclick="window.close()"> 
+            <i class="fas fa-times"></i>
+        <span class="link_name">Close App</span>
+      <span class="tooltip">Close App</span>
+        </a> 
+        </li>
+      </ul>
+
+
+      <ul class="nav-list">
+        <li class="divider">
+          <a href="#" id="project-reload-link" onclick="location.reload()">
+            <i class="fas fa-sync-alt"></i> 
             <span class="link_name">Re-Load App</span>
             <span class="tooltip">Re-Load App</span>
           </a>
-            </li>
-          <li class="divider">
-            <a href="#" id="project-close-link" onclick="window.close()"> 
-              <i class="fas fa-times"></i>
-          <span class="link_name">Close App</span>
-        <span class="tooltip">Close App</span>
-          </a> 
-          </li>
+        </li>
+        <li class="divider">
+          <a href="#" id="project-close-link" onclick="window.close()"> 
+            <i class="fas fa-times"></i>
+            <span class="link_name">Close App</span>
+            <span class="tooltip">Close App</span>
+          </a>
+        </li>
+      </ul>
        
-        </ul> 
-     </div>
-       
-    </div>
- 
+  </div>
+
   <!-- <section class="home-section"> -->
-    <div class="table_box" id="mainSectionTable">
-      <div class="table__header">
+    <main  class="table">
+      <section  class="table__header">
+       
           <span id="recordCount"></span>
           <div class="input-group">
               <!-- <input type="text" placeholder="Search Data..." id="search-input"> -->
               <input type="search" id="search-input" placeholder="Search...">
+              <!-- <img src="images/search.png" alt=""> -->
               <i class="fas fa-search"></i>
           </div>
             <select id="table-filter">
@@ -269,13 +251,11 @@
           
           <button id="Run-Buton" class="New-Buton" onclick=" toggleNotificationPanel()"> <i class="fas fa-play"></i>  Running </button>
         
-      </div >
-      <div class="table__body">  
+      </section >
+      <section  class="table__body">  
         <table id="main" class="customers_table"></table>
-      </div >
-    </div> 
-
-  </div>
+      </section >
+    </main> 
 
 
  <!-- Custom Context Menu -->
@@ -302,6 +282,7 @@
           <i class="fas fa-play"></i>
           <span>Run Project</span>
         </li>
+
 
         <li class="item share">
           <div>
@@ -584,13 +565,8 @@
 
   </dialog>
 
- <!-- //Toast Notification -->
- <div class="notifications"> 
-</div>
-
 
 <!--Closing of Custom Dialog Box for Showing and updating the default Project Settings-->
-<script src="./login.js"></script>
 <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 <script src="./maintablefunctions.js"></script>
 <script src="./apifunctions.js"></script>
@@ -599,3 +575,4 @@
 
 </body>
 </html>
+

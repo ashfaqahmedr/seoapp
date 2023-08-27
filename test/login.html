@@ -1,0 +1,321 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login Page</title>
+  <style>
+  
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;    
+        font-family: Raleway, sans-serif;
+    }
+
+/* @keyframes colorChange {
+  0% { background: linear-gradient(90deg, #ED508F, #FF6B9D); }
+  10% { background: linear-gradient(90deg, #ED508F, #FF6B9D); }
+  30% { background: linear-gradient(90deg, #C2517D, #FFF); }
+  50% { background: linear-gradient(90deg, #FF4F8E, #ED508F); }
+  70% { background: linear-gradient(90deg, #F1609A, #FF81A4); }
+  90% { background: linear-gradient(90deg, #ED508F, #FF6B9D); }
+  100% { background: linear-gradient(90deg, #ED508F, #FF6B9D); }
+}
+
+ */
+
+body {
+  /* animation: colorChange 10s infinite;  */
+   background: linear-gradient(360deg, #adf7f7  , #534f4b  );
+}
+
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        overflow: hidden;
+     /* background: linear-gradient(90deg, #ED508F, #F1609A);  */
+      }
+
+    .screen {       
+        background: linear-gradient(90deg, #228B22     , #D35400  );        
+        position: relative;    
+        height: 500px; /* Adjusted height */
+        width: 320px; /* Adjusted width */
+        box-shadow: 0px 0px 24px #33976d;
+        overflow: hidden;
+    }
+
+    .screen__content {
+        z-index: 1;
+        position: relative;    
+        height: 100%;
+    }
+
+    .screen__background {        
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 0;
+        -webkit-clip-path: inset(0 0 0 0);
+        clip-path: inset(0 0 0 0);    
+    }
+
+    .screen__background__shape {
+        transform: rotate(45deg);
+        position: absolute;
+    }
+
+    .screen__background__shape1 {
+        height: 420px; /* Adjusted height */
+        width: 420px; /* Adjusted width */
+        background: #0494ad     ;    
+        top: -50px;
+        right: 90px;    
+        border-radius: 0 72px 0 0;
+    }
+
+    .screen__background__shape2 {
+        height: 180px; /* Adjusted height */
+        width: 180px; /* Adjusted width */
+        background: #b6a599  ;    
+        top: -152px;
+        right: 0;    
+        border-radius: 32px;
+    }
+
+    .screen__background__shape3 {
+        height: 500px; /* Adjusted height */
+        width: 160px; /* Adjusted width */
+        background: linear-gradient(270deg, #55ec55     , #75706d  );   
+        /* background: linear-gradient(270deg, #ED508F, #F1609A); */
+        top: -14px;
+        right: 0;    
+        border-radius: 32px;
+    }
+
+    .screen__background__shape4 {
+        height: 360px; /* Adjusted height */
+        width: 180px; /* Adjusted width */
+        background: #88e488     ;    
+        top: 380px;
+        right: 40px;    
+        border-radius: 60px;
+    }
+
+    .login {
+        width: 280px; /* Adjusted width */
+        padding: 30px;
+        padding-top: 126px; /* Adjusted padding-top */
+    }
+
+    .login__field {
+        padding: 16px 0px; /* Adjusted padding */
+        position: relative;    
+    }
+
+    .title {
+      /* top: -300px !important; */
+      margin-top: -50px !important;
+      /* border-bottom: 2px solid #6e655d; */
+      background: none;
+      /* font-weight: 700; */
+      font-weight: bold;
+      width: 100%;
+	    font-size: 20px;
+      text-align: center;
+      color: rgb(238, 224, 224);
+      padding-bottom: 50px;
+    }
+
+    .login__input {
+        border: none;
+        border-bottom: 2px solid #6e655d;
+        background: none;
+        padding: 8px;
+        padding-left: 16px;
+        font-weight: 700;
+        font-weight: bold;
+        width: 90%;
+	    font-size: 14px;
+        transition: .2s;
+        color: rgb(248, 241, 241);
+    }
+
+    .login__input:active,
+    .login__input:focus,
+    .login__input:hover {
+        outline: none;
+        border-bottom-color: #fdfdfd;
+    }
+
+    .login__input:focus ~ .login__label,
+    .login__input:not(:placeholder-shown) ~ .login__label {
+        top: -3px; /* Adjusted top position */
+        font-size: 14px; /* Adjusted font-size */
+        font-weight: bold;
+        color: #050505;
+	     transition: .5s;
+    }
+
+    .login__label {
+        position: absolute;
+        top: 16px; /* Adjusted top position */
+        left: 16px; /* Adjusted left position */
+        color: #050505;
+        pointer-events: none;
+        transition: 1s;
+        font-weight: bold;
+        font-size: 14px; /* Adjusted font-size */
+    }
+
+    .message__lable{
+       position: relative;
+        top: 16px; /* Adjusted top position */
+        left: 16px; /* Adjusted left position */
+        color: #050505;
+        pointer-events: none;
+        transition: .2s;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-weight: bold;
+        font-weight: 700;
+        font-size: 12px; /* Adjusted font-size */
+    }
+
+    .login__submit {
+        background: #fff;
+        position: relative;
+        font-size: 12px; /* Updated font-size */
+        margin-top: 20px; /* Updated margin-top */
+        padding: 12px 16px; /* Updated padding */
+        border-radius: 26px;
+        border: 1px solid #050505;
+        text-transform: uppercase;
+        font-weight: 700;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+	      max-width: 120px;
+        color: #050505;
+        box-shadow: 0px 2px 2px #C2517D;
+        cursor: pointer;
+        transition: .2s;
+    }
+
+    .login__submit:active,
+    .login__submit:focus,
+    .login__submit:hover {
+        border-color: #050505;
+	box-shadow: 0px 2px 2px #C2517D;
+	background:  #D35400;
+	color: #fff;
+
+    }
+  </style>
+</head>
+<body>
+
+
+
+    <div id="login" class="container">
+      
+      
+    <div class="screen">
+   
+    <div class="screen__content login">
+    
+      <h1 class="title">Welcome Back!</h1> 
+
+                <div class="login__field">
+                  <input type="text" placeholder=" "class=" login__input" name="username" autocomplete="on" required id="username">
+                  <label class="login__label">User name / Email</label>
+                </div>
+                <div class="login__field">
+                  <input id="password" type="password"name="password"class="login__input" placeholder=" " autocomplete="on" required>
+                     <label class="login__label">Password</label>
+                </div>
+              <button onclick="loginUser()" class="button login__submit button__text"> Login</button>
+      
+        </div>
+      
+             <div class="screen__background">
+         
+            <span class="screen__background__shape screen__background__shape4"></span>
+            <span class="screen__background__shape screen__background__shape3"></span>        
+            <span class="screen__background__shape screen__background__shape2"></span>
+            <span class="screen__background__shape screen__background__shape1"></span>
+           
+        </div>    
+    </div>
+</div>
+
+  <div id="welcome" style="display: none;">
+    <h2>Hello <span id="fullName"></span></h2>
+    <p>User Type: <span id="userType"></span></p>
+    <p>User Token: <span id="userToken"></span></p>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <script>
+async function loginUser() {
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+
+  const response = await fetch('https://script.google.com/macros/s/AKfycbxgyT3rHw0zc7xeF_HWP3fxiy9VjaBcwzE18b6eA7HzFejEvCQEJewrJSzDFkeaUa4m/exec?sheetName=Users', {
+    method: 'POST',
+    body: JSON.stringify({ action: 'login', username, password }), // Include the action
+  });
+
+  if (response.ok) {
+  const { success, fullName, userType, token, error } = await response.json();
+
+  if (success) {
+
+    // Set the cookie with a 30-second expiration // expires=${now.toUTCString()}; path=/
+
+  var cookieName = 'userToken';
+  var maxAge = 60;
+  console.log('Original Token: ' + token);
+  console.log('Original Time: ' + maxAge);
+
+  // Set the cookie
+  document.cookie = `${cookieName}=${encodeURIComponent(token)}; Max-Age=${maxAge}; Secure;  SameSite=Lax`;
+
+  // Get the value of the cookie and display it
+  var cookieValue = getCookie('userToken');
+  console.log("userToken: , Cookie Value:"+ cookieValue);
+
+    // // Redirect after 30 seconds
+    // setTimeout(() => {
+
+    window.location.href = 'home.html'; // Replace with your login page URL
+
+    // }, 30000); // 30 seconds
+  } else {
+    alert(`Login failed. ${error}`);
+  }
+} else {
+  alert('Network error. Please try again later.');
+}
+}
+
+// Function to get the value of a cookie
+function getCookie(name) {
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(';');
+  for (var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) == 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
+  }
+  return null;
+}
+
+  </script>
+</body>
+</html>

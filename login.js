@@ -1,20 +1,24 @@
 const loginPanel = document.getElementById('loginPanel');      
 const sidebar = document.getElementById('sidebar');
 const mainSectionTable = document.getElementById('mainSectionTable');
+const fullName = document.getElementById('fullName');
+const userType = document.getElementById('userType');
+const container = document.getElementById('container');
 
-// loginPanel.classList.add('hidden')
+const headerElement = document.getElementById('header');
+headerElement.classList.add('connected');
+container.classList.add('hidden');
+
 // sidebar.classList.add('hidden');
 // mainSectionTable.classList.add('hidden');
 
-        // Add the 'hidden' class to the elements
-        sidebar.classList.remove('hidden');
-        mainSectionTable.classList.remove('hidden');
-        loginPanel.classList.add('hidden');
+document.getElementById('popupContainer').style.display = 'none';
+document.getElementById('loadingOverlay').style.display = 'none';
+// document.getElementById('container').style.display = 'none';
 
-
-// showAdminPanel();
 
 async function loginUser() {
+  showLoader();
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
   
@@ -42,23 +46,23 @@ async function loginUser() {
     var cookieValue = getCookie('userToken');
     console.log("userToken: , Cookie Value:"+ cookieValue);
   
-      // // Redirect after 30 seconds
-      // setTimeout(() => {
-
-
         // Add the 'hidden' class to the elements
         sidebar.classList.remove('hidden');
         mainSectionTable.classList.remove('hidden');
         loginPanel.classList.add('hidden');
+        mainSectionTable.classList.add('table');
+        document.getElementById('fullName').textContent = fullName;
+        // document.getElementById('userType').textContent = userType;
 
         showAdminPanel();
-
       // }, 30000); // 30 seconds
     } else {
-        createToast('error', 'fa-solid fa-circle-exclamation', 'error', 'Username or Password is invalid: ');
+        createToast('error', 'fa-solid fa-circle-exclamation', 'error', 'Username or Password is invalid. error: '+error);
+        hideLoader();
     }
   } else {
-    createToast('error', 'fa-solid fa-circle-exclamation', 'error', 'There is a network error ');
+    createToast('error', 'fa-solid fa-circle-exclamation', 'error', 'There is a network error:'+error);
+    hideLoader();
   }
   
   // Function to get the value of a cookie
@@ -78,4 +82,8 @@ async function loginUser() {
             sidebar.classList.add('hidden');
             mainSectionTable.classList.add('hidden');
             loginPanel.classList.remove('hidden');
+            mainSectionTable.classList.remove('table');
+            document.getElementById('fullName').textContent = '';
+            // document.getElementById('userType').textContent = '';
+    
   }
