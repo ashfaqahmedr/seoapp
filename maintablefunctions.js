@@ -35,7 +35,7 @@ window.onload = async () =>{
   const sidebar = document.querySelector(".sidebar");
   const tooltip = document.getElementById('tooltip');
   const closeBtn = document.querySelector("#btn");
-  const link = document.querySelectorAll('.nav-list');
+  const link = document.querySelectorAll('.sidebar');
   
   // Logic to show the sidebar and tooltip on mouse over
 function showSidebar() {
@@ -355,7 +355,7 @@ const loadingOverlay = document.getElementById('loadingOverlay');
 function showLoader() {
   // alert('Loader')
   document.body.style.cursor = 'none';
-  loadingOverlay.style.display = 'flex';
+  loadingOverlay.style.display = 'block';
 }
 
 // Function to hide the loader

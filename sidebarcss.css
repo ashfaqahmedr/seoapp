@@ -33,9 +33,11 @@ body, h1, h2, h3, h4, h5, h6, p, ul, ol, li {
 }
 
 body {
-  background: linear-gradient(180deg,  #19bcee, #dbfdcc, #4cf592);   
+  background: linear-gradient(180deg,  #2d2e2e, #6f996f, #ebf0ed);   
   background-blend-mode: multiply;
   overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 .container {
