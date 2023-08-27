@@ -12,76 +12,79 @@
   <link rel="stylesheet" href="sidebarcss.css">
   <link rel="stylesheet" href="tablecss.css">
   
+
 </head>
 <body>
  
-  <header>
-
-    <span id="header" class="header">SEO Content Machine Web App (Connected to Google Sheet) </span>
-      <div id="profile" class="btnLogout">
-     <span class="btnLogout"> <i class="fas fa-user"></i><a id="fullName"></a> </span>
-     <button class="btnLogout header" onclick="logout()">Logout</button> 
-      </div>
-     
-  </header>
-  
-
-   <!-- //Loader Animation -->
-   <div id="loadingOverlay">
-    <div class="loader-container" id="loader-container">
-      <div class="loader"></div>
-    </div>
-</div>
-
-  <section id="loginPanel"> 
-    <div class="userIcon"><i class="fas fa-user"></i></div>
+  <section id="loginPanel" class="hidden"> 
+    
+    <div id="login" class="container">
+      
+      
       <div class="screen">
-   
+     
       <div class="screen__content login">
-       
-        <div class="title">Sign In</div> 
-
+      
+        <h1 class="title">Welcome Back!</h1> 
+  
                   <div class="login__field">
-                    <i class="fas fa-user"></i>
-                     <input type="text" placeholder=" "class=" login__input" name="username" autocomplete="on" required id="username">
+                    <input type="text" placeholder=" "class=" login__input" name="username" autocomplete="on" required id="username">
                     <label class="login__label">User name</label>
                   </div>
                   <div class="login__field">
-                    <i class="fas fa-lock"></i>
                     <input id="password" type="password"name="password"class="login__input" placeholder=" " autocomplete="on" required>
                        <label class="login__label">Password</label>
                   </div>
-               
-          </div>
-         
+                <button onclick="loginUser()" class="button login__submit button__text"> Login</button>
         
-          
+          </div>
+        
                <div class="screen__background">
            
               <span class="screen__background__shape screen__background__shape4"></span>
               <span class="screen__background__shape screen__background__shape3"></span>        
               <span class="screen__background__shape screen__background__shape2"></span>
               <span class="screen__background__shape screen__background__shape1"></span>
-
              
           </div>    
       </div>
-      <button onclick="loginUser()" class="button login__submit button__text"> Sign In  ></button>
+  </div>
   </section>
+  <!-- //Loader Animation -->
+  <div id="loadingOverlay">
+      <div class="loader-container" id="loader-container">
+        <div class="loader"></div>
+      </div>
+  </div>
 
- 
+  <!-- //Toast Notification -->
+  <div class="notifications"> 
+  </div>
 
-  <div class="sidebar" id="sidebar">
+
+  <header>
+  
+    <h2>Hello <span id="fullName"></span></h2>
+    <p>User Type: <span id="userType"></span>
+    <!-- <p>User Token: <span id="userToken"></span></p> -->
+    <button onclick="logout()">Logout</button></p>
+    <i class="bx bx-menu" id="btn"></i>
+    <span id="header" class="header" >SEO WEB APP</span>
+
+  </header>
+  
+
+  <div class="container">
+   <aside class="sidebar" id="sidebar">
     <div class="logo_details">
       <i class="bx bxl-audible icon"></i>
       <div class="logo_name">SEO App</div>
-      <i class="bx bx-menu" id="btn"></i>
+ 
     </div>
 
+     
 
     <ul class="nav-list">
-
-  
     <ul>
         <li class="divider">
         <a href="#" id="dashboard-link"  onclick="fetchAPI()">
@@ -263,11 +266,11 @@
           </a>
         </li>
       </ul>
-       
+    </aside>    
   </div>
 
   <!-- <section class="home-section"> -->
-    <main id="mainSectionTable">
+    <main class="table" id="mainSectionTable">
       <section  class="table__header">
        
           <span id="recordCount"></span>
@@ -603,10 +606,6 @@
 
   </dialog>
 
- <!-- //Toast Notification -->
- <div class="notifications"> 
-</div>
-
 
 <!--Closing of Custom Dialog Box for Showing and updating the default Project Settings-->
 <script src="./login.js"></script>
@@ -618,3 +617,4 @@
 
 </body>
 </html>
+

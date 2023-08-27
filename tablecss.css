@@ -21,6 +21,7 @@ button{
     border-radius: 5px;
     --color: #0abf30;
     background-image: linear-gradient(to right, #0abf3055, #22242F 30%);
+    
     animation: show_toast 0.3s ease forwards;
     z-index: 999;
 }
@@ -28,6 +29,9 @@ button{
     color: var(--color);
 }
 .toast .title{
+  display: flex;
+  justify-content: center;
+  align-items: center;
     font-size: x-large;
     font-weight: bold;
 }
@@ -93,9 +97,10 @@ button{
 /* Main table CSS */
 
 main.table {
+  /* display: inline-flex; */
     position: relative;
-    width: 100dvw;
-    top: -100px;
+    width: auto;
+    /* top: -950px; */
     height: 100dvh;
     background-color: #fff5;
     backdrop-filter: blur(7px);
@@ -190,10 +195,10 @@ border: none;
 }
 
 .table__body {
-    width: 100%;
-    max-height: 100%;
+    width: 99%;
+    max-height: calc(92% - 1.6rem);
     background-color: #fffb;
-    margin: .3rem auto;
+    margin: .8rem auto;
     border-radius: .8rem;
     overflow: auto;
     overflow: overlay;
@@ -275,67 +280,37 @@ border: none;
 }
 
 #main > tbody > tr:hover {
-    background-color: rgba(218, 250, 75, 0.548) !important;
-    /* transform: scale(1.02); */
+    background-color: #fff6 !important;
+    transform: scale(1.02);
     
     /* width: 110%; */
 }
 
-/* #main > tbody > tr > td {
+#main > tbody > tr > td {
     transition: .2s ease-in-out;
     padding: 0.7rem;
     border-collapse: collapse;
     padding: 0.7rem;
     text-align: left;
     word-wrap: break-word;
-} */
-
-/* #main > tbody > tr > td {
-  transition: .2s ease-in-out;
-  padding: 0.2rem;
-  border: 1px solid #ccc; 
-  text-align: left;
-  white-space: nowrap; 
-  overflow: hidden; 
-  text-overflow: ellipsis;  
-} */
-
-/* 
-#main > tbody > tr > td {
-  transition: .2s ease-in-out;
-  border: 1px solid #ccc; 
-  text-align: left;
-  white-space: nowrap; 
-  overflow: hidden; 
-  /*text-overflow: ellipsis; 
-}
- */
-
-
- #main > tbody > tr > td {
-  /* transition: .2s ease-in-out; */
-  border: 1px solid #ccc; /* Add border to cells */
-  padding: 0.2rem;
-  text-align: left;
-  white-space: nowrap; /* Prevent line breaks */
-  overflow: hidden; /* Hide overflow content */
-  /* text-overflow: ellipsis;  */
-  width: auto; /* Let cell width adjust based on content */
 }
 
 #main > tbody >  tr.hide > td {
     padding: 0;
     font: 0 / 0 sans-serif;
-    /* transition: .2s ease-in-out .5s; */
+    transition: .2s ease-in-out .5s;
 }
+
+
+
 
 
 .status-pill {
   display: inline-block;
-  padding: 2px 2px 2px 2px;
+  padding: 4px 10px;
   width: 100%;
   border-radius: 20px;
-  margin: 2px, 2px, 2px, 2px;
+  margin: 10px, 10px, 10px, 10px;
   text-align: center;
 }
 
