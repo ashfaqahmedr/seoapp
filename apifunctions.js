@@ -45,7 +45,7 @@ async function fetchAPI() {
       let type = 'error';
       let icon = 'fa-solid fa-circle-exclamation';
       let title = 'Error';
-      let text = 'An error occurred while fetching projects.';
+      let text = 'An error occurred while fetching projects.' + error;
       createToast(type, icon, title, text);
       hideLoader();
     }
@@ -222,7 +222,7 @@ function updateDashboardCounts(counts) {
 
 
   
-
+  
 
 
 

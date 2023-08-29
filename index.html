@@ -8,6 +8,8 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
   <link rel="stylesheet" href="login.css">
+  <link rel="stylesheet" href="dialogs.css">
+
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <link rel="stylesheet" href="sidebarcss.css">
   <link rel="stylesheet" href="tablecss.css">
@@ -222,7 +224,7 @@
         <ul class="nav-list">
           <li class="divider">
           <!-- <a href="#" id="setting-link"  onclick="fetchAPI()"> -->
-            <i class="fas fa-cog "></i>
+            <i class="fas fa-cog"></i>
             <span class="link_name"></i>Setting</span>
             <span class="tooltip">Setting</span>
         <!-- </a>    -->
@@ -310,6 +312,11 @@
           <span>Run Project</span>
         </li>
 
+        <li class="item" onclick="openSettingDialog()">
+          <i class="fas fa-cog"></i>
+          <span>Project Default Settings</span>
+        </li>
+
         <li class="item share">
           <div>
             <i class="fas fa-file-export"></i>
@@ -352,26 +359,27 @@
 
     <div id="articleCreatorSection" class="dialog-section section1">
 
-
+      <!-- FORM START -->
+      <!-- <form id="createProjectForm" class="createProjectForm"> -->
+        
       <label for="ProjectID">Article Creator ID:</label>
       
-      <input type="text" id="ProjectID">
+      <input type="text" id="ProjectID" name="ProjectID">
 
       <label for="articleProjectName">Article Project Name:</label>
       
-      <input type="text" id="articleProjectName">
+      <input type="text" id="articleProjectName" name="ProjectName">
 
         <label for="articleKeywordsFile">Article Keywords: </label>
-        <input type="text" id="articleKeywordsFile">
+        <input type="text" id="articleKeywordsFile"  name="ProjectKeywords">
     
       <label for="articleCategories">Article Categories: </label>
       
-      <input type="text" id="articleCategories">
+      <input type="text" id="articleCategories" name="ProjectCategories">
 
       <label for="ProjectStatus">Article Creartor Status:</label>
       
-      <input type="text" id="ProjectStatus">
-
+      <input type="text" id="ProjectStatus" name="ProjectStatus">
 
     </div>
 
@@ -381,16 +389,16 @@
       
       <label for="PostUploaderId">Post Uploader ID:</label>
       
-      <input type="text" id="PostUploaderId">
+      <input type="text" id="PostUploaderId" name="PostUploaderId">
 
       <label for="postJobName">Post Job Name:</label>
-      <input type="text" id="postJobName">
+      <input type="text" id="postJobName" name="PostUploaderName">
 
       <label for="PostUploaderStatus">Post Uploader Status:</label>
-      <input type="text" id="PostUploaderStatus">
+      <input type="text" id="PostUploaderStatus" name="PostUploaderStatus">
 
       <label for="postDate">Post Date:</label>
-      <input type="date" id="postDate">
+      <input type="date" id="postDate" name="PostStartDate">
 
     </div>
 
@@ -401,35 +409,39 @@
 
       <label for="BlogIdId">Blog ID:</label>
       
-      <input type="text" id="BlogId">
+      <input type="text" id="BlogId" name="BlogId">
 
 
       <label for="blogUserName">Blog User Name:</label>
-      <input type="text" id="blogUserName">
+      <input type="text" id="blogUserName" name="username">
     
       <label for="blogPassword">Blog Password:</label>
-      <input type="text" id="blogPassword">
+      <input type="text" id="blogPassword" name="password"> 
 
       <label for="blogUrl">Blog URL:</label>
-      <input type="text" id="blogUrl">
+      <input type="text" id="blogUrl" name="url">
 
       <label for="blogGroup">Blog Group:</label>
-      <input type="text" id="blogGroup">
+      <input type="text" id="blogGroup" name="group">
 
       <label for="SEOStatus">SEO Status:</label>
-      <input type="text" id="SEOStatus">
-
+      <input type="text" id="SEOStatus" name="SEOStatus">
+    
     </div>
 
     <span class="btn">
-
-      <button class="btn closeDialog" id="updatedata" onclick="updateDataToApi()">
+      <button class="btn closeDialog" id="updateProjectData" onclick="updateDataToApi()">
         <i class="fas fa-sync"></i> Update
       </button>
-      <button class="btn closeDialog" id="closeDialog" onclick="closeDialog('myDialog')">
+
+      <button class="btn closeDialog" id="createProjectData" onclick="createProjects()">
+        <i class="fas fa-plus"></i> Add
+      </button>
+
+      <button  class="btn closeDialog" id="closeDialog" onclick="closeDialog('myDialog')">
         <i class="fas fa-times-circle"></i> Cancel
       </button>
-      
+    <!-- </form> -->
     </span>
     
   </dialog>

@@ -25,8 +25,11 @@ closeuserform.addEventListener("click", () => {
 
 const addProjectDialog =document.getElementById("createProjectDialog")
 const createProjectBtn = document.getElementById("createProjectBtn");
+
 const addProjectsForm = document.getElementById("createProjectForm");
+
 const addProjectToGSheet = document.getElementById("addProjectData");
+
 const closeprojectDialog = document.getElementById("closeProjectDialog");
 
 createProjectBtn.addEventListener("click", () => {
@@ -53,16 +56,19 @@ const handleAddUsersSubmit = (url, dialog, form) => {
       data[key] = value;
     });
 
+    
     // Create the JSON object
     const jsonData = {
+      action: 'addProjectData', username: "ASHFAQ",
       dataItems: [data]
     };
 
+    console.table (jsonData)
     // Make a POST request to add data to the Google Sheet using fetch
-    fetch(url, {
-      method: 'POST',
-      body: JSON.stringify(jsonData)
-    })
+      fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(jsonData)
+      })
       .then((res) => res.json())
       .then((res) => {
         console.log(res);
@@ -88,17 +94,16 @@ const handleAddUsersSubmit = (url, dialog, form) => {
 //Event Handler for Users Form
 addDataToGSheet.addEventListener("click", () => {
   handleAddUsersSubmit(
-    "https://script.google.com/macros/s/AKfycbxgyT3rHw0zc7xeF_HWP3fxiy9VjaBcwzE18b6eA7HzFejEvCQEJewrJSzDFkeaUa4m/exec?action=addData&sheetName=Users",
+    "https://script.google.com/macros/s/AKfycbxgyT3rHw0zc7xeF_HWP3fxiy9VjaBcwzE18b6eA7HzFejEvCQEJewrJSzDFkeaUa4m/exec",
     addUsersDialog,
     addUsersForm
   );
 });
 
-
 //Event Handler for Projects Form
 addProjectToGSheet.addEventListener("click", () => {
   handleAddUsersSubmit(
-    "https://script.google.com/macros/s/AKfycbxgyT3rHw0zc7xeF_HWP3fxiy9VjaBcwzE18b6eA7HzFejEvCQEJewrJSzDFkeaUa4m/exec?action=addData&sheetName=Projects",
+    "https://script.google.com/macros/s/AKfycbxgyT3rHw0zc7xeF_HWP3fxiy9VjaBcwzE18b6eA7HzFejEvCQEJewrJSzDFkeaUa4m/exec",
     addProjectDialog,
     addProjectsForm
   );
@@ -139,6 +144,13 @@ const showMessageDialog = (title, message, isSuccess = true) => {
 // Event listener for 'Get All Users' button
 getAllUsersBtn.addEventListener('click', async () => {
     try {
+
+    // Make a POST request to add data to the Google Sheet using fetch
+    fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(jsonData)
+    })
+
       const response = await fetch('https://script.google.com/macros/s/AKfycbxgyT3rHw0zc7xeF_HWP3fxiy9VjaBcwzE18b6eA7HzFejEvCQEJewrJSzDFkeaUa4m/exec?action=getData&sheetName=Users');
       
       if (!response.ok) {
@@ -163,8 +175,11 @@ getAllUsersBtn.addEventListener('click', async () => {
 // Event listener for 'Get All Projects' button
 getAllProjectsBtn.addEventListener('click', async () => {
   try {
-    const response = await fetch('https://script.google.com/macros/s/AKfycbxgyT3rHw0zc7xeF_HWP3fxiy9VjaBcwzE18b6eA7HzFejEvCQEJewrJSzDFkeaUa4m/exec?action=getData&sheetName=Projects');
-      const responseData = await response.json();
+    const response = await fetch('https://script.google.com/macros/s/AKfycbxgyT3rHw0zc7xeF_HWP3fxiy9VjaBcwzE18b6eA7HzFejEvCQEJewrJSzDFkeaUa4m/exec', {
+      method: 'POST',
+      body: JSON.stringify({ action: 'getProjects', username: "ASHFAQ" }), // Include the action
+    });
+       const responseData = await response.json();
 
     showMessageDialog('Success', `All Projects fetched successfully.`, true);
    // Assuming 'responseData' contains the response data from the server

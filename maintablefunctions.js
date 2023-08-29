@@ -340,9 +340,9 @@ function applyConditionalFormatting() {
       // Append the status span to the cell
       cell.appendChild(statusSpan);
 
-      // Apply border radius to cells
-      cell.style.borderRadius = '5px';
-      cell.style.width = '100%';
+      // // Apply border radius to cells
+      // cell.style.borderRadius = '5px';
+      // cell.style.width = '100%';
     });
   }
 }
@@ -374,7 +374,7 @@ const Projectdialog = document.getElementById('myDialog');
 
 const closeButton = document.getElementById('closeDialogButton');
 
-const updateButton = document.getElementById('updateDataButton');
+const updateButton = document.getElementById('updateProjectData');
 
 // // Get the input elements
 const articleProjectNameInput = document.getElementById('articleProjectName');
@@ -428,8 +428,16 @@ const cnsarticleCreatorSection = document.getElementById("articleCreatorSection"
 const cnspostUploaderTitle = document.getElementById("postuploader");
 const cnspostUploaderSection = document.getElementById("postUploaderSection");
 
+const postDateInput = document.getElementById('postDate');
+
 const cnsblogSettingTitle = document.getElementById('blogIdNo');
 const cnsblogSettingSection = document.getElementById("blogSettingSection");
+
+const btnupdateProjectData = document.getElementById("updateProjectData");
+
+const btncreateProjectData = document.getElementById("createProjectData");
+
+
 
 
 async function fetchDataAndHandle(selectedRowId, method) {
@@ -440,12 +448,10 @@ async function fetchDataAndHandle(selectedRowId, method) {
   const articleCategoriesInput = document.getElementById('articleCategories');
   const ProjectStatusinput = document.getElementById('ProjectStatus');
 
-
   const PostUploaderIdInput = document.getElementById('PostUploaderId');
   const postJobNameInput = document.getElementById('postJobName');
   const PostUploaderStatusInput = document.getElementById('PostUploaderStatus');
 
-  const postDateInput = document.getElementById('postDate');
 
   const BlogIdInput = document.getElementById('BlogId');
   const blogUserNameInput = document.getElementById('blogUserName');
@@ -453,7 +459,6 @@ async function fetchDataAndHandle(selectedRowId, method) {
   const blogUrlInput = document.getElementById('blogUrl');
   const blogGroupInput = document.getElementById('blogGroup');
   const SEOStatusInput = document.getElementById('SEOStatus');
-
 
   try {
 
@@ -468,26 +473,20 @@ async function fetchDataAndHandle(selectedRowId, method) {
 
     console.table(data);
 
-
-      // Fill in the Article Creator section
-
-
       cnsarticleCreatorTitle.textContent = `Article Creator Details of ID: ${selectedRowId}`;
 
       ProjectIDInput.value = data[0].ProjectID;
       articleProjectNameInput.value = data[0].ProjectName;
+      ProjectStatusinput.value = data[0].ProjectStatus;
       articleKeywordsFileInput.value = data[0].ProjectKeyowrds;
       articleCategoriesInput.value = data[0].ProjectCatagories;
-      ProjectStatusinput.value = data[0].ProjectStatus;
 
       cnspostUploaderTitle.textContent = `Post Uploader Details of ID: ${data[0].PostUploaderId}`;
 
-      // Fill in the Post Uploader section
+      // // Fill in the Post Uploader section
       PostUploaderIdInput.value = data[0].PostUploaderId;
       postJobNameInput.value = data[0].PostUploaderName;
       PostUploaderStatusInput.value = data[0].PostUploaderStatus;
-
-      // postDateInput.value = new Date(data[0].PostStartDate).toLocaleDateString('en-US');
 
         // Extract the date part and format it as "YY-MM-DD"
         const postStartDate = new Date(data[0].PostStartDate);
@@ -496,10 +495,9 @@ async function fetchDataAndHandle(selectedRowId, method) {
         // Assign the formatted date to the input value
         postDateInput.value = formattedPostStartDate;
 
-
       cnsblogSettingTitle.textContent = `Blog Setting details of ID: ${data[0].BlogId} SEO Status ${data[0].SEOStatus}`;
 
-      // Fill in the Blog Setting section
+      // // Fill in the Blog Setting section
       BlogIdInput.value = data[0].BlogId;
       blogUserNameInput.value = data[0].username;
       blogPasswordInput.value = data[0].password;
@@ -509,126 +507,198 @@ async function fetchDataAndHandle(selectedRowId, method) {
 
     } else if (method.toUpperCase() === 'POSTDATA') {
      
-      const jsonData = {
-        action: "updateProjectsData",
+         const jsonData = {
+        action: 'updateProjectsData',
         username: LoggedUsername,
         dataItems: [
           {
-            SheetID: ProjectIDInput.value, // This field should be provided if available
-            ProjectID: articleProjectNameInput.value,
+            SheetID: selectedRowId,
+            ProjectID: ProjectIDInput.value,
             ProjectName: articleProjectNameInput.value,
-            ProjectStatus: ProjectStatusinput.value, // This field should be provided if available
+            ProjectStatus: ProjectStatusinput.value, // Use corresponding input element
             ProjectKeyowrds: articleKeywordsFileInput.value,
             ProjectCatagories: articleCategoriesInput.value,
             PostUploaderId: PostUploaderIdInput.value,
             PostUploaderName: postJobNameInput.value,
-            PostUploaderStatus: PostUploaderStatusInput.value,
+            PostUploaderStatus: PostUploaderStatusInput.value , // Use corresponding input element
             PostStartDate: postDateInput.value,
-            BlogId: blogUserNameInput.value,
+            BlogId: BlogIdInput.value,
             username: blogUserNameInput.value,
             password: blogPasswordInput.value,
             url: blogUrlInput.value,
             group: blogGroupInput.value,
-            SEOStatus: SEOStatusInput.value, // This field should be provided if available
-          }
-        ]
+            SEOStatus: SEOStatus.value, // Use corresponding input element
+          },
+        ],
       };
 
-      // const jsonData = {
-      //   "action": "updateProjectsData",
-      //     "username": "ASHFAQ",  
-      //     "dataItems": [
-      //       {
-      //         "SheetID": "f2b342ef-6a73-4b3f-ab82-b994275de161", 
-      //         "ProjectID": "system",
-      //         "ProjectName": "system 1",
-      //         "ProjectStatus": "system",
-      //         "ProjectKeyowrds": "system 1, system 2",
-      //         "ProjectCatagories": "system 1, system 2",
-      //         "PostUploaderId": "system101",
-      //         "PostUploaderName": "system Doe",
-      //         "PostUploaderStatus": "system",
-      //         "PostStartDate": "2023-07-25",
-      //         "BlogId": "1234505055",
-      //         "username": "system",
-      //         "password": "system",
-      //         "url": "https://system.com",
-      //         "group": "system A",
-      //         "SEOStatus": "system"
-      //       }
-      //     ]
-      //   }
-
-      
       console.table(jsonData)
+    
      let response = await fetch(seourl, {
         method: 'POST',
-        body: JSON.stringify({ jsonData }), // Include the action
+        body: JSON.stringify( jsonData ), // Include the action
         // body: jsonData, // Include the action
-
       });
 
-      // const data = await response.json();
+      const Resdata = await response.json();
 
-      // console.table(data);
+      console.table(Resdata);
 
-      // // Get the table element
-      // const table = document.getElementById('main');
-      // const row = table.rows[selectedRowIndex];
+        const success = Resdata[0].success;
+        const id = Resdata[0].SheetID;
+        const message = Resdata[0].message;
 
-      // if (row) {
-      //   const cell2 = row.cells[2];
-      //   if (cell2) {
-      //     cell2.textContent = articleProjectName;
-      //   }
+        createToast('success', 'fa-solid fa-circle-check', 'Success', "Success: " + success + " ID: "+ id + ' Message: '+ message);
 
-      //   const cell3 = row.cells[3];
-      //   if (cell3) {
-      //     cell3.textContent = CategoryInsertFile.join(', ');
-      //   }
+if (success) {
+        // Assuming you have the row index stored in selectedRowIndex
+const table = document.getElementById('main');
+const row = table.rows[selectedRowIndex];
 
-      //   const cell4 = row.cells[4];
-      //   if (cell4) {
-      //     cell4.textContent = articleKeywordsFile.join(', ');
-      //   }
+if (row) {
+  // Update each cell based on its corresponding input field value
+  row.cells[1].textContent = ProjectIDInput.value;
+  row.cells[2].textContent = articleProjectNameInput.value;
 
-      //   const cell6 = row.cells[6];
-      //   if (cell6) {
-      //     cell6.textContent = postDateInput.value;
-      //   }
 
-      //   const cell7 = row.cells[7];
-      //   if (cell7) {
-      //     cell7.textContent = postJobNameInput.value;
-      //   }
+// Update ProjectStatus span element
+const projectStatusSpan = row.cells[3].querySelector('span.status-pill');
+const cleanedProjectStatus = removeTrailingDots(ProjectStatusinput.value);
+projectStatusSpan.textContent = ProjectStatusinput.value;
+projectStatusSpan.className = 'status-pill'; // Remove all classes and set to 'status-pill'
+projectStatusSpan.classList.add(`status-${cleanedProjectStatus.toLowerCase()}`);
 
-      //   const cell2 = row.cells[10];
-      //   if (cell2) {
-      //     cell2.textContent = usernameInput.value;
-      //   }
+  row.cells[4].textContent = articleKeywordsFileInput.value;
+  row.cells[5].textContent = articleCategoriesInput.value;
+  row.cells[6].textContent = PostUploaderIdInput.value;
+  row.cells[7].textContent = postJobNameInput.value;
+
+ // Update PostUploaderStatus span element
+ const postUploaderStatusSpan = row.cells[8].querySelector('span.status-pill');
+ const cleanedPostUploaderStatus = removeTrailingDots(PostUploaderStatusInput.value);
+ postUploaderStatusSpan.textContent = PostUploaderStatusInput.value;
+ postUploaderStatusSpan.className = 'status-pill'; // Remove all classes and set to 'status-pill'
+ postUploaderStatusSpan.classList.add(`status-${cleanedPostUploaderStatus.toLowerCase()}`);
+
+  row.cells[9].textContent = postDateInput.value;
+  row.cells[10].textContent = BlogIdInput.value;
+  row.cells[11].textContent = blogUserNameInput.value;
+  row.cells[12].textContent = blogPasswordInput.value;
+  row.cells[13].textContent = blogUrlInput.value;
+  row.cells[14].textContent = blogGroupInput.value;
+  
+ // Update SEOStatus span element
+  const seoStatusSpan = row.cells[15].querySelector('span.status-pill');
+  const cleanedSEOStatus = removeTrailingDots(SEOStatusInput.value);
+  seoStatusSpan.textContent = SEOStatusInput.value;
+  seoStatusSpan.className = 'status-pill'; // Remove all classes and set to 'status-pill'
+  seoStatusSpan.classList.add(`status-${cleanedSEOStatus.toLowerCase()}`);
+  }
+  hideLoader();
+}
+
+} else if (method.toUpperCase() === 'ADDDATA') {
    
-      //   const cell3 = row.cells[11];
-      //   if (cell3) {
-      //     cell3.textContent = passwordInput.value;
-      //   }
-   
-        
-      //   const cell4 = row.cells[12];
-      //   if (cell4) {
-      //     cell4.textContent =  urlInput.value;
-      //   }
-   
-      //   const cell5 = row.cells[13];
-      //   if (cell5) {
-      //     cell5.textContent =groupInput.value;
-      //   }
+  const currentDate = new Date();
+  const formattedDate = currentDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
-      // }
-      
-      console.log('Article Creator Data has been saved!');
+const jsonData = {
+        action: 'addProjectData',
+        username: "ASHFAQ",
+        dataItems: [
+          {
+            ProjectID: ProjectIDInput.value,
+            ProjectName: articleProjectNameInput.value,
+            ProjectStatus: ProjectStatusinput.value, // Use corresponding input element
+            ProjectKeyowrds: articleKeywordsFileInput.value,
+            ProjectCatagories: articleCategoriesInput.value,
+            PostUploaderId: PostUploaderIdInput.value,
+            PostUploaderName: postJobNameInput.value,
+            PostUploaderStatus: PostUploaderStatusInput.value , // Use corresponding input element
+            PostStartDate: formattedDate,
+            BlogId: BlogIdInput.value,
+            username: blogUserNameInput.value,
+            password: blogPasswordInput.value,
+            url: blogUrlInput.value,
+            group: blogGroupInput.value,
+            SEOStatus: SEOStatus.value, // Use corresponding input element
+          },
+        ],
+      };
+
+console.table(jsonData)
+
+hideLoader();
+
+let response = await fetch(seourl, {
+ method: 'POST',
+ body: JSON.stringify( jsonData ), // Include the action
+ // body: jsonData, // Include the action
+});
+
+const Resdata = await response.json();
+
+console.table(Resdata);
+
+ const success = Resdata[0].success;
+ const id = Resdata[0].SheetID;
+ const message = Resdata[0].message;
+
+ createToast('success', 'fa-solid fa-circle-check', 'Success', "Success: " + success + " ID: "+ id + ' Message: '+ message);
+
+ if (success) {
+
+    // Add a new row at index 2 (third row)
+    const table = document.getElementById('main');
+    const newRow = table.insertRow(1);
+
+    // Insert cells and set their content
+    for (let i = 0; i < 16; i++) {
+      const cell = newRow.insertCell(i);
+      cell.textContent = '';
     }
+
+    // Set specific cell values based on input fields and create status spans
+    newRow.cells[0].textContent = id;
+    newRow.cells[1].textContent = ProjectIDInput.value;
+    newRow.cells[2].textContent = articleProjectNameInput.value;
+
+    const statusSpan1 = document.createElement('span');
+    statusSpan1.className = 'status-pill status-draft';
+    statusSpan1.textContent = 'draft';
+    newRow.cells[3].appendChild(statusSpan1);
+
+    newRow.cells[4].textContent = articleKeywordsFileInput.value;
+    newRow.cells[5].textContent = articleCategoriesInput.value;
+    newRow.cells[6].textContent = PostUploaderIdInput.value;
+    newRow.cells[7].textContent = postJobNameInput.value;
+
+    const statusSpan2 = document.createElement('span');
+    statusSpan2.className = 'status-pill status-draft';
+    statusSpan2.textContent = 'draft';
+    newRow.cells[8].appendChild(statusSpan2);
+
+    newRow.cells[9].textContent = postDateInput.value;
+    newRow.cells[10].textContent = BlogIdInput.value;
+    newRow.cells[11].textContent = blogUserNameInput.value;
+    newRow.cells[12].textContent = blogPasswordInput.value;
+    newRow.cells[13].textContent = blogUrlInput.value;
+    newRow.cells[14].textContent = blogGroupInput.value;
+
+    const statusSpan3 = document.createElement('span');
+    statusSpan3.className = 'status-pill status-pending';
+    statusSpan3.textContent = 'pending';
+    newRow.cells[15].appendChild(statusSpan3);
+
+    console.log('Article Creator Data has been saved!');
+    Projectdialog.close();
+    hideLoader();
+  }
+  }
+
   } catch (error) {
     console.error('Error fetching or posting data:', error);
+    hideLoader();
   }
 }
 
@@ -686,15 +756,15 @@ async function fetchAndPopulateDialog() {
 //           // Handle the successful response data
           
 //     }
-
-    const updateButton = document.getElementById('updatedata');
-
+    
     if (sectiontoshow === 'AllDatatoshow') {
       // Show the "Update Data" button
       updateButton.style.display = 'flex';
+      btncreateProjectData.style.display = 'none'
     } else {
       // Hide the "Update Data" button
       updateButton.style.display = 'none';
+      btncreateProjectData.style.display = 'none'
     }
     
   setSectionVisibility(hasArticleCreatorData, hasPostUploaderData, hasBlogSettingData);
@@ -704,6 +774,7 @@ async function fetchAndPopulateDialog() {
 
     } catch(error) {
       hideLoader();
+      console.log(error)
       createToast('error', 'fa-solid fa-circle-exclamation', 'error', 'There is error while retrieving data from SEO and custom API! Error: ' + error);
     }
 }
@@ -730,263 +801,110 @@ try {
 
 showLoader();
 
+btncreateProjectData.style.display="none";
+updateButton.style.display = 'flex';
+ 
+
 await fetchDataAndHandle(selectedRowId, 'POSTDATA'); // Make GET request
 
-  Projectdialog.close();
 
     hideLoader();
     // fetchAPI();
    
-    createToast('success', 'fa-solid fa-circle-check', 'Success', 'Data has been Updated to SEO for Selected Project!');
-
+  
   } catch(error) {
     
     createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is an error while savind data to files.');
+   
     hideLoader();
   }
 } 
 
+
   //Delete Selected Project
   async function deleteProjectData(selectedRowId) {
+   
     try {
+      showLoader();
+      const jsonData = {
+        action: 'deleteProjectsData',
+        username: LoggedUsername,
+        dataItems: [
+          {
+            SheetID: selectedRowId
+          }
+        ]
+      };
 
-      console.log(apiurl)
-  
-      //Step 1 get ChainJob ID
-      const response = await fetch(`${apiurl}/data/${selectedRowId}`);
-      const data = await response.json();
-      const result = data.result;
-  
-      const Postjobids = result.chainJobId;
-  
-      console.log(Postjobids)
-  
-      //Step 2 Get BlogID
-      const response2 = await fetch(`${apiurl}/data/${Postjobids}`);
-      const data2 = await response2.json();
-      const result2 = data2.result;
-  
-      const blogsetID = Array.isArray(result2.blogIds) ? result2.blogIds.join(', ') : result2.blogIds;
+      console.table(jsonData)
     
-      console.log(blogsetID)
-  
-      // Step 3: Delete selected RowId of Creator
-      deleteSeoProjects(selectedRowId)
-  
-      // Step 4: Delete chainJobId
-      deleteSeoProjects(Postjobids)
-  
-      // Step 5: Delete blogIds
-      JSONApi(blogsetID, 'DELETE');
-  
-      // alert('Data deleted successfully');
+     let response = await fetch(seourl, {
+        method: 'POST',
+        body: JSON.stringify( jsonData ), // Include the action
+        // body: jsonData, // Include the action
+      });
+
+      const Resdata = await response.json();
+
+      console.table(Resdata);
+
+        const success = Resdata[0].success;
+        const id = selectedRowId;
+        const message = Resdata[0].message;
+
+      // Assuming you have the row index stored in selectedRowIndex
+      const table = document.getElementById('main');
+
+      if (selectedRowIndex >= 0) {
+        table.deleteRow(selectedRowIndex);
+      }
+      createToast('success', 'fa-solid fa-circle-check', 'Success', "Success: " + success + " ID: "+ id + ' Message: '+ message);
+
+
+      hideLoader();
   
     } catch (error) {
+
+      createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while deleting the Selected Project');
+      hideLoader();
+      
       // alert('Error deleting data:', error.message);
     }
   }
   
-  //Delete Selected ID Creator and Poster Project from SEO.
-  function deleteSeoProjects(deleteid) {
-    fetch(`${apiurl}/delete/${deleteid}`)
-    // alert(`Deleted ID: ` +deleteid)
-  }
   
+
   //Function to call Delete functions with related IDs
   function deleteUsingAPI(){
-   try {
-    showLoader();
-    deleteProjectData(selectedRowId);
-    createToast('success', 'fa-solid fa-circle-check', 'Success', 'Selected Project has been Deleted!');
-      //Update the Table by Data
-      // fetchAPI();
-      
-    hideLoader();
-  } catch(error) {
-    createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while deleting the Selected Project');
-    hideLoader();
-  }
+   
+    deleteProjectData(selectedRowId);      
    
   }
   
+  
   function createnewJobID() {
 
-  try {
-  showLoader();
-  // Call the function to complete all commands
-  createProjects();
+    showLoader();
 
-
-} catch(error) {
-  createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some error on the server');
-
-}
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  
+    postDateInput.value = formattedDate;
+  
+    btncreateProjectData.style.display="flex";
+   updateButton.style.display = 'none';
+   Projectdialog.showModal();
+  
+   hideLoader();
   
   }
   
   // Function to complete all commands
   async function createProjects() {
-    let settingdata;
-    try {
-      // Retrieve the file content from the API
-      const response = await fetch(`${appurl}/custom-settings`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-  
-      if (response.ok) {
-        settingdata = await response.json();
-        console.table(settingdata);
-        // Populate the input elements with the retrieved values
-      } else {
-        console.error('Error retrieving settings:', response.statusText);
-      }
-  
-      // Step 1: Create Article Creator
-      const response1 = await fetch(`${seourl}/create/articlecreator`);
-      const data1 = await response1.json();
-      console.log(data1);
-      const newArticleCreatorID = data1.result.id;
-
-      console.log('New Article Creator ID:', newArticleCreatorID);
-  
-      // Step 2: Create Post Uploader
-      const response2 = await fetch(`${seourl}/create/postuploader`);
-      const data2 = await response2.json();
-      const newPostUploaderID = data2.result.id;
-      console.log('New Post Uploader ID:', newPostUploaderID);
-  
-      // Step 3: Create new Blog
-      const response3 = await fetch(`${appurl}/data`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-  
-      const data3 = await response3.json();
-      const newBlogID = data3.id;
-      console.log('New Blog ID:', newBlogID);
-  
-      // Step 4: Update the newArticleCreatorID using POST Method
-      await fetch(`${apiurl}/data/${newArticleCreatorID}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          chainJobId: newPostUploaderID,
-          articleUseCategoryInsert:true,
-          ListofContentFilter: settingdata.ArticleCreatorSettings.ListofContentFilter,
-          URLsDownloadResultLimits: settingdata.ArticleCreatorSettings.URLsDownloadResultLimits,
-          ArticleCount: settingdata.ArticleCreatorSettings.ArticleCount,
-          InsertNoofImagesFROM: settingdata.ArticleCreatorSettings.InsertNoofImagesFROM,
-          InsertNoofImagesTO:settingdata.ArticleCreatorSettings.InsertNoofImagesTO,
-          UseImages: settingdata.ArticleCreatorSettings.UseImages,
-          UseBingImages: settingdata.ArticleCreatorSettings.UseBingImages,
-          UseYoutubeThumbnails: settingdata.ArticleCreatorSettings.UseYoutubeThumbnails,
-          UseCreativeCommonsImages: settingdata.ArticleCreatorSettings.UseCreativeCommonsImages,
-          UseBingCCImages: settingdata.ArticleCreatorSettings.UseBingCCImages,
-        })
-      });
-  
-      const currentDate = new Date();
-      const formattedDate = currentDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-  
-      // Step 5: Get SEO Path to Pass to Folderpath
-      const response4 = await fetch(`${appurl}/SEOFolderPath`);
-      const data4 = await response4.json();
-      const soefolder = data4.folderPath;
-      const folderpath = `${soefolder}\\${newArticleCreatorID}\\articles`;
-  
-      // Step 6: Update the newBlogID using POST Method
-      await fetch(`${apiurl}/data/${newPostUploaderID}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          blogIds: [newBlogID],
-          postUseToday: settingdata.PostUploaderSettings.postUseToday,
-          postStartDate: formattedDate,
-          articleFolder: folderpath,
-          articleTitle: settingdata.PostUploaderSettings.postarticleTitle,
-          postsPerDay: parseInt(settingdata.PostUploaderSettings.PostsperDay),
-          postIntervalFrom: parseInt(settingdata.PostUploaderSettings.PostIntervaldaysFROM),
-          postIntervalTo: settingdata.PostUploaderSettings.PostIntervaldaysTO,
-        })
-      });
-
       // alert('New Article Creator ID: ' + newArticleCreatorID + ' New Post Uploader ID: ' + newPostUploaderID + ' New Blog ID: ' + newBlogID);
-      hideLoader();
-
-      createToast('success', 'fa-solid fa-circle-check', 'Success', 'New Article Creator Project with ID:' + newArticleCreatorID + 'has been created,  New Post Uploader with ID: ' + newPostUploaderID + ' has been created, New Blog with ID: ' + newBlogID + ' has been created!');
-
-
-//Update the Variables to newly created Project IDs
-      selectedRowId =newArticleCreatorID;
-      jobid = newPostUploaderID;
-      blogsetID = newBlogID;
-
-      document.getElementById('main').insertRow(selectedRowIndex);
-      const table = document.getElementById('main');
-      // Create a new row element
-      const newRow = table.insertRow(2); // Index 2, meaning it will be inserted as the third row (0-indexed)
-
-      for (let i = 0; i < 11; i++) {
-        const cell = newRow.insertCell(i);
-        cell.textContent = '';
-      }
-
-      const newRowIdx = newRow.rowIndex;
-
-      selectedRowIndex=newRowIdx;
-
-      // Create cells and set their content
-      const cell1 = newRow.insertCell(0); // Index 0, first cell in the new row
-      cell1.textContent = selectedRowId;
-      const span1 = document.createElement('span');
-
-      span1.className = 'status-pill status-draft';
-      span1.textContent = 'draft';
-      newRow.cells[1].appendChild(span1);
-
-      const cell2 = newRow.insertCell(5);
-      cell2.textContent = jobid;
-
-      const span2 = document.createElement('span');
-      span2.className = 'status-pill status-draft';
-      span2.textContent = 'draft';
-      newRow.cells[8].appendChild(span2);
-
-      const cell3 = newRow.insertCell(9); // Index 2, third cell in the new row
-      cell3.textContent = blogsetID;
-
-      // document.getElementById('main').rows[rowIndex]?.cells[2]?.textContent = articleProjectName;
-
-      // Fetch data for Article Creator section
-      await fnarticleCreator(selectedRowId, 'GET'); // Make GET request
-
-      // Fetch data for Post Uploader section
-      await fnPostUploader(jobid, 'GET')
-
-      // Fetch data for Blog Setting section
-      await JSONApi(blogsetID, 'GET');
-
-      // Show the Projectdialog
-      Projectdialog.showModal();
-      // closeButton.focus();
-
-      //Update the Table by Data
-      //  fetchAPI();
-      } 
-        catch (error) {
-        console.error('Error retrieving settings:', error);
-        createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is error while fetching data from SEO Server: ' + error);
-
-}
+  showLoader();
+   await fetchDataAndHandle(null, 'ADDDATA'); // Make GET request
+     
 }
   
   
