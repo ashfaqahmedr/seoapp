@@ -103,21 +103,22 @@
   }
   
   
-  
-    
 
   /* Custom Right Click Menu CSS */
   .wrapper{
     visibility: hidden;
     position: absolute;
     width: 300px;
+    z-index: 10000;
     border-radius: 10px;
     background: #ffffffe8;
     box-shadow: 0 12px 35px rgba(0, 0, 0, 0.493);
     }
+
     .wrapper .menu{
     padding: 10px 12px;
     }
+
     .content .item{
     list-style: none;
     font-size: 22px;
@@ -169,21 +170,24 @@
 
   /* Custom Dialog CSS */
   dialog {
-    width: 98dvw;
-    height: 98dvh;
+    width: 95dvw;
+    height: 95dvh;
     background-color: rgba(168, 175, 148, 0.651);
     border-radius: 10px;
     border: 2px solid  #2885f0de;
     box-shadow: 0px 0px 15px rgba(177, 30, 235, 0.932);
     position: fixed;
-    display: block;
+    /* display: table; */
+  /* display:-moz-popup; */
+
+    /* display: ; */
       justify-content: center;
       align-items: center;
 
       /* height: 100vh;  */
 
-    /* left: 50%;
-    top: 50%; */
+    /* left: 50%; */
+    /* top: 150px; */
     /* transform: translate(-50%, -50%); */
     z-index: auto;
     /* overflow: hidden; */

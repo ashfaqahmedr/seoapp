@@ -134,7 +134,7 @@ z-index: 999;
     font-weight: bold;
     text-align: center;
     /* align-self: auto; */
-    width: 30%;
+    width: 20%;
     border-radius: 20px;
 }
 
@@ -144,13 +144,13 @@ z-index: 999;
   align-items: center;
   background-color: var(--color-default);
   color: var(--color-white);
-  padding: 10px 10px 10px 10px;
+  padding: 5px 5px 5px 5px;
   font-weight: bold;
   text-align: center;
   outline: none;
   text-decoration: none;
   /* align-self: auto; */
-  width: 200px;
+  width: auto;
   cursor: pointer;
   /* border: 3px solid var(--color-white); */
   border: none;
@@ -159,12 +159,12 @@ z-index: 999;
 
 .New-Buton > i{
   
-  padding: 10px 10px 10px 10px;
+  padding: 5px 5px 5px 5px;
   
 }
 
 .New-Buton:hover {
-scale: 1.025;
+/* scale: 1.025; */
 background-color: var(--color-default);
 color: var(--color-white);
 border: none;
@@ -173,7 +173,7 @@ border: none;
 
 
 .table__header .input-group {
-    width: 35%;
+    width: 15%;
     height: 100%;
     background-color: #fff5;
     padding: 0 .8rem;
@@ -182,17 +182,15 @@ border: none;
     justify-content: center;
     align-items: center;
     transition: .2s;
-    
 }
 
 .table__header .input-group:hover {
-    width: 45%;
+  width: 16%;
     background-color: #fff8;
     box-shadow: 0 .1rem .4rem #0002;
 }
 
 .table__header .input-group input {
-    width: 100%;
     padding: 0 .5rem 0 .3rem;
     background-color: transparent;
     border: none;
@@ -486,7 +484,7 @@ thead th.active,tbody td.active {
   border-color: #006b22b6;
 }
 
-.datalist-popout {
+/* .datalist-popout {
   position: absolute;
   top: 100%;
   left: 0;
@@ -500,4 +498,4 @@ thead th.active,tbody td.active {
 
 .datalist-popout {
   display: block;
-}
+} */

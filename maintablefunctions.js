@@ -907,70 +907,30 @@ await fetchDataAndHandle(selectedRowId, 'POSTDATA'); // Make GET request
      
 }
   
-  
- //custom Right Click Menu
-function enableCustomContextMenu(tableSelector, menuSelector) {
-  const contextMenu = document.querySelector(menuSelector);
-  const table = document.querySelector(tableSelector);
 
-  table.addEventListener("contextmenu", e => {
-    const target = e.target;
-    // if (target.tagName === "TD" && target.cellIndex === 0) {
-    if (target.tagName === "TD") {
-      
-      e.preventDefault();
 
-      const row = target.parentNode;
-      selectedRowId = target.textContent.trim();
-
-       // Get the row index number
-    selectedRowIndex = row.rowIndex;
-    
-      console.log("First TD Text:", selectedRowId);
-      console.log("Row Index Number:", selectedRowIndex );
-      
-      const mousePosX = e.pageX;
-      const mousePosY = e.pageY;
-      const menuWidth = contextMenu.offsetWidth;
-      const menuHeight = contextMenu.offsetHeight;
-
-      const windowWidth = window.innerWidth;
-      const windowHeight = window.innerHeight;
-
-      const maxMenuPosX = windowWidth - menuWidth;
-      const maxMenuPosY = windowHeight - menuHeight;
-
-      const menuPosX = Math.min(mousePosX, maxMenuPosX);
-      const menuPosY = Math.min(mousePosY, maxMenuPosY);
-
-      contextMenu.style.left = `${menuPosX}px`;
-      contextMenu.style.top = `${menuPosY}px`;
-      contextMenu.style.visibility = "visible";
-    } else {
-      contextMenu.style.visibility = "hidden";
-    }
-  });
-
-  document.addEventListener("click", () => {
-    contextMenu.style.visibility = "hidden";
-  });
-
-}
-
-const filedialog = document.getElementById('fileDialog');
 
 function openSettingDialog() {
     // Show the Projectdialog
     showLoader();
  
-    filedialog.showModal();
-    populateSettingsDialog();
+    getandUpdateProjectSetting("GETDATA");
  
-    this.classList.remove('active');
-
     }
 
-//custom settings 
+  async function UpdateCustomSettig() {
+    showLoader();
+  await getandUpdateProjectSetting("UPDATEDATA"); 
+  
+  }
+
+
+// Function to populate the dialog with retrieved settings data
+async function getandUpdateProjectSetting(METHOD) {
+
+  const filedialog = document.getElementById('fileDialog');
+  //custom settings 
+const sheetIDInput = document.getElementById('sheetID');
 const listofContentFilterInput = document.getElementById('listofContentFilter');
 const urlsDownloadResultLimitsInput = document.getElementById('urlsDownloadResultLimits');
 const articleCountInput = document.getElementById('articleCount');
@@ -978,150 +938,302 @@ const insertNoofImagesFROMInput = document.getElementById('insertNoofImagesFROM'
 const insertNoofImagesTOInput = document.getElementById('insertNoofImagesTO');
 const articleUseCategoryInsertInput = document.getElementById('articleUseCategoryInsert');
 const useImagesInput = document.getElementById('useImages');
+const imageInserTypeInput = document.getElementById('imageInserType');
+const InsertAtStartOfBodyInput = document.getElementById('InsertAtStartOfBody');
 const useBingImagesInput = document.getElementById('useBingImages');
 const useYoutubeThumbnailsInput = document.getElementById('useYoutubeThumbnails');
 const useCreativeCommonsImagesInput = document.getElementById('useCreativeCommonsImages');
 const useBingCCImagesInput = document.getElementById('useBingCCImages');
+const postUseTodayInput = document.getElementById('postUseToday');
 const postsperDayInput = document.getElementById('postsperDay');
 const postIntervaldaysFROMInput = document.getElementById('postIntervaldaysFROM');
 const postIntervaldaysTOInput = document.getElementById('postIntervaldaysTO');
 const postarticleTitleInput = document.getElementById('postarticleTitle');
-const postUseTodayInput = document.getElementById('postUseToday');
+const seoStatusInput = document.getElementById('seoStatus');
 
 
-// Function to populate the dialog with retrieved settings data
-async function populateSettingsDialog() {
-  try {
-    // Retrieve the file content from the API
-    const response = await fetch(`${appurl}/custom-settings`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
+  if (METHOD==="GETDATA") {
+   
+    try {  
+      const response = await fetch(seourl, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'getProjectSettings', username: LoggedUsername }), // Include the action
     });
 
     if (response.ok) {
       const data = await response.json();
 
       // Populate the input elements with the retrieved values
-      listofContentFilterInput.value = data.ArticleCreatorSettings.ListofContentFilter.join(', ');
-      urlsDownloadResultLimitsInput.value = data.ArticleCreatorSettings.URLsDownloadResultLimits;
-      articleCountInput.value = data.ArticleCreatorSettings.ArticleCount;
-      insertNoofImagesFROMInput.value = data.ArticleCreatorSettings.InsertNoofImagesFROM;
-      insertNoofImagesTOInput.value = data.ArticleCreatorSettings.InsertNoofImagesTO;
-      articleUseCategoryInsert.checked = data.ArticleCreatorSettings.articleUseCategoryInsert;
-      useImagesInput.checked = data.ArticleCreatorSettings.UseImages;
-      useBingImagesInput.checked = data.ArticleCreatorSettings.UseBingImages;
-      useYoutubeThumbnailsInput.checked = data.ArticleCreatorSettings.UseYoutubeThumbnails;
-      useCreativeCommonsImagesInput.checked = data.ArticleCreatorSettings.UseCreativeCommonsImages;
-      useBingCCImagesInput.checked = data.ArticleCreatorSettings.UseBingCCImages;
-      postUseTodayInput.checked = data.PostUploaderSettings.postUseToday;
-      postsperDayInput.value = data.PostUploaderSettings.PostsperDay;
-      postIntervaldaysFROMInput.value = data.PostUploaderSettings.PostIntervaldaysFROM;
-      postIntervaldaysTOInput.value = data.PostUploaderSettings.PostIntervaldaysTO;
-      postarticleTitleInput.value = data.PostUploaderSettings.postarticleTitle;
+      sheetIDInput.value = data[0].sheetID;
+      listofContentFilterInput.value = data[0].ListofContentFilter;
+      urlsDownloadResultLimitsInput.value = data[0].URLsDownloadResultLimits;
+      articleCountInput.value = data[0].ArticleCount;
+      insertNoofImagesFROMInput.value = data[0].InsertNoofImagesFROM;
+      insertNoofImagesTOInput.value = data[0].InsertNoofImagesTO;
+      articleUseCategoryInsertInput.checked = data[0].articleUseCategoryInsert;
+      useImagesInput.checked = data[0].UseImages;
+      imageInserTypeInput.value = data[0].InsertType;
+      InsertAtStartOfBodyInput.checked = data[0].InsertAtStartOfBody;
+      useBingImagesInput.checked = data[0].UseBingImages;
+      useYoutubeThumbnailsInput.checked = data[0].UseYoutubeThumbnails;
+      useCreativeCommonsImagesInput.checked = data[0].UseCreativeCommonsImages;
+      useBingCCImagesInput.checked = data[0].UseBingCCImages;
+      postUseTodayInput.checked = data[0].postUseToday;
+      postsperDayInput.value = data[0].PostsperDay;
+      postIntervaldaysFROMInput.value = data[0].PostIntervaldaysFROM;
+      postIntervaldaysTOInput.value = data[0].PostIntervaldaysTO;
+      postarticleTitleInput.value = data[0].postarticleTitle;
+      seoStatusInput.value = data[0].SEOStatus;
  
       hideLoader();
       createToast('success', 'fa-solid fa-circle-check', 'Success', 'Settings has been loaded!');
-   
-    } else {
-      console.error('Error retrieving settings:', response.statusText);
-      hideLoader();
-      createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Error retrieving settings: ' + response.statusText);
-    }
-  } catch (error) {
-    console.error('Error retrieving settings:', error);
-    createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Error retrieving settings: ' + response.statusText);
-    hideLoader();
-  }
-}
+      filedialog.showModal();
+    
+        }  else {
+          console.error('Error retrieving settings:');
+          hideLoader();
+          createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Error retrieving settings: ' + error);
+      }
+        } catch (error) {
+          console.error('Error retrieving settings:', error);
+          createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Error retrieving settings: ' + error);
+          hideLoader();
+        }
+      }
 
-async function UpdateCustomSettig() {
-  showLoader();
-await updateSettings(); 
-
-}
-// Function to update the settings
-
-async function updateSettings() {
+  if (METHOD==="UPDATEDATA") {
   try {
     
-    // Get the values from the input elements
-    const listofContentFilter = listofContentFilterInput.value;
-    const urlsDownloadResultLimits = parseInt(urlsDownloadResultLimitsInput.value);
-    const articleCount = parseInt(articleCountInput.value);
-    const insertNoofImagesFROM = parseInt(insertNoofImagesFROMInput.value);
-    const insertNoofImagesTO = parseInt(insertNoofImagesTOInput.value);
-    const articleUseCategoryInsert = articleUseCategoryInsertInput.checked;
-    const useImages = useImagesInput.checked;
-    const useBingImages = useBingImagesInput.checked;
-    const useYoutubeThumbnails = useYoutubeThumbnailsInput.checked;
-    const useCreativeCommonsImages = useCreativeCommonsImagesInput.checked;
-    const useBingCCImages = useBingCCImagesInput.checked;
-    const postsperDay = parseInt(postsperDayInput.value);
-    const postIntervaldaysFROM = parseInt(postIntervaldaysFROMInput.value);
-    const postIntervaldaysTO = parseInt(postIntervaldaysTOInput.value);
-    const postarticleTitle = postarticleTitleInput.value;
-    const postUseToday = postUseTodayInput.checked;
-
-    // Create the updated settings object
-    const updatedSettings = {
-      "ArticleCreatorSettings": {
-        "ListofContentFilter": listofContentFilter.split(',').map(value => value.trim()),
-        "URLsDownloadResultLimits": urlsDownloadResultLimits,
-        "ArticleCount": articleCount,
-        "InsertNoofImagesFROM": insertNoofImagesFROM,
-        "InsertNoofImagesTO": insertNoofImagesTO,
-        "articleUseCategoryInsert":articleUseCategoryInsert,
-        "UseImages": useImages,
-        "UseBingImages": useBingImages,
-        "UseYoutubeThumbnails": useYoutubeThumbnails,
-        "UseCreativeCommonsImages": useCreativeCommonsImages,
-        "UseBingCCImages": useBingCCImages
-      },
-      "PostUploaderSettings": {
-        "postUseToday": postUseToday,
-        "PostsperDay": postsperDay,
-        "PostIntervaldaysFROM": postIntervaldaysFROM,
-        "PostIntervaldaysTO": postIntervaldaysTO,
-        "postarticleTitle": postarticleTitle
+    const jsonData = {
+      action: 'updatesettingData',
+      username: LoggedUsername,
+      dataItems: [
+        {
+         "SheetID": sheetIDInput.value,
+        "ListofContentFilter": listofContentFilterInput.value,
+        "URLsDownloadResultLimits": parseInt(urlsDownloadResultLimitsInput.value),
+        "ArticleCount": parseInt(urlsDownloadResultLimitsInput.value),
+        "InsertNoofImagesFROM":  parseInt(insertNoofImagesFROMInput.value),
+        "InsertNoofImagesTO": parseInt(insertNoofImagesTOInput.value),
+        "articleUseCategoryInsert":articleUseCategoryInsertInput.checked,
+        "UseImages": useImagesInput.checked,
+        "InsertType": imageInserTypeInput.value,
+        "InsertAtStartOfBody": InsertAtStartOfBodyInput.checked,
+        "UseBingImages": useImagesInput.checked,
+        "UseYoutubeThumbnails": useYoutubeThumbnailsInput.checked,
+        "UseCreativeCommonsImages": useCreativeCommonsImagesInput.checked,
+        "UseBingCCImages": useBingCCImagesInput.checked,
+        "postUseToday": postUseTodayInput.checked,
+        "PostsperDay": parseInt(postsperDayInput.value),
+        "PostIntervaldaysFROM": parseInt(postIntervaldaysFROMInput.value),
+        "PostIntervaldaysTO": parseInt(postIntervaldaysTOInput.value),
+        "postarticleTitle": postarticleTitleInput.value,
+        "SEOStatus": "pending"
       }
-    };
+    ]
+  };
+
+  console.table(jsonData)
 
     // Send the updated settings to the server
-    const response = await fetch(`${appurl}/custom-settings`, {
+    const response = await fetch(seourl, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(updatedSettings)
+      body: JSON.stringify(jsonData), // Include the action
     });
 
     if (response.ok) {
-    
-      createToast('success', 'fa-solid fa-circle-check', 'Success', 'Settings has been Saved!');
-      filedialog.close()
 
-      hideLoader();
-      
-    } else {
-      createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Error retrieving settings: ' + response.statusText);
+      const Resdata = await response.json();
+
+      console.table(Resdata);
+
+        const success = Resdata[0].success;
+        const id =  Resdata[0].SheetID;
+        const message = Resdata[0].message;
+
+      createToast('success', 'fa-solid fa-circle-check', 'Success', "Success: " + success + " <br> ID: "+ id + ' <br> Message: '+ message);
       filedialog.close()
       hideLoader();
     }
-  } catch (error) {
-
-    filedialog.close()
-
-    createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Error retrieving settings: ' + response.statusText);
-
-    filedialog.close()
-    hideLoader();
-           
   }
+ 
+     catch (error) {
+
+      createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while Updating the Project Setting' +error);
+      hideLoader();
+      filedialog.close()
+    } 
+  }
+}
+
+
+function getSelectedUserDialog() {
+  // Show the Projectdialog
+  showLoader();
+
+  getandAddUsers("GETDATA");
+
+  }
+
+async function updateSelectedUserDialog() {
+  showLoader();
+await getandAddUsers("UPDATEDATA"); 
 
 }
 
+
+// Function to populate the dialog with retrieved settings data
+async function getandAddUsers(METHOD) {
+
+const filedialog = document.getElementById('userDialog');
+//custom settings 
+const sheetIDInput = document.getElementById('usersheetID');
+const userFullInputInput = document.getElementById('userFullInput');
+const usernameInputInput = document.getElementById('usernameInput');
+const passwordInputInput = document.getElementById('passwordInput');
+const timeCountInput = document.getElementById('timeCount');
+const userTypeInput = document.getElementById('userType');
+const seoStatusinputInput = document.getElementById('seoStatusinput');
+
+if (METHOD==="GETDATA") {
+ 
+  try {  
+    const response = await fetch(seourl, {
+    method: 'POST',
+    body: JSON.stringify({ action: 'getUsers', dataId: sheetIDInput.value, username: LoggedUsername }), // Include the action
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+
+    // Populate the input elements with the retrieved values
+    sheetIDInput.value = data[0].SheetID;
+    userFullInputInput.value = data[0].FullName;
+    usernameInputInput.value = data[0].userName;
+    passwordInputInput.value = data[0].Password;
+    timeCountInput.value = data[0].TimeOutMinute;
+    userTypeInput.value = data[0].Type;
+    seoStatusinputInput.value = data[0].SEOStatus;
+
+    hideLoader();
+    createToast('success', 'fa-solid fa-circle-check', 'Success', 'Settings has been loaded!');
+    filedialog.showModal();
+  
+      }  else {
+        console.error('Error retrieving settings:');
+        hideLoader();
+        createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Error retrieving settings: ' + error);
+    }
+      } catch (error) {
+        console.error('Error retrieving settings:', error);
+        createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Error retrieving settings: ' + error);
+        hideLoader();
+      }
+    }
+
+    if (METHOD==="ADDDATA") {
+      try {
+        
+        const jsonData = {
+          action: 'addUsersData',
+          username: LoggedUsername,
+          dataItems: [
+            {
+             "SheetID": "",
+            "Type": userTypeInput.value,
+            "TimeOutMinute": parseInt(timeCountInput.value),
+            "userName": parseInt(usernameInputInput.value),
+            "Password":  parseInt(passwordInputInput.value),
+            "FullName":  userFullInputInput.value,
+            "SEOStatus": "pending"
+          }
+        ]
+      };
+      
+      console.table(jsonData)
+      
+        // Send the updated settings to the server
+        const response = await fetch(seourl, {
+          method: 'POST',
+          body: JSON.stringify(jsonData), // Include the action
+        });
+      
+        if (response.ok) {
+      
+          const Resdata = await response.json();
+      
+          console.table(Resdata);
+      
+            const success = Resdata[0].success;
+            const id =  Resdata[0].SheetID;
+            const message = Resdata[0].message;
+      
+          createToast('success', 'fa-solid fa-circle-check', 'Success', "Success: " + success + " <br> ID: "+ id + ' <br> Message: '+ message);
+          filedialog.close()
+          hideLoader();
+        }
+      }
+      
+         catch (error) {
+      
+          createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while Updating the Project Setting' +error);
+          hideLoader();
+          filedialog.close()
+        } 
+      }
+
+if (METHOD==="UPDATEDATA") {
+try {
+  
+  const jsonData = {
+    action: 'updateUsersData',
+    username: LoggedUsername,
+    dataItems: [
+      {
+       "SheetID": sheetIDInput.value,
+      "Type": userTypeInput.value,
+      "TimeOutMinute": parseInt(timeCountInput.value),
+      "userName": parseInt(usernameInputInput.value),
+      "Password":  parseInt(passwordInputInput.value),
+      "FullName":  userFullInputInput.value,
+      "SEOStatus": "pending"
+    }
+  ]
+};
+
+console.table(jsonData)
+
+  // Send the updated settings to the server
+  const response = await fetch(seourl, {
+    method: 'POST',
+    body: JSON.stringify(jsonData), // Include the action
+  });
+
+  if (response.ok) {
+
+    const Resdata = await response.json();
+
+    console.table(Resdata);
+
+      const success = Resdata[0].success;
+      const id =  Resdata[0].SheetID;
+      const message = Resdata[0].message;
+
+    createToast('success', 'fa-solid fa-circle-check', 'Success', "Success: " + success + " <br> ID: "+ id + ' <br> Message: '+ message);
+    filedialog.close()
+    hideLoader();
+  }
+}
+
+   catch (error) {
+
+    createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while Updating the Project Setting' +error);
+    hideLoader();
+    filedialog.close()
+  } 
+}
+}
+// Function to update the settings
 
 // Function to close the dialog
 function closeDialog(dialogname) {
@@ -1130,669 +1242,6 @@ function closeDialog(dialogname) {
   hideLoader();
 // Event listeners
 }
-
-
-// Define arrays to store project data and notifications
-let projectWatchlist = [];
-let notificationList = [];
-
-
-// Function to run project by ID and show loader while running
-async function runProjectById() {
-  showLoader();
-  await startMonitoringProject(selectedRowId);
-  hideLoader();
-}
-
-
-// Function to run a project by its ID
-const runProject = async (projectId) => {
-  const response = await fetch(`${seourl}/project/run/${projectId}`);
-  const data = await response.json();
-  hideLoader();
-  return data.success;
-};
-
-// Function to fetch all projects by status
-const fetchProjectsbyStatus = async (status) => {
-  const response = await fetch(`${seourl}/all-projects?status=${status}`);
-  const data = await response.json();
-  return data.result.map(project => ({
-    id: project.id,
-    name: project.name,
-    type: project.type,
-    status: project.status
-  }));
-}
-
-// Function to fetch all project data
-const fetchAllProjectData = async () => {
-  const runningProjects = await fetchProjectsbyStatus('running');
-  const waitingProjects = await fetchProjectsbyStatus('waiting');
-
-  return { runningProjects, waitingProjects };
-};
-
-// Function to get current status of a project by its ID and update the watchlist
-const getProjectStatus = async (projectId) => {
-
-  try {
-    const response = await fetch(`${seourl}/project/status/${projectId}`);
-    const data = await response.json();
-
-    const currentStatus = data.result[0].status;
-    const existingProjectIndex = projectWatchlist.findIndex(project => project.id === projectId);
-
-    if (existingProjectIndex !== -1) {
-      // Update the existing project's data in the watchlist
-      projectWatchlist[existingProjectIndex] = {
-        ...projectWatchlist[existingProjectIndex], // Preserve existing properties
-        status: currentStatus, // Update the status
-        name: data.result[0].name, // Add project name to the watchlist
-        type: data.result[0].type, // Add project type to the watchlist
-      };
-    } else {
-      // If the project doesn't exist in the watchlist, add it along with its name and type information
-      const newProjectData = {
-        id: projectId,
-        name: data.result[0].name, // Add project name to the watchlist
-        type: data.result[0].type, // Add project type to the watchlist
-        status: currentStatus,
-      };
-      projectWatchlist.push(newProjectData);
-
-      const existingProjectNoteIndex = notificationList.findIndex(project => project.id === projectId);
-
-      if (existingProjectNoteIndex !== -1) {
-        // Update the existing project's data in the watchlist
-        projectWatchlist[existingProjectNoteIndex] = {
-          ...projectWatchlist[existingProjectNoteIndex], // Preserve existing properties
-          status: currentStatus, // Update the status
-          name: data.result[0].name, // Add project name to the watchlist
-          type: data.result[0].type, // Add project type to the watchlist
-        };
-      
-      } else {
-        // If the project doesn't exist in the watchlist, add it along with its name and type information
-        const newProjectData = {
-          id: projectId,
-          name: data.result[0].name, // Add project name to the watchlist
-          type: data.result[0].type, // Add project type to the watchlist
-          status: currentStatus,
-        };
-        projectWatchlist.push(newProjectData);
-      } 
-  
-    } 
-    
-         // Call the createNotification function with the updated watchlist
-         createNotification(notificationList);
-
-    return {
-      status: currentStatus,
-      name: data.result[0].name,
-      type: data.result[0].type,
-    };
-
-  } catch (error) {
-    console.error('Error fetching project status:', error);
-    return {
-      status: 'unknown', // Return 'unknown' status if there's an error
-      name: '',
-      type: '',
-    };
-  }
-};
-
-
-// Function to get current status of a project by its ID and update the watchlist
-const currentProjectStatus = async (projectId) => {
-
-  try {
-    const response = await fetch(`${seourl}/project/status/${projectId}`);
-    const data = await response.json();
-    const currentStatus = data.result[0].status;
-  
-    return currentStatus
-
-  } catch (error) {
-    console.error('Error fetching project status:'+projectId , error);
-    return 'unknown'
-      
-  }
-};
-
-// Function to start monitoring a project
-const startMonitoring = () => {
-  monitorAllProjectsAndCreateNotification(); // Monitor projects every minute
-};
-
-
-// Function to open the dialog
-function openDialog() {
-  openConfrimDialog('confrimDialog','Confirm Re-Run the Project?','Do you want to Re-Run the Completed Project again?')
-     
-}
-
-function openConfrimDialog(dialogId, titleHeader, confirmMessage) {
-  return new Promise((resolve, reject) => {
-    const confrimdialog = document.getElementById(dialogId);
-    const dialogTitleelement = document.getElementById('dialogHeader');
-    const confirmMessageelement = document.getElementById('confirmMessage');  
-    // const confirmIcon = document.getElementById('confirmIcon').className=`fas fa${confirmIconClass}`;
-
-    dialogTitleelement.textContent = titleHeader;
-    confirmMessageelement.textContent = confirmMessage;
-    // confirmIcon.className = `fas ${confirmIconClass}`;
-    
-    // Event listener for the confirm button
-    document.getElementById('confirmButton').addEventListener('click', function() {
-      resolve(true); // Resolve the promise with true when confirm button is clicked
-      closeDialog(dialogId);
-    });
-
-    // Event listener for the cancel button
-    document.getElementById('cancelButton').addEventListener('click', function() {
-      resolve(false); // Resolve the promise with false when cancel button is clicked
-      closeDialog(dialogId);
-    });
-
-    confrimdialog.showModal();
-  });
-}
-
-// JavaScript
-let tablerowIndex;
-let statusCellIndex;
-
-let tableRowIndex;
-let projectColumnIndex;
-
-function findRowIndexAndStatusCellIndex(projectId, projectType) {
-
-  const tableMain = document.getElementById('main');
-  let columnIndex;
-
-  if (projectType === 'article creator') {
-    columnIndex = 0;
-  } else if (projectType === 'post uploader') {
-    columnIndex = 5;
-  } else {
-    return;
-  }
-
-  console.log('columnIndex Index is: ' + columnIndex);
-
-  tableRowIndex = -1;
-
-  for (const rowtoFind of tableMain.tBodies[0].rows) {
-    const cellValue = rowtoFind.cells[columnIndex].textContent.trim();
-    if (cellValue === projectId) {
-      tableRowIndex = rowtoFind.rowIndex;
-      console.log('Row Index is: ' + tableRowIndex);
-      break;
-    }
-  }
-
-  if (tableRowIndex === -1) {
-    console.error('Project ID not found in the table:', projectId);
-    return;
-  }
-
-  if (projectType === 'article creator') {
-    projectColumnIndex = 1;
-  } else {
-    projectColumnIndex = 8;
-  }
-
-  console.log('projectColumnIndex Index is: ' + projectColumnIndex);
-}
-
-function updateStatusAndApplyClasses(newStatus) {
-  if (tableRowIndex === -1 || projectColumnIndex === -1) {
-    console.error('Row index or status cell index is invalid. Please call findRowIndexAndStatusCellIndex first.');
-    return;
-  }
-
-  // Remove trailing "..." from the status
-  const cleanedStatus = removeTrailingDots(newStatus);
-  tableRowIndex=tableRowIndex-1
-  const tableMain = document.getElementById('main');
-  const rowtoFind = tableMain.tBodies[0].rows[tableRowIndex];
-  const statusCell = rowtoFind.cells[projectColumnIndex];
-
-  let spanElement = statusCell.querySelector('.status-pill');
-
-  spanElement.textContent = newStatus;
-  spanElement.classList.add(`status-${cleanedStatus.toLowerCase()}`);
-  addStatusUpdatedClass(rowtoFind);
-}
-
-// Function to add the status-updated class and trigger the animation
-function addStatusUpdatedClass(rowtoFind) {
-  rowtoFind.classList.add('status-row');
-  // Remove the class and reapply it after a short delay (10ms)
-  setTimeout(() => {
-    rowtoFind.classList.remove('status-row');
-    void rowtoFind.offsetWidth; // Trigger reflow (optional)
-    // row.classList.add('status-row');
-  }, 3000);
-}
-
-
-//  Function to remove trailing "..." from a status
-const removeTrailingDots = (status) => {
-  return status.replace(/\.\.\.$/, '');
-};
-
-
-
-//Function to Run a project Bases on Project Status.
-
-async function startMonitoringProject (projectToRun)  {
-
-  let selectedProjectId=projectToRun.trim();
-
-  // Check if the selected project is already in the watchlist
-  // const existingProject = projectWatchlist.find(project => project.id === selectedProjectId);
-
-  let articleCreatorName =null
-  let articleCreatorType =null
-  let articleCreatorStatus =null
-
-  let postUploaderName = null
-  let postUploaderType = null
-  let postUploaderStatus = null
-
-
-    const selectedProjectData = await getProjectStatus(selectedProjectId);
-    articleCreatorName = selectedProjectData.name;
-    articleCreatorType = selectedProjectData.type;
-    articleCreatorStatus = selectedProjectData.status;
-
-    if (articleCreatorStatus === 'waiting' || articleCreatorStatus === 'running') {
-      createToast(
-        'info',
-        'fa-solid fa-info-circle',
-        'Info',
-        `Project ID: ${selectedProjectId}\nProject Name: ${articleCreatorName}\nType: ${articleCreatorType}\nis already being monitored.\nCurrent Status is: ${articleCreatorStatus}`
-      );
-      return;
-    }
-
-    if (articleCreatorStatus !== 'complete') {
-      // If the project status is not complete, run the project and add it to the watchlist with status 'waiting'
-      const success = await runProject(selectedProjectId);
-
-      if (success) {
-        // Add the project to the watchlist with status 'waiting'
-        projectWatchlist.push({
-          id: selectedProjectId,
-          name: articleCreatorName,
-          type: articleCreatorType,
-          status: 'waiting',
-        });
-
-         // Add the project to the watchlist with status 'waiting'
-         notificationList.push({
-          id: selectedProjectId,
-          name: articleCreatorName,
-          type: articleCreatorType,
-          status: 'waiting',
-        });
-
-
-        createToast(
-          'info',
-          'fa-solid fa-info-circle',
-          'Info',
-          `Project ID: ${selectedProjectId}\nProject Name: ${articleCreatorName}\nType: ${articleCreatorType}\nis already being monitored.\nCurrent Status is: waiting`
-        );
-       
-        createNotification(notificationList);
-
-        monitorProjects([{ id: selectedProjectId }]);
-
-        }
-    } 
-
-    if (articleCreatorStatus === 'complete') {
-      const response = await fetch(`${apiurl}/data/${selectedProjectId}`);
-      const data = await response.json();
-      const chainJobId = data.result.chainJobId.trim();
-     
-       // Check if the post uploader project already exists in the watchlist
-      //  const existingPostUploaderProject = projectWatchlist.find(project => project.id === chainJobId);
-        
-      if (chainJobId) {
-        
-        // Get the status, name, and type of the post uploader project using the getProjectStatus API call
-        const postUploaderData = await getProjectStatus(chainJobId);
-        postUploaderName = postUploaderData.name;
-        postUploaderType = postUploaderData.type;
-        postUploaderStatus = postUploaderData.status;
-
-        if (postUploaderStatus === 'waiting' || postUploaderStatus === 'running') {
-          createToast(
-            'info',
-            'fa-solid fa-info-circle',
-            'Info',
-            `Project ID: ${chainJobId}\nProject Name: ${postUploaderName}\nType: ${postUploaderType}\nis already being monitored.\nCurrent Status is: ${postUploaderStatus}`
-          );
-          return;
-        }
-
-        
-          if (postUploaderStatus !== 'complete')  {
-
-            // If the post uploader project is not complete, run it and add it to the watchlist with status 'waiting'
-            const success = await runProject(chainJobId);
-      
-            if (success) {
-              // If the post uploader project doesn't exist in the watchlist, add it along with its name and type information
-
-                projectWatchlist.push({
-                  id: chainJobId,
-                  name: postUploaderName,
-                  type: postUploaderType,
-                  status: 'waiting',
-                });
-
-                notificationList.push({
-                  id: chainJobId,
-                  name: postUploaderName,
-                  type: postUploaderType,
-                  status: 'waiting',
-                });
-      
-                createToast(
-                  'info',
-                  'fa-solid fa-info-circle',
-                  'Info',
-                  `Project ID: ${chainJobId}\nProject Name: ${postUploaderName}\nType: ${postUploaderType}\nis already being monitored.\nCurrent Status is: waiting}`
-                );
-
-                
-                createNotification(notificationList);
-              
-                monitorProjects([{ id: chainJobId }]);
-               
-            }
-          }
-
-          if (postUploaderStatus === 'complete') {
-       
-            hideLoader();
-
-            const confirmDialogUse = await openConfrimDialog('confrimDialog', 'Confirm Re-Run the Project?', 'Do you want to Re-Run the Completed Project again?');
-
-            if (confirmDialogUse) { 
-
-              showLoader();
-
-              // Run the article creator project again and add it to the watchlist with status 'waiting'
-                     
-                  // If the project status is not complete, run the project and add it to the watchlist with status 'waiting'
-                  const success = await runProject(selectedProjectId);
-            
-                  if (success) {
-                  //   // Add the project to the watchlist with status 'waiting'
-                    projectWatchlist.push({
-                      id: selectedProjectId,
-                      name: articleCreatorName,
-                      type: articleCreatorType,
-                      status: 'waiting',
-                    });
-                  
-                    // Add the project to the watchlist with status 'waiting'
-                  notificationList.push({
-                    id: selectedProjectId,
-                    name: articleCreatorName,
-                    type: articleCreatorType,
-                    status: 'waiting',
-                  });
-
-                  createToast(
-                    'info',
-                    'fa-solid fa-info-circle',
-                    'Info',
-                    `Project ID: ${selectedProjectId}\nProject Name: ${articleCreatorName}\nType: ${articleCreatorType}\nis already being monitored.\nCurrent Status is: waiting`
-                  );
-                  createNotification(notificationList);
-                  monitorProjects([{ id: chainJobId }]);  
-                 
-                }
-            }
-            else {
-              return;
-            }
-
-          } 
-
-      }  
-
-  }
-
-}
-
-// Function to monitor a list of projects' status and update the watchlist
-const monitorProjects = async (projects) => {
-  const statusArray = ['complete', 'failed', 'aborted', ''];
-
-  const monitoredProjects = [];
-
-  for (const projectData of projects) {
-    const { id: projectId, name: projectName, type: projectType } = projectData;
-
-    let currentStatus = await currentProjectStatus(projectId);
-
-    const existingProjectIndex = projectWatchlist.findIndex(
-      (proj) => proj.id.trim() === projectId
-    );
-
-    if (existingProjectIndex === -1) {
-      projectWatchlist.push({
-        id: projectId,
-        name: projectName,
-        type: projectType,
-        status: 'waiting',
-      });
-    }
-
-    const existingNotificationIndex = notificationList.findIndex(
-      (proj) => proj.id.trim() === projectId
-    );
-
-    if (existingNotificationIndex === -1) {
-      notificationList.push({
-        id: projectId,
-        name: projectName,
-        type: projectType,
-        status: 'waiting',
-      });
-    }
-
-
-    while (!statusArray.includes(currentStatus)) {
-      await new Promise((resolve) => setTimeout(resolve, 10000));
-      currentStatus = await currentProjectStatus(projectId);
-
-      if (existingProjectIndex !== -1) {
-        projectWatchlist[existingProjectIndex].status = currentStatus;
-
-        console.log(`Project with ID ${projectId} status is: ${currentStatus}`);
-
-        if (currentStatus === 'aborted' || currentStatus === 'failed' || currentStatus === '') {
-          createToast(
-            currentStatus === 'complete' ? 'success' : 'warning',
-            currentStatus === 'complete' ? 'fa-solid fa-check-circle' : 'fa-solid fa-exclamation-triangle',
-            currentStatus === 'complete' ? 'Success' : 'Warning',
-            `Project with name "${projectName}", id: "${projectId}", type: "${projectType}" has been ${currentStatus} on SEO App.`
-          );
-          projectWatchlist.splice(existingProjectIndex, 1);
-          break;
-        }
-      }
-
-      if (currentStatus === 'aborting...') {
-        createToast(
-          'warning',
-          'fa-solid fa-exclamation-triangle',
-          'Warning',
-          `Project with name "${projectName}", id: "${projectId}", type: "${projectType}" has been ${currentStatus} on SEO App.`
-        );
-      }
-
-      const existingNotificationIndex = notificationList.findIndex((proj) => proj.id === projectId);
-
-      if (existingNotificationIndex !== -1) {
-        notificationList[existingNotificationIndex].status = currentStatus;
-        findRowIndexAndStatusCellIndex(projectId, projectType);
-        updateStatusAndApplyClasses(currentStatus);
-        createNotification(notificationList);
-      }
-    }
-
-    if (currentStatus === 'complete' && projectType === 'article creator') {
-      if (existingNotificationIndex !== -1) {
-        notificationList[existingNotificationIndex].status = currentStatus;
-      }
-
-      findRowIndexAndStatusCellIndex(projectId, projectType);
-      updateStatusAndApplyClasses(currentStatus);
-      createNotification(notificationList);
-
-      createToast(
-        currentStatus === 'complete' ? 'success' : 'warning',
-        currentStatus === 'complete' ? 'fa-solid fa-check-circle' : 'fa-solid fa-exclamation-triangle',
-        currentStatus === 'complete' ? 'Success' : 'Warning',
-        `Project with name "${projectName}", id: "${projectId}", type: "${projectType}" has been ${currentStatus} on SEO App.`
-      );
-
-      projectWatchlist.splice(existingProjectIndex, 1);
-
-      const response = await fetch(`${apiurl}/data/${projectId}`);
-      const data = await response.json();
-      const postUploaderId = data.result.chainJobId;
-
-      if (postUploaderId) {
-        let tries = 0;
-        let postUploaderStatus = await currentProjectStatus(postUploaderId);
-
-        while (postUploaderStatus !== 'running' && tries < 3) {
-          await new Promise((resolve) => setTimeout(resolve, 10000));
-          const success = await runProject(postUploaderId);
-          tries++;
-          postUploaderStatus = await currentProjectStatus(postUploaderId);
-        }
-
-        if (postUploaderStatus === 'running') {
-          const postUploaderData = await getProjectStatus(postUploaderId);
-          const postUploaderName = postUploaderData.name;
-          const postUploaderType = postUploaderData.type;
-          const postUploaderStatus = postUploaderData.status;
-
-          projectWatchlist.push({
-            id: postUploaderId,
-            name: postUploaderName,
-            type: postUploaderType,
-            status: postUploaderStatus,
-          });
-
-          notificationList.push({
-            id: postUploaderId,
-            name: postUploaderName,
-            type: postUploaderType,
-            status: postUploaderStatus,
-          });
-
-          if (existingNotificationIndex !== -1) {
-            notificationList[existingNotificationIndex].status = currentStatus;
-            findRowIndexAndStatusCellIndex(projectId, projectType);
-            updateStatusAndApplyClasses(currentStatus);
-          }
-
-          createToast(
-            currentStatus === 'complete' ? 'success' : 'warning',
-            currentStatus === 'complete' ? 'fa-solid fa-check-circle' : 'fa-solid fa-exclamation-triangle',
-            currentStatus === 'complete' ? 'Success' : 'Warning',
-            `Project with name "${projectWatchlist.find(project => project.id === postUploaderId).name}", id: "${postUploaderId}", type: "${projectType}" has been ${currentStatus} on SEO App.`
-          );
-
-          createNotification(notificationList);
-
-        } else {
-          createToast('error', 'fa-solid fa-times-circle', 'Error', 'Post uploader project failed to start.');
-        }
-      } else {
-        createToast('error', 'fa-solid fa-times-circle', 'Error', 'Chain job ID not found for the Post Uploader project.');
-      }
-    } else if (currentStatus === 'complete' && projectType !== 'article creator') {
-      createToast(
-        currentStatus === 'complete' ? 'success' : 'warning',
-        currentStatus === 'complete' ? 'fa-solid fa-check-circle' : 'fa-solid fa-exclamation-triangle',
-        currentStatus === 'complete' ? 'Success' : 'Warning',
-        `Project with name "${projectName}", id: "${projectId}", type: "${projectType}" has been ${currentStatus} on SEO App.`
-      );
-    }
-
-    if (existingNotificationIndex !== -1) {
-      notificationList[existingNotificationIndex].status = currentStatus;
-      findRowIndexAndStatusCellIndex(projectId, projectType);
-      updateStatusAndApplyClasses(currentStatus);
-      createNotification(notificationList);
-    }
-  }
-
-
-};
-
-// Function to continuously monitor projects and update notifications
-const monitorAllProjectsAndCreateNotification = async () => {
-  const { runningProjects, waitingProjects } = await fetchAllProjectData();
-  const allProjectData = [...runningProjects, ...waitingProjects];
-
-  const trimmedProjects = allProjectData.map(projectData => ({
-    id: projectData.id.trim(),
-    name: projectData.name.trim(),
-    type: projectData.type.trim(),
-    status: projectData.status,
-  }));
-
-  allProjectData.forEach(projectData => {
-
-    const projectId = projectData.id.trim();
-    let existingProject = projectWatchlist.find(project => project.id === projectId);
-
-    if (!existingProject) {
-      projectWatchlist.push({
-        id: projectId,
-        name: projectData.name,
-        type: projectData.type,
-        status: projectData.status,
-      });
-
-      notificationList.push({
-        id: projectId,
-        name: projectData.name,
-        type: projectData.type,
-        status: projectData.status,
-      });
-    }
-  });
-
-  // Show notification with all running and waiting projects
-  createNotification(notificationList);
-
-  // Monitor all projects
-   await monitorProjects(trimmedProjects);
-
-  // If there are no running, waiting, or aborting projects, show a toast
-  if (!allProjectData.some(project => project.status === 'running' || project.status === 'waiting' || project.status === 'aborting...')) {
-    createToast('info', 'fa-solid fa-info-circle', 'Info', 'There are no projects to monitor on SEO App.');
-  }
-};
-
 
 
 const notificationTableBody = document.getElementById('notificationTableBody');
@@ -1945,8 +1394,6 @@ const toJSON = function(table) {
 
   return table_data;
 };
-
-
 
 
 // Function to convert HTML table to CSV
