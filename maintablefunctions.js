@@ -432,339 +432,206 @@ const cnsblogSettingTitle = document.getElementById('blogIdNo');
 const cnsblogSettingSection = document.getElementById("blogSettingSection");
 
 
-// Function to fetch and update data for different sections
-async function fnarticleCreator(selectedRowId, method = 'GET') {
+async function fetchDataAndHandle(selectedRowId, method) {
   
-    // Declare input fields
-  
+  const ProjectIDInput = document.getElementById('ProjectID');
   const articleProjectNameInput = document.getElementById('articleProjectName');
   const articleKeywordsFileInput = document.getElementById('articleKeywordsFile');
   const articleCategoriesInput = document.getElementById('articleCategories');
-  const fetchdataurl =`${apiurl}/data/${selectedRowId}`
-      
+  const ProjectStatusinput = document.getElementById('ProjectStatus');
+
+
+  const PostUploaderIdInput = document.getElementById('PostUploaderId');
+  const postJobNameInput = document.getElementById('postJobName');
+  const PostUploaderStatusInput = document.getElementById('PostUploaderStatus');
+
+  const postDateInput = document.getElementById('postDate');
+
+  const BlogIdInput = document.getElementById('BlogId');
+  const blogUserNameInput = document.getElementById('blogUserName');
+  const blogPasswordInput = document.getElementById('blogPassword');
+  const blogUrlInput = document.getElementById('blogUrl');
+  const blogGroupInput = document.getElementById('blogGroup');
+  const SEOStatusInput = document.getElementById('SEOStatus');
+
+
   try {
 
-    if (method.toUpperCase() === 'GET') {
-      // Make GET request
-      const response = await fetch(fetchdataurl);
-      const data = await response.json();
-      const result = data.result;
+    if (method.toUpperCase() === 'GETDATA') {
 
-     
-      cnsarticleCreatorTitle.textContent = `Article Creator Details of ID: ${selectedRowId}`;
-
-
-      // Update input fields with received values
-      articleProjectNameInput.value = result.jobName;     
-      
-      articleKeywordsFileInput.value = Array.isArray(result.articleKeywordsFile)
-        ? result.articleKeywordsFile.join(', ')
-        : '';
-
-      articleCategoriesInput.value = Array.isArray(result.categoryInsert.CategoryInsertFile)
-        ? result.categoryInsert.CategoryInsertFile.join(', ')
-        : '';
-      
-
-      jobid = result.chainJobId
-    //   document.getElementById('inputchainJobId').value = jobid;
-
-
-      cnspostUploaderTitle.textContent = `Post Uploader Details of ID: ${jobid}`;
-
-      // Continue with the rest of your code for GET request
-      // ...
-    } else if (method.toUpperCase() === 'POST') {
-      // Get values from input fields
-      
-      const articleProjectName = articleProjectNameInput.value;
-      const articleKeywordsFile = articleKeywordsFileInput.value.split(',').map(keyword => keyword.trim());
-      const articleCategories = articleCategoriesInput.value.split(',').map(category => category.trim());
-      const CategoryInsertFile = articleCategoriesInput.value.split(',').map(keyword => keyword.trim());
-            
-      // Prepare request body
-      const jsonData = JSON.stringify({
-        jobName: articleProjectName,
-        CategoryInsertFile,
-        articleCategories,
-        articleKeywordsFile,
-        
-      });
-
-      // Make POST request
-       await fetch(fetchdataurl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonData
-      });
-
-        // Get the table element
-        const table = document.getElementById('main');
-
-        // Update the table cells with the variables if the row and cell exist
-        const row = table.rows[selectedRowIndex];
-        if (row) {
-          const cell2 = row.cells[2];
-          if (cell2) {
-            cell2.textContent = articleProjectName;
-          }
-
-          const cell3 = row.cells[3];
-          if (cell3) {
-            cell3.textContent = CategoryInsertFile.join(', ');
-          }
-
-          const cell4 = row.cells[4];
-          if (cell4) {
-            cell4.textContent = articleKeywordsFile.join(', ');
-          }
-        }
-              console.log('Article Creator Data has been saved!');
-
-            } 
-
-          }  catch (error) {
-            console.error('Error fetching or posting data:', error);
-          }
-        }
-
-// Function to fetch data for the Post Uploader section
-async function fnPostUploader(chainJobId, method = 'GET') {
-
-    const postJobNameInput = document.getElementById('postJobName');
-    const postDateInput = document.getElementById('postDate');
-    const postsPerDayInput = document.getElementById('postsPerDay');
-    const postIntervalFromInput = document.getElementById('postIntervalFrom');
-    const postIntervalToInput = document.getElementById('postIntervalTo');
-    const articleTitleInput = document.getElementById('articleTitle');
- 
-   
-  const fetchdataurl =`${apiurl}/data/${chainJobId}`
-
-  //Get SEO Path to Pass to Folderpath 
-  fetch(`${appurl}/SEOFolderPath`)
-  .then(response => response.json())
-  .then(data => {
-
-    const soefolder =data.folderPath
-    folderpath =`${soefolder}\\${selectedRowId}\\articles`;
-    // const folderPath = data.folderPath;
-  document.getElementById('articleFolder').value= folderpath;
-   console.log("File path for the Artilce Creator is " + folderpath);
-  })
-  .catch(error => {
-    console.error('Error retrieving folder path:', error);
-    // Handle the error
-  });
-
-  try {
-   
-    if (method.toUpperCase() === 'GET') {
-      const response = await fetch(fetchdataurl);
-      const data = await response.json();
-      const result = data.result;
-
-      // Fill in the Post Uploader section
-      postJobNameInput.value = result.jobName;
-
-      const apiDate = result.postStartDate; // Example API date string
-
-      if (apiDate) {
-
-        const formattedDate = new Date(apiDate);
-        formattedDate.setDate(formattedDate.getDate() + 1);
-        const dateString = formattedDate.toISOString().split("T")[0];
-        postDateInput.value = dateString;
-      }
-
-
-      postsPerDayInput.value = result.postsPerDay;
-      postIntervalFromInput.value = result.postIntervalFrom;
-      postIntervalToInput.value = result.postIntervalTo;
-      articleTitleInput.value = result.articleTitle;
-     
-      blogsetID = Array.isArray(result.blogIds) ? result.blogIds.join(', ') : result.blogIds;
-
-    // const blogIdInput = document.getElementById('blogIdinput');
-
-      cnsblogSettingTitle.textContent = `Blog Setting details of ID: ${blogsetID}`;
-      // blogIdInput.value = blogsetID;
-      // Fill in more input fields for other properties as needed
-    } else if (method.toUpperCase() === 'POST') {
-
-      const postDateInput = document.getElementById('postDate');
-      const currentDate = new Date(postDateInput.value);
-      const formattedDate = currentDate.toLocaleDateString('en-US', {
-        month: 'long',
-        day: 'numeric',
-        year: 'numeric'
-      });
-
-      const jsonData = JSON.stringify({
-        jobName: postJobNameInput.value,
-        postStartDate: formattedDate,
-        postsPerDay: postsPerDayInput.value,
-        postIntervalFrom: postIntervalFromInput.value,
-        postIntervalTo: postIntervalToInput.value,
-        articleTitle: articleTitleInput.value,
-        articleFolder: folderpath,
-        // blogIds: blogIdInput.value.split(',').map(keyword => keyword.trim())
-
-        // Include other  properties as needed
-      });
-
-       await fetch(fetchdataurl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonData
-      });
-
-       // Get the table element
-const table = document.getElementById('main');
-
-// Update the table cells with the variables if the row and cell exist
-const row = table.rows[selectedRowIndex];
-if (row) {
-  const cell2 = row.cells[6];
-  if (cell2) {
-    cell2.textContent = formattedDate;
-  }
-
-  const cell3 = row.cells[7];
-  if (cell3) {
-    cell3.textContent = postJobNameInput.value;
-  }
-
-}
-
-     console.log('Post Uploader data has been Saved!')
-    }
-  } catch (error) {
-    console.error('Error fetching or posting Post Uploader data:', error);
-  }
-}
-
-const usernameInput = document.getElementById('blogUserName');
-const passwordInput = document.getElementById('blogPassword');
-const urlInput = document.getElementById('blogUrl');
-const groupInput = document.getElementById('blogGroup');
-
-
-// Function to fetch data for the Blog Setting section
-async function fetchBlogJSONgData(id, method = 'GET') {
-  
-  try {
-    const response = await fetch(`${appurl}/data/${id}`, {
-        method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
+    const response = await fetch(seourl, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'getProjects', dataId: selectedRowId, username: LoggedUsername }), // Include the action
     });
 
     const data = await response.json();
 
-    // Fill in the Blog Setting section
-    usernameInput.value = data.username;
-    passwordInput.value = data.password;
-    urlInput.value = data.url;
-    groupInput.value = data.group;
-    console.log('Blog data has been loaded')
-    // Fill in more input fields for other properties as needed
-  } catch (error) {
-    console.error('Error fetching Blog Setting data:', error);
-  }
-}
+    console.table(data);
 
-async function JSONApi(ID = '', method = 'GET', dataToParse) {
 
-console.log('ID from JSONApi Fucntion' +ID)
-try {
-    let url = `${appurl}/data`;
-    let options = {
-      method,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
+      // Fill in the Article Creator section
 
-    if (ID) {
-      url += `/${ID}`;
-    }
 
-    if (method === 'GET' && ID) {
-      const response = await fetch(url, options);
-      const responseData = await response.json();
+      cnsarticleCreatorTitle.textContent = `Article Creator Details of ID: ${selectedRowId}`;
 
-      // Fill in the input elements with retrieved data
-      usernameInput.value = responseData.username;
-      passwordInput.value = responseData.password;
-      urlInput.value = responseData.url;
-      groupInput.value = responseData.group;
+      ProjectIDInput.value = data[0].ProjectID;
+      articleProjectNameInput.value = data[0].ProjectName;
+      articleKeywordsFileInput.value = data[0].ProjectKeyowrds;
+      articleCategoriesInput.value = data[0].ProjectCatagories;
+      ProjectStatusinput.value = data[0].ProjectStatus;
+
+      cnspostUploaderTitle.textContent = `Post Uploader Details of ID: ${data[0].PostUploaderId}`;
+
+      // Fill in the Post Uploader section
+      PostUploaderIdInput.value = data[0].PostUploaderId;
+      postJobNameInput.value = data[0].PostUploaderName;
+      PostUploaderStatusInput.value = data[0].PostUploaderStatus;
+
+      // postDateInput.value = new Date(data[0].PostStartDate).toLocaleDateString('en-US');
+
+        // Extract the date part and format it as "YY-MM-DD"
+        const postStartDate = new Date(data[0].PostStartDate);
+        const formattedPostStartDate = postStartDate.toISOString().split('T')[0];
   
-      return responseData;
-    } else if (method === 'POST' || method === 'PUT') {
+        // Assign the formatted date to the input value
+        postDateInput.value = formattedPostStartDate;
 
-      // Get the table element
-      const table = document.getElementById('main');
-      // Update the table cells with the variables if the row and cell exist
-      const row = table.rows[selectedRowIndex];
 
-      addStatusUpdatedClass(row)
+      cnsblogSettingTitle.textContent = `Blog Setting details of ID: ${data[0].BlogId} SEO Status ${data[0].SEOStatus}`;
 
-      if (row) {
+      // Fill in the Blog Setting section
+      BlogIdInput.value = data[0].BlogId;
+      blogUserNameInput.value = data[0].username;
+      blogPasswordInput.value = data[0].password;
+      blogUrlInput.value = data[0].url;
+      blogGroupInput.value = data[0].group;
+      SEOStatusInput.value = data[0].SEOStatus;
 
-        const cell2 = row.cells[10];
-        if (cell2) {
-          cell2.textContent = usernameInput.value;
-        }
+    } else if (method.toUpperCase() === 'POSTDATA') {
+     
+      const jsonData = {
+        action: "updateProjectsData",
+        username: LoggedUsername,
+        dataItems: [
+          {
+            SheetID: ProjectIDInput.value, // This field should be provided if available
+            ProjectID: articleProjectNameInput.value,
+            ProjectName: articleProjectNameInput.value,
+            ProjectStatus: ProjectStatusinput.value, // This field should be provided if available
+            ProjectKeyowrds: articleKeywordsFileInput.value,
+            ProjectCatagories: articleCategoriesInput.value,
+            PostUploaderId: PostUploaderIdInput.value,
+            PostUploaderName: postJobNameInput.value,
+            PostUploaderStatus: PostUploaderStatusInput.value,
+            PostStartDate: postDateInput.value,
+            BlogId: blogUserNameInput.value,
+            username: blogUserNameInput.value,
+            password: blogPasswordInput.value,
+            url: blogUrlInput.value,
+            group: blogGroupInput.value,
+            SEOStatus: SEOStatusInput.value, // This field should be provided if available
+          }
+        ]
+      };
+
+      // const jsonData = {
+      //   "action": "updateProjectsData",
+      //     "username": "ASHFAQ",  
+      //     "dataItems": [
+      //       {
+      //         "SheetID": "f2b342ef-6a73-4b3f-ab82-b994275de161", 
+      //         "ProjectID": "system",
+      //         "ProjectName": "system 1",
+      //         "ProjectStatus": "system",
+      //         "ProjectKeyowrds": "system 1, system 2",
+      //         "ProjectCatagories": "system 1, system 2",
+      //         "PostUploaderId": "system101",
+      //         "PostUploaderName": "system Doe",
+      //         "PostUploaderStatus": "system",
+      //         "PostStartDate": "2023-07-25",
+      //         "BlogId": "1234505055",
+      //         "username": "system",
+      //         "password": "system",
+      //         "url": "https://system.com",
+      //         "group": "system A",
+      //         "SEOStatus": "system"
+      //       }
+      //     ]
+      //   }
+
+      
+      console.table(jsonData)
+     let response = await fetch(seourl, {
+        method: 'POST',
+        body: JSON.stringify({ jsonData }), // Include the action
+        // body: jsonData, // Include the action
+
+      });
+
+      // const data = await response.json();
+
+      // console.table(data);
+
+      // // Get the table element
+      // const table = document.getElementById('main');
+      // const row = table.rows[selectedRowIndex];
+
+      // if (row) {
+      //   const cell2 = row.cells[2];
+      //   if (cell2) {
+      //     cell2.textContent = articleProjectName;
+      //   }
+
+      //   const cell3 = row.cells[3];
+      //   if (cell3) {
+      //     cell3.textContent = CategoryInsertFile.join(', ');
+      //   }
+
+      //   const cell4 = row.cells[4];
+      //   if (cell4) {
+      //     cell4.textContent = articleKeywordsFile.join(', ');
+      //   }
+
+      //   const cell6 = row.cells[6];
+      //   if (cell6) {
+      //     cell6.textContent = postDateInput.value;
+      //   }
+
+      //   const cell7 = row.cells[7];
+      //   if (cell7) {
+      //     cell7.textContent = postJobNameInput.value;
+      //   }
+
+      //   const cell2 = row.cells[10];
+      //   if (cell2) {
+      //     cell2.textContent = usernameInput.value;
+      //   }
    
-        const cell3 = row.cells[11];
-        if (cell3) {
-          cell3.textContent = passwordInput.value;
-        }
+      //   const cell3 = row.cells[11];
+      //   if (cell3) {
+      //     cell3.textContent = passwordInput.value;
+      //   }
    
         
-        const cell4 = row.cells[12];
-        if (cell4) {
-          cell4.textContent =  urlInput.value;
-        }
+      //   const cell4 = row.cells[12];
+      //   if (cell4) {
+      //     cell4.textContent =  urlInput.value;
+      //   }
    
-        const cell5 = row.cells[13];
-        if (cell5) {
-          cell5.textContent =groupInput.value;
-        }
-      }
+      //   const cell5 = row.cells[13];
+      //   if (cell5) {
+      //     cell5.textContent =groupInput.value;
+      //   }
 
-      options.body = JSON.stringify(dataToParse);
-
-      console.log(JSON.stringify(dataToParse))
-
-      await fetch(url, options);
-
-      return;
-
-    } else if (method === 'DELETE') {
-
-      const response = await fetch(url, options);
-      if (response.ok) {
-        // Delete successful (status code within 200 to 299 range)
-
-        document.getElementById('main').deleteRow(selectedRowIndex);
-
-      } 
-    } else {
-      throw new Error(`Invalid method: ${method}`);
-      alert(Error)
+      // }
+      
+      console.log('Article Creator Data has been saved!');
     }
   } catch (error) {
-    console.error('Error in JSONApi:', error);
-    throw error;
+    console.error('Error fetching or posting data:', error);
   }
 }
+
 
 async function fetchAndPopulateDialog() {
 
@@ -778,12 +645,9 @@ async function fetchAndPopulateDialog() {
   if (sectiontoshow === 'AllDatatoshow') {
   
       //  Fetch data for Article Creator section
-    await fnarticleCreator(selectedRowId, 'GET'); // Make GET request
-    // Fetch data for Post Uploader section
-    await fnPostUploader(jobid, 'GET')
-    // Fetch data for Blog Setting section
- 
-    await JSONApi(blogsetID, 'GET');
+      // selectedRowId='ff7c9355-d9e0-4bba-90bd-4a020a19a03e'
+
+    await fetchDataAndHandle(selectedRowId, 'GETDATA'); // Make GET request
 
       hasArticleCreatorData = true;
       hasPostUploaderData = true;
@@ -791,38 +655,37 @@ async function fetchAndPopulateDialog() {
 
       DialogTitle.textContent = `Edit Project Data for ID: [ ${selectedRowId} ]`;
 
-    
     }
 
- else if (sectiontoshow === 'articleCreator') {
+//  else if (sectiontoshow === 'articleCreator') {
 
-    //  Fetch data for Article Creator section
-    await fnarticleCreator(selectedRowId, 'GET'); // Make GET request
+//     //  Fetch data for Article Creator section
+//     await fnarticleCreator(selectedRowId, 'GET'); // Make GET request
     
-    DialogTitle.textContent = `Article Creator Data for ID: [ ${selectedRowId} ]`;
+//     DialogTitle.textContent = `Article Creator Data for ID: [ ${selectedRowId} ]`;
 
 
-    hasArticleCreatorData = true;
+//     hasArticleCreatorData = true;
 
-  } else if (sectiontoshow === 'postuploader') {
+//   } else if (sectiontoshow === 'postuploader') {
    
-     //  Fetch data for Article Creator section
-     await fnPostUploader(selectedRowId, 'GET'); // Make GET request
+//      //  Fetch data for Article Creator section
+//      await fnPostUploader(selectedRowId, 'GET'); // Make GET request
     
-     DialogTitle.textContent = `Post Uploader Data for ID: [ ${selectedRowId} ]`;
+//      DialogTitle.textContent = `Post Uploader Data for ID: [ ${selectedRowId} ]`;
 
-          hasPostUploaderData = true;
-          // Handle the successful response data
+//           hasPostUploaderData = true;
+//           // Handle the successful response data
      
-  } else if (sectiontoshow === 'jsondata') {
-     await JSONApi(selectedRowId, 'GET');
+//   } else if (sectiontoshow === 'jsondata') {
+//      await JSONApi(selectedRowId, 'GET');
 
-     DialogTitle.textContent = `Json File Data for ID: [ ${selectedRowId} ]`;
+//      DialogTitle.textContent = `Json File Data for ID: [ ${selectedRowId} ]`;
 
-          hasBlogSettingData = true;
-          // Handle the successful response data
+//           hasBlogSettingData = true;
+//           // Handle the successful response data
           
-    }
+//     }
 
     const updateButton = document.getElementById('updatedata');
 
@@ -867,19 +730,8 @@ try {
 
 showLoader();
 
-await fnarticleCreator(selectedRowId, 'POST'); // Make GET request
-await fnPostUploader(jobid, 'POST');
-  
-const username = document.getElementById('blogUserName').value;
-const password = document.getElementById('blogPassword').value;
-const url = document.getElementById('blogUrl').value;
-const group = document.getElementById('blogGroup').value;
+await fetchDataAndHandle(selectedRowId, 'POSTDATA'); // Make GET request
 
- const jsonData = { username, password, url, group };
- console.log(jsonData)
-
- await JSONApi(blogsetID, 'PUT', jsonData); 
- 
   Projectdialog.close();
 
     hideLoader();

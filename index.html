@@ -32,6 +32,12 @@
   
     <span id="header" class="header">SEO Content Machine Web App (Connected to Google Sheet) </span>
 
+    <div id="profile" class="btnLogout">
+      <i class="fas fa-user"> <span class="btnLogout" id="fullName"> </i>  </span>
+      <i class="fas fa-user"> <span class="btnLogout" id="userName"> </i> </span>
+      <i class="fas fa-user"> <span class="btnLogout" id="UserType"> </i> </span>
+      <button class="btnLogout" onclick="logout()">Logout</button> 
+      </div>
   </header>
   
 
@@ -63,10 +69,7 @@
   
 </section>
 
-  <div id="profile" class="btnLogout hidden">
-    <span class="btnLogout"> <i class="fas fa-user"></i><a id="fullName"></a> </span>
-    <button class="btnLogout header" onclick="logout()">Logout</button> 
-    </div>
+ 
 
 <div class="container" id="container">
   <div class="header-spacer"></div>
@@ -349,6 +352,11 @@
 
     <div id="articleCreatorSection" class="dialog-section section1">
 
+
+      <label for="ProjectID">Article Creator ID:</label>
+      
+      <input type="text" id="ProjectID">
+
       <label for="articleProjectName">Article Project Name:</label>
       
       <input type="text" id="articleProjectName">
@@ -360,40 +368,42 @@
       
       <input type="text" id="articleCategories">
 
+      <label for="ProjectStatus">Article Creartor Status:</label>
+      
+      <input type="text" id="ProjectStatus">
+
+
     </div>
 
     <div class="subheading" id="postuploader"></div>
 
     <div id="postUploaderSection" class="dialog-section section2">
       
+      <label for="PostUploaderId">Post Uploader ID:</label>
+      
+      <input type="text" id="PostUploaderId">
+
       <label for="postJobName">Post Job Name:</label>
       <input type="text" id="postJobName">
 
+      <label for="PostUploaderStatus">Post Uploader Status:</label>
+      <input type="text" id="PostUploaderStatus">
+
       <label for="postDate">Post Date:</label>
       <input type="date" id="postDate">
-    
-      <label for="postsPerDay">Post Per Day:</label>
-      <input type="number" id="postsPerDay">
-
-      <label for="postIntervalFrom">Post Interval From:</label>
-      <input type="number" id="postIntervalFrom">
-    
-      <label for="postIntervalTo">Post Interval To:</label>
-      <input type="number" id="postIntervalTo">
-
-      <label for="articleTitle">Article Title:</label>
-      <input type="text" id="articleTitle">
-
-      <label for="articleFolder">article Folder Path:</label>
-      <input type="text" id="articleFolder">
-
 
     </div>
 
     <div class="subheading" id="blogIdNo">Blog Setting</div>
 
     <div id="blogSettingSection" class="dialog-section section3">
-    
+
+
+      <label for="BlogIdId">Blog ID:</label>
+      
+      <input type="text" id="BlogId">
+
+
       <label for="blogUserName">Blog User Name:</label>
       <input type="text" id="blogUserName">
     
@@ -405,6 +415,9 @@
 
       <label for="blogGroup">Blog Group:</label>
       <input type="text" id="blogGroup">
+
+      <label for="SEOStatus">SEO Status:</label>
+      <input type="text" id="SEOStatus">
 
     </div>
 

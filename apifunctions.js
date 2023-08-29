@@ -1,8 +1,7 @@
 
 // let sectiontoshow ='AllDatatoshow'
 
-
-
+let notifications = document.querySelector('.notifications');
 
 function createToast(type, icon, title, text){
     let newToast = document.createElement('div');
@@ -23,7 +22,6 @@ function createToast(type, icon, title, text){
 }
 
 
-
 //Main DashBoard Function to Create Dashboard.
 async function fetchAPI() {
   sectiontoshow='AllDatatoshow'
@@ -31,9 +29,11 @@ async function fetchAPI() {
     showLoader();
   
     try {
+      const response = await fetch(seourl, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'getProjects', username: LoggedUsername }), // Include the action
+      });
 
-      const response = await fetch(`${seourl}?action=getData&sheetName=Projects`);
-      
         const responseData = await response.json();
             // Task 6: Generate the table based on the final formattedData object
             createTableFromData(responseData);
@@ -58,7 +58,12 @@ async function fetchAPI() {
      showLoader();
   
      try {
-       const response = await fetch(`${seourl}?action=getCreatorProjects&sheetName=Projects`);
+
+      const response = await fetch(seourl, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'getCreatorProjects', username: LoggedUsername }), // Include the action
+      });
+
          const responseData = await response.json();
              // Task 6: Generate the table based on the final formattedData object
              createTableFromData(responseData);
@@ -85,7 +90,10 @@ async function fetchPostUploader() {
      showLoader();
   
      try {
-       const response = await fetch(`${seourl}?action=getPostProjects&sheetName=Projects`);
+       const response = await fetch(seourl, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'getPostProjects', username: LoggedUsername }), // Include the action
+      });
          const responseData = await response.json();
              // Task 6: Generate the table based on the final formattedData object
              createTableFromData(responseData);
@@ -115,7 +123,10 @@ async function ReadJsonFile() {
    showLoader();
   
    try {
-     const response = await fetch(`${seourl}?action=getJSON&sheetName=Projects`);
+    const response = await fetch(seourl, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'getJSON', username: LoggedUsername }), // Include the action
+    });
        const responseData = await response.json();
            // Task 6: Generate the table based on the final formattedData object
            createTableFromData(responseData);
@@ -141,8 +152,10 @@ async function fetchArticleCreatorbyStatus(articleStatus) {
 
   try {
   // Task 1: Fetch all projects and store the required keys in an object
-  const response = await fetch(`${seourl}?action=getStatus&sheetName=Projects&status=${articleStatus}`)
-   console.log(`${seourl}?action=getStatus&sheetName=Projects&status=${articleStatus}`)
+  const response = await fetch(seourl, {
+    method: 'POST',
+    body: JSON.stringify({ action: 'getStatus', status: articleStatus, username: LoggedUsername }), // Include the action
+  });
     const formattedData = await response.json();
 
       // Task 6: Generate the table based on the final filteredProjects object
@@ -173,7 +186,11 @@ async function fetchArticleCreatorbyStatus(articleStatus) {
 
 async function updateStatusCounts() {
   try {
-    const response = await fetch(`${seourl}?action=getProjectCounts&sheetName=Projects`);
+    const response = await fetch(seourl, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'getProjectCounts', username: LoggedUsername }), // Include the action
+    });
+
     const data = await response.json();
     updateDashboardCounts(data); // Assuming `statusCounts` is available in the scope where this function is called.
   } catch (error) {

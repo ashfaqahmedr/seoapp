@@ -1,39 +1,46 @@
-const loginPanel = document.getElementById('loginPanel');      
-const sidebar = document.getElementById('sidebar');
-const mainSectionTable = document.getElementById('mainSectionTable');
-const fullName = document.getElementById('fullName');
-const userType = document.getElementById('userType');
-const container = document.getElementById('container');
+let LoggedUsername;
+
+const loginPanel = document.getElementById('loginPanel');     
 
 const headerElement = document.getElementById('header');
+
+const spanfullName = document.getElementById('fullName');
+const spanuserName = document.getElementById('userName');
+const spanuserType = document.getElementById('UserType');
+
+const profile = document.getElementById('profile');
+profile.classList.add('hidden');
+
+const container = document.getElementById('container');
+const sidebar = document.getElementById('sidebar');
+const mainSectionTable = document.getElementById('mainSectionTable');
+
 headerElement.classList.add('connected');
 container.classList.add('hidden');
 
-// sidebar.classList.add('hidden');
-// mainSectionTable.classList.add('hidden');
+
 
 document.getElementById('popupContainer').style.display = 'none';
 document.getElementById('loadingOverlay').style.display = 'none';
-// document.getElementById('container').style.display = 'none';
-
 
 async function loginUser() {
   showLoader();
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
   
-    const response = await fetch('https://script.google.com/macros/s/AKfycbxgyT3rHw0zc7xeF_HWP3fxiy9VjaBcwzE18b6eA7HzFejEvCQEJewrJSzDFkeaUa4m/exec?sheetName=Users', {
+    const response = await fetch(seourl, {
       method: 'POST',
       body: JSON.stringify({ action: 'login', username, password }), // Include the action
     });
   
     if (response.ok) {
-    const { success, fullName, userType, token, error } = await response.json();
+    const { success, username, userType, fullName, token, error } = await response.json();
   
     if (success) {
   
       // Set the cookie with a 30-second expiration // expires=${now.toUTCString()}; path=/
-  
+    
+    LoggedUsername=username
     var cookieName = 'userToken';
     var maxAge = 60;
     console.log('Original Token: ' + token);
@@ -46,14 +53,20 @@ async function loginUser() {
     var cookieValue = getCookie('userToken');
     console.log("userToken: , Cookie Value:"+ cookieValue);
   
+        spanfullName.innerHTML = fullName;
+        spanuserType.innerHTML  = userType;
+        spanuserName.innerHTML = username;
+
+        profile.classList.remove('hidden');
+
         // Add the 'hidden' class to the elements
         sidebar.classList.remove('hidden');
         mainSectionTable.classList.remove('hidden');
         loginPanel.classList.add('hidden');
         mainSectionTable.classList.add('table');
-        document.getElementById('fullName').textContent = fullName;
-        // document.getElementById('userType').textContent = userType;
-
+        
+        createToast('success', 'fa-solid fa-circle-check', 'Success', 'Logged In successfully.');
+        hideLoader();
         showAdminPanel();
       // }, 30000); // 30 seconds
     } else {
@@ -61,7 +74,7 @@ async function loginUser() {
         hideLoader();
     }
   } else {
-    createToast('error', 'fa-solid fa-circle-exclamation', 'error', 'There is a network error:'+error);
+    createToast('error', 'fa-solid fa-circle-exclamation', 'error', 'There is a network error.');
     hideLoader();
   }
   
@@ -80,10 +93,12 @@ async function loginUser() {
   function logout() {
             // Add the 'hidden' class to the elements
             sidebar.classList.add('hidden');
+            profile.classList.add('hidden');
             mainSectionTable.classList.add('hidden');
             loginPanel.classList.remove('hidden');
-            mainSectionTable.classList.remove('table');
-            document.getElementById('fullName').textContent = '';
-            // document.getElementById('userType').textContent = '';
+            // mainSectionTable.classList.remove('table');
+            document.getElementById('fullName').innerHTML = '';
+            document.getElementById('userType').innerHTML = '';
+
     
   }
