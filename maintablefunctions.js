@@ -196,13 +196,28 @@ function createTableFromData(data) {
     searchTable(searchTerm);
   });
 
-  //Filter by Status Text
-  const tableFilter = document.getElementById('table-filter');
-  tableFilter.addEventListener('change', () => {
-    const selectedValue = tableFilter.value;
-    searchTable(selectedValue);
+  const customSelect = document.getElementById('table-filter');
+  const selectedOption = customSelect.querySelector('.selected-option');
+  const optionsContainer = customSelect.querySelector('.options');
+  const options = customSelect.querySelectorAll('.option');
+  
+  options.forEach(option => {
+    option.addEventListener('click', () => {
+      selectedOption.innerHTML = option.innerHTML;
+      optionsContainer.style.display = 'none';
+      const selectedValue = option.getAttribute('data-value');
+      searchTable(selectedValue);
+    });
   });
-
+  
+  customSelect.addEventListener('mouseenter', () => {
+    optionsContainer.style.display = 'block';
+  });
+  
+  customSelect.addEventListener('mouseleave', () => {
+    optionsContainer.style.display = 'none';
+  });
+  
 
   function searchTable(searchData) {
     let visibleCount = 0; // Variable to store the count of visible records
@@ -274,6 +289,10 @@ function createTableFromData(data) {
   console.log("Inside the Table Scrope: "+ totalRecords)
  
 }
+
+
+
+
 
 // Function to sort the table
 function sortTable(column, sort_asc) {

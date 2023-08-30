@@ -29,19 +29,16 @@
  <div class="notifications"> 
 </div>
 
-  <header>
-  
-    <span id="header" class="header">SEO Content Machine Web App (Connected to Google Sheet) </span>
-
-    <div id="profile" class="btnLogout">
-      <i class="fas fa-user"> <span class="btnLogout" id="fullName"> </i>  </span>
-      <i class="fas fa-user"> <span class="btnLogout" id="userName"> </i> </span>
-      <i class="fas fa-user"> <span class="btnLogout" id="UserType"> </i> </span>
-      <button class="btnLogout" onclick="logout()">Logout</button> 
+  <div id="header" class="header">
+    <span  >SEO Content Machine Web App (Connected to Google Sheet) </span>
+    <div id="profile" class="profile">
+      <i class="fas fa-user-circle"></i>
+      <span class="fullname" id="fullName">
+      </span> 
+      <button class="btnLogout" onclick="logout()"><i class="fas fa-sign-out-alt"></i>Logout</button> 
       </div>
-  </header>
+    </div>
   
-
 <section id="loginPanel" class="loginPanel">
  
   <div class="screen">
@@ -73,27 +70,32 @@
 <div class="container" id="container">
   <div class="header-spacer"></div>
   <div class="sidebar close" id="sidebar">
-  <div class="top-sidebar">
-    <ul class="nav-list">
-    <li class="divider">
-    <div class="logo_details">
-      <i class="bx bxl-audible icon"></i>
-      <div class="logo_name">SEO App</div>
-      <i class="bx bx-menu" id="btn"></i>
-      <span class="tooltip" id="btnToolTip">Show Sidebar</span>
 
-    </div>
-    </li>
+    <div class="top-sidebar">
+      <ul class="nav-list">
+      <div class="logo_details">
+        <i class="bx bxl-audible icon"></i>
+        <div class="logo_name">SEO App</div>
+        <i class="bx bx-menu" id="btn"></i>
+        <span class="tooltip" id="btnToolTip">Show Sidebar</span>
+      </div>
     </ul>
-  </div>
+    </div>
 
 
   <div class="middle-sidebar">
 
     <ul class="nav-list">
 
+      <li class="user-details">
+        <span id="userIcon" class="user-icon"></span>
+        <span id="userName"></span>
+        <span id="UserType"></span>
+      </li>
+
       <ul>
           <li class="divider">
+            
           <a href="#" id="dashboard-link"  onclick="fetchAPI()">
             <i class='bx bx-grid-alt' ></i> </i><span class="link_name">Dashboard</span>
           <span class="tooltip">Dashboard</span>
@@ -266,18 +268,22 @@
               <input type="search" id="search-input" placeholder="Search...">
               <i class="fas fa-search"></i>
           </div>
-            <select id="table-filter">
-              <option value="" selected>All Projects</option>
-              <option value="running">Running</option>
-              <option value="complete">Complete</option>
-              <option value="failed">Failed</option>
-              <option value="aborted">Aborted</option>
-              <option value="draft">Draft</option>
-            </select>
-          
-          
-          <!-- <button id="Run-Buton" class="New-Buton" onclick=" toggleNotificationPanel()"> <i class="fas fa-play"></i>  Running </button> -->
-          <button id="updateProjectSettings" class="New-Buton" onclick="openSettingDialog()"> <i class="fas fa-cog"></i>  Update Project Settings</button>
+          <div class="custom-select" id="table-filter">
+            <div class="selected-option"><i class="fas fa-list-ul"></i> All Projects  <span class="arrow"></span></div>
+            <div class="options">
+              <div class="option" data-value=""><i class="fas fa-list-ul"></i> All Projects</div>
+              <div class="option" data-value="running"><i class="fas fa-play"></i> Running</div>
+              <div class="option" data-value="complete"><i class="fas fa-check"></i> Complete</div>
+              <div class="option" data-value="failed"><i class="fas fa-exclamation"></i> Failed</div>
+              <div class="option" data-value="waiting"><i class="fas fa-hourglass"></i> Waiting</div>
+              <div class="option" data-value="aborted"><i class="fas fa-ban"></i> Aborted</div>
+              <div class="option" data-value="draft"><i class="fas fa-file"></i> Draft</div>
+              <div class="option" data-value="aborting..."><i class="fas fa-stop"></i> Aborting...</div>
+            </div>
+          </div>          
+
+             <button id="updateProjectSettings" class="New-Buton" onclick="openSettingDialog()"> <i class="fas fa-cog"></i>  Update Project Settings</button>
+              <!-- <button id="Run-Buton" class="New-Buton" onclick=" toggleNotificationPanel()"> <i class="fas fa-play"></i>  Running </button> -->
         </div >
 
         <div class="table__body">  
@@ -286,8 +292,6 @@
       </div >
      
 </div> 
-
-
 
  <!-- Custom Context Menu -->
 

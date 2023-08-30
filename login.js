@@ -7,9 +7,11 @@ const headerElement = document.getElementById('header');
 const spanfullName = document.getElementById('fullName');
 const spanuserName = document.getElementById('userName');
 const spanuserType = document.getElementById('UserType');
+const userIconElement = document.getElementById('userIcon'); // Get the userIcon span
 
 const profile = document.getElementById('profile');
-profile.classList.add('hidden');
+
+profile.style.display = 'none';
 
 const container = document.getElementById('container');
 const sidebar = document.getElementById('sidebar');
@@ -18,13 +20,20 @@ const mainSectionTable = document.getElementById('mainSectionTable');
 headerElement.classList.add('connected');
 container.classList.add('hidden');
 
-
-
 document.getElementById('popupContainer').style.display = 'none';
 document.getElementById('loadingOverlay').style.display = 'none';
 
+function formatName(name) {
+  return name
+    .replace(/([a-z])([A-Z])/g, '$1 $2') // Add space before uppercase letters preceded by lowercase letters
+    .replace(/([A-Z])/g, ' $1') // Add space before uppercase letters
+    .replace(/^./, (str) => str.toUpperCase()) // Capitalize the first letter
+    .trim();
+}
+
 async function loginUser() {
   showLoader();
+
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
   
@@ -53,11 +62,32 @@ async function loginUser() {
     var cookieValue = getCookie('userToken');
     console.log("userToken: , Cookie Value:"+ cookieValue);
   
+      // Update full name in the header with spaces between uppercase letters
         spanfullName.innerHTML = fullName;
-        spanuserType.innerHTML  = userType;
-        spanuserName.innerHTML = username;
+        spanuserType.innerHTML  = formatName(userType);
+        spanuserName.innerHTML = formatName(username);
 
-        profile.classList.remove('hidden');
+       // Update icon based on user type in the sidebar
+       userIconElement.classList.remove('fas', 'fa-crown', 'fa-briefcase', 'fa-users', 'fa-user');
+
+       switch (userType) {
+         case 'SuperAdmin':
+           userIconElement.classList.add('fas', 'fa-crown');
+           break;
+         case 'Admin':
+           userIconElement.classList.add('fas', 'fa-briefcase');
+           break;
+         case 'User':
+           userIconElement.classList.add('fas', 'fa-users');
+           break;
+         // Add more cases for other user types
+         default:
+           userIconElement.classList.add('fas', 'fa-user');
+       }
+ 
+        // profile.classList.remove('hidden');
+        
+        profile.style.display = 'flex';
 
         // Add the 'hidden' class to the elements
         sidebar.classList.remove('hidden');
@@ -93,7 +123,7 @@ async function loginUser() {
   function logout() {
             // Add the 'hidden' class to the elements
             sidebar.classList.add('hidden');
-            profile.classList.add('hidden');
+            profile.style.display = 'none';
             mainSectionTable.classList.add('hidden');
             loginPanel.classList.remove('hidden');
             // mainSectionTable.classList.remove('table');

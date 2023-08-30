@@ -13,11 +13,12 @@
   --light-gray: rgb(144, 144, 144);
   --medium-gray: rgb(96, 96, 96);
   --dark-gray: rgb(13, 13, 13);
+  --color-yellow: rgb(243, 181, 11);
   --animation-duration: 200ms;
   --animation-timing-curve: ease-in-out;
 
   --sidebar-min-width: 100px;
-  --sidebar-max-width: 230px;
+  --sidebar-max-width: 200px;
 
   --header-height: 40px;
 
@@ -44,8 +45,6 @@ body {
   display: flex;
   height: calc(100vh - var(--header-height)); /* Adjust height accordingly */
   overflow: hidden; /* Prevent content overflow */
-
- 
 }
 
 .header-spacer {
@@ -53,13 +52,9 @@ body {
 }
 
 .header {
-  font-size: 18px;
-}
-
-
-header {
   box-sizing: border-box;
   display: flex;
+  position: relative;
   position: sticky;
   width: 100vw;
   height: var(--header-height);
@@ -67,38 +62,93 @@ header {
   font-weight: 600;
   border-radius: 0px;
   background-color: var(--color-second);
-  box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.4);
   color: var(--color-white);
-  padding: 10px 20px;
+  padding: 10px;
   overflow: hidden;
   text-align: center;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   align-content: space-between;
   z-index: 1;
   animation-fill-mode: both;
   transition: all 0.5s ease-in-out;
 }
 
+.profile {
+  align-items: flex-end;
+  justify-content: flex-end; /* Align elements to the right */
+  align-items: center;
 
-.sidebar{
+}
 
+.profile  i.fas {
+  
+  text-align: center;
+  align-items: center;
+  border: none;
+  background-color: var(--color-default);
+  color: var(--color-yellow);
+  font-size: 25px;
+  font-weight: 800;
+  border-radius: 10px;  
+}
+
+.fullname{ 
+  border: none;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-left: 10px;
+  /* background-color: var(--color-default); */
+  color: var(--color-yellow);
+  font-size: 20px;
+  font-weight: 800;
+  border-radius: 50px;
+  user-select: none;
+}
+
+.btnLogout {
+
+ align-items: flex-end;
+  justify-content: flex-end;
+
+  margin-left: 10px;
+  border: none;
+  padding: 10px;
+  background-color: var(--color-default);
+  color: var(--color-yellow);
+  font-size: 18px;
+  font-weight: 800;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.btnLogout:hover {
+  background-color: var(--color-yellow);
+  background-color: var(--color-ul);
+  color: var(--color-defaul);
+  transition: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  scale: 1.1;
+
+}
+
+.sidebar {
   top: var(--header-height);
   left: 0;
   box-sizing: border-box;
   height: calc(100dvh-var(--header-height));
   width: var(--sidebar-min-width);
   margin-left: 2px;
-  padding: 5px 14px;
+  padding: 2px;
   z-index: 99;
-  border-radius: 50px;
+  border-radius: 10px;
   background-color: var(--color-default);
   transition: all .5s ease;
   align-items: center;
   align-content: center;
   justify-content: left;
 
-overflow: auto;
+  overflow: auto;
     /* overflow: overlay; */
   overflow-x: scroll;
   scrollbar-width: thin;
@@ -106,13 +156,11 @@ overflow: auto;
   overflow: visible;
 }
 
-
 .sidebar::-webkit-scrollbar{
   width: 0.5rem;
   height: 0.5rem;
   cursor: grabbing;
   overflow: hidden;
-
 }
 
 .sidebar::-webkit-scrollbar-thumb{
@@ -134,90 +182,143 @@ overflow: auto;
   transition: all .5s ease;
   border-radius: 10px;
   overflow: visible;
-
 }
+
 
 .sidebar .top-sidebar {
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  margin-bottom: 5px;
 }
 
 
-.middle-sidebar {
-
-  flex-grow: 1;
-  margin: 1rem 0;
-}
-
-.middle-sidebar,
-.bottom-sidebar {
-  width: 100%;
-}
-
-
-.sidebar .logo_details{
-  height: 60px;
+/* Simplified CSS for logo details in the sidebar */
+.sidebar .logo_details {
   display: flex;
-  align-items: center;
-  align-content: center;
+  align-items: flex-start;
   position: relative;
+  transition: all 0.5s ease;
 }
 
-.sidebar .logo_details .icon{
-  opacity: 0;
-  transition: all 0.5s ease ;
+.sidebar .logo_details .icon {
+  font-size: 23px;
+  cursor: pointer;
+  transition: all 0.5s ease;
+  display: block;
 }
 
-.sidebar .logo_details .logo_name{
-  color:var(--color-white);
+.sidebar .logo_details .logo_name,
+.sidebar .logo_details .tooltip {
+  color: var(--color-white);
+  margin-top: 5px;
   font-size: 22px;
   font-weight: 600;
   text-align: center;
-  opacity: 0;
-  transition: all .5s ease;
+  transition: all 0.5s ease;
+  display: none;
 }
 
-.sidebar.open .logo_details .icon,
-.sidebar.open .logo_details .logo_name{
-  opacity: 1;
+.sidebar.open .logo_details .logo_name,
+.sidebar.open .logo_details .tooltip {
+  display: flex;
+  /* top: 50%; */
 }
 
-.sidebar .logo_details #btn{
+.sidebar .logo_details #btn {
   position: absolute;
-  top:50%;
-  left: 0;
+  top: 50%;
+  right: 20px;
   transform: translateY(-50%);
   font-size: 23px;
   text-align: right;
   align-content: center;
   cursor: pointer;
-  transition: all .5s ease;
+  transition: all 0.5s ease;
 }
 
-.sidebar.open .logo_details #btn{
+.sidebar.open .logo_details #btn {
   text-align: left;
-  left: 170px;
+  right: -30px;
   transform: translateY(-50%);
+  color: var(--color-yellow);
 }
 
-#btn:hover {
+.sidebar #btn:hover {
   color: var(--color-light);
+}
+
+
+.sidebar .user-details {
+  display: block;
+  font-size: 10px;
+  margin-bottom: 0.5rem;
+}
+
+.sidebar .user-details #userName {
+  padding: 0px;
+  font-weight: 800; 
+  font-size: 15px;
+
+  color: var(--color-white);
+}
+
+.sidebar .user-details #UserType {
+  font-size: 12px;
+  font-weight: 800;
+  padding-left: 8px;
+  color: rgb(243, 181, 11);
+  display: none;
 
 }
 
-.sidebar .nav-list{
+.sidebar.open .user-details #UserType {
+  display: flex;
+
+}
+
+.sidebar .user-details .user-icon {
+  padding: 0px;
+  margin-right: 8px;
+  font-size: 15px;
+  color: rgb(243, 181, 11);
+}
+
+.sidebar .middle-sidebar {
+  flex-grow: 0.1;
+  margin: 0;
+}
+
+.sidebar .middle-sidebar,
+.sidebar .bottom-sidebar {
   width: 100%;
-  height: 100%;
+}
+
+
+/* .sidebar .nav-list{
+  width: 100%;
   display: flex;
   flex-direction: column;
-  flex-grow: 1; /* Allow the list to grow to fill the available height */
-  overflow: hidden; /* To hide overflowing content */
+} */
+
+/* Nav List Styles */
+.sidebar .nav-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+  list-style: none;
 }
 
+
+.sidebar .nav-list li {
+  position: relative;
+  margin-left: 0;
+}
 
 .sidebar i{
   color:var(--color-white);
-  height: 60px;
+  height: 30px;
   line-height: 60px;
   width: 60px;
   font-size: 25px;
@@ -225,19 +326,6 @@ overflow: auto;
   justify-content: center;
   align-items: center;
 }
-
-
-.sidebar .count-wrapper:last-child,
-.sidebar .divider:last-child {
-  position: sticky;
-  bottom: 0;
-}
-
-.sidebar li.count-wrapper:last-child,
-.sidebar li.divider:last-child {
-  order: 999; /* Set an order greater than others to make it appear at the bottom */
-}
-
 
 .sidebar li {
   flex: 1;
@@ -416,6 +504,7 @@ overflow: auto;
 
 .sidebar li .count-wrapper {
   position: sticky;
+
 }
 
 .sidebar li .count {

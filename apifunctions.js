@@ -352,3 +352,23 @@ function openConfrimDialog(dialogId, titleHeader, confirmMessage) {
     confrimdialog.showModal();
   });
 }
+
+const customSelect = document.getElementById('table-filter');
+const selectedOption = customSelect.querySelector('.selected-option');
+const optionsContainer = customSelect.querySelector('.options');
+const options = customSelect.querySelectorAll('.option');
+
+customSelect.addEventListener('mouseenter', () => {
+  optionsContainer.style.display = 'block';
+});
+
+customSelect.addEventListener('mouseleave', () => {
+  optionsContainer.style.display = 'none';
+});
+
+options.forEach(option => {
+  option.addEventListener('click', () => {
+    selectedOption.textContent = option.textContent;
+    optionsContainer.style.display = 'none';
+  });
+});
