@@ -184,6 +184,8 @@ function createTableFromData(data) {
           td.textContent = value !== undefined ? value : '';
         }
         
+        td.setAttribute('data-label', header); // Add data-label attribute
+
         row.appendChild(td);
       }
     });

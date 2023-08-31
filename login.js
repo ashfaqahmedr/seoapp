@@ -2,7 +2,7 @@ let LoggedUsername;
 
 const loginPanel = document.getElementById('loginPanel');     
 
-const headerElement = document.getElementById('topTitle');
+
 
 const spanfullName = document.getElementById('fullName');
 const spanuserName = document.getElementById('userName');
@@ -13,11 +13,10 @@ const profile = document.getElementById('profile');
 const btngetUsers = document.getElementById('getUsers');
 const btnAddNewUser = document.getElementById('AddNewUser');
 const container = document.getElementById('container');
-const txttopTitle = document.getElementById('header');
 
+const headerElement = document.getElementById('header');
 
-txttopTitle.innerHTML="SEO Content Machine Web App"
-
+const txttopTitle = document.getElementById('topTitle');
 
 document.getElementById('popupContainer').style.display = 'none';
 document.getElementById('loadingOverlay').style.display = 'none';
@@ -25,9 +24,6 @@ document.getElementById('loadingOverlay').style.display = 'none';
 profile.style.display = 'none';
 btngetUsers.style.display = 'none';
 btnAddNewUser.style.display = 'none';
-
-headerElement.classList.add('disconected');
-
 container.style.display = 'none';
 
 function formatName(name) {
@@ -70,10 +66,10 @@ async function loginUser() {
     console.log("userToken: , Cookie Value:"+ cookieValue);
   
       // Update full name in the header with spaces between uppercase letters
-      headerElement.classList.remove('disconected');
-      headerElement.classList.add('connected');
+      headerElement.classList.remove('disconnected');
+      headerElement.classList.add('connected');      
 
-      txttopTitle.innerHTML="SEO Content Machine Web App (Connected to Google Sheet)"
+      txttopTitle.textContent="SEO Content Machine Web App (Connected to Google Sheet)"
 
         spanfullName.innerHTML = fullName;
         spanuserType.innerHTML  = formatName(userType);
@@ -100,13 +96,12 @@ async function loginUser() {
          // Add more cases for other user types
          default:
            userIconElement.classList.add('fas', 'fa-user');
-       }
- 
-        // profile.classList.remove('hidden');
-        
+       }      
+
         profile.style.display = 'flex';
         container.style.display = 'flex';
         loginPanel.style.display = 'none';
+
         
         createToast('success', 'fa-solid fa-circle-check', 'Success', 'Logged In successfully.');
         hideLoader();
@@ -134,19 +129,21 @@ async function loginUser() {
   }
 }
   function logout() {
-            // Add the 'hidden' class to the elements
-            sidebar.style.display = 'none';
-            profile.style.display = 'none';
-            mainSectionTable.style.display = 'none';
-            loginPanel.style.display = 'flex';
-            // mainSectionTable.classList.remove('table');
-            spanfullName.innerHTML = '';
-            spanuserType.innerHTML = '';
-            spanuserName.innerHTML = '';
-            headerElement.classList.remove('connected');
-            headerElement.classList.add('disconected');
-            txttopTitle.innerHTML="SEO Content Machine Web App"
+            // // Add the 'hidden' class to the elements
+            // sidebar.style.display = 'none';
+            // profile.style.display = 'none';
+            // mainSectionTable.style.display = 'none';
+            // loginPanel.style.display = 'flex';
+            // // mainSectionTable.classList.remove('table');
+            // spanfullName.innerHTML = '';
+            // spanuserType.innerHTML = '';
+            // spanuserName.innerHTML = '';
+            // headerElement.classList.remove('connected');
+            // headerElement.classList.add('disconected');
+            // txttopTitle.innerHTML="SEO Content Machine Web App"
+
             location.reload()
+
 
     
   }

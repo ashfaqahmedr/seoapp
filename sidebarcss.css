@@ -2,14 +2,14 @@
 
 :root{
   --color-default:#004f83;
-  --color-second:#117474;
-  --color-white:#fff;
-  --color-body:#e4e9f7;
+  --color-second:#126d6d;
+  --color-white:#e4e2e2;
+  --color-body:#84a5f8;
   --color-light:#5405ad;
   --color-ul:#58cae794;
   --accent-color: rgb(204, 0, 0);
   --lightest-gray: rgb(10, 10, 8);
-  --light-gray: rgb(144, 144, 144);
+  --light-gray: rgb(170, 169, 169);
   --medium-gray: rgb(96, 96, 96);
   --dark-gray: rgb(13, 13, 13);
   --color-yellow: rgb(243, 181, 11);
@@ -50,56 +50,22 @@ body {
   height: 20px; /* Adjust as needed */
 }
 
-.connected {
-  user-select: none;
-  display: flex;
-  position: relative;
-  justify-content: space-around;
-  align-content: center;
-  text-align: center;
-  padding: 10px;
-  height: var(--header-height);
-  font-size: 22px;
-  font-weight: 600;
-  border-radius: 0px;
-  background-color: var(--color-second);
-  box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.4);
-  color: var(--color-white);
-  overflow: hidden;
-  position: sticky;
-  z-index: 999;
-  box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.4);
-}
-
-.disconected {
-  user-select: none;
-  display: flex;
-  position: relative;
-  justify-content: space-around;
-  align-content: center;
-  text-align: center;
-  padding: 10px;
-  height: var(--header-height);
-  font-size: 22px;
-  font-weight: 600;
-  border-radius: 0px;
-  background-color: var(--medium-gray);
-  box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.4);
-  color: var(--color-white);
-  overflow: hidden;
-  position: sticky;
-  z-index: 999;
-  box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.4);
-}
-
-
-
 .profile {
   display: flex;
-   justify-content: center;
-  align-content: center;
-
+  justify-content: space-between;
+  align-items: center;
 }
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+
+.user-icon {
+  margin-right: 8px; /* Add left margin to the icon */
+}
+
 
 .profile i.fas {
   color: var(--color-yellow);
@@ -109,40 +75,37 @@ body {
 
 
 .profile .logoutcls {
-  
   display: flex;
   position: relative;
-  /* justify-content: flex-end;
-  align-content: flex-end; */
   right: 50px;
   justify-content: center;
   align-content: center;
-/* width: 50%; */
 }
 
 
-.profile .logoutcls .btnLogout, .profile .logoutcls .fullname {
+
+.profile .logoutcls .btnLogout,
+.profile .logoutcls .fullname {
   border: none;
   right: 20px;
   top: 4px;
   justify-content: center;
   align-content: center;
   color: var(--color-light);
-  font-size: 20px;
-  /* width: 50px; */
+  font-size: 1.5rem;
   height: 50px;
-  font-weight: 800;
+  font-weight: 600;
   border-radius: 50px;
   cursor: pointer;
-  position: fixed; 
+  position: fixed;
 }
 
 .profile .logoutcls .fullname{ 
   right: 100px;
+  margin-left: 4px;
   justify-content: center;
   align-content: center;
   flex-wrap: nowrap;
-  /* word-wrap: break-word; */
   width: 200px;
   top: 10px;
   color: var(--color-white);
@@ -157,30 +120,29 @@ body {
   scale: 1.1;
   border: none;
 
-}
+} 
 
-/* Style the tooltip */
 .profile .logoutcls .New-Button::before {
-  content: attr(data-tooltip); /* Tooltip text */
+  content: attr(data-tooltip);
   position: absolute;
-  top: calc(100% + 10px); /* Position it below the button with 10px gap */
-  left: 50%; /* Center it horizontally */
-  transform: translateX(-50%); /* Center it perfectly */
+  top: calc(100% + 10px); 
+  left: 50%; 
+  transform: translateX(-50%); 
   padding: 8px;
   background-color: var(--color-yellow);
   color: white;
   border-radius: 50px;
-  font-size: 15px;
-  white-space: nowrap; /* Prevent text from wrapping */
-  opacity: 0; /* Initially hidden */
-  pointer-events: none; /* Allow clicks to pass through the tooltip */
+  font-size: 1rem;
+  white-space: nowrap;
+  opacity: 0; 
+  pointer-events: none; 
   transition: opacity 0.2s ease;
   z-index: 1000;
 }
 
 .profile .logoutcls .New-Button:hover::before {
-  opacity: 1; /* Show tooltip on hover */
-}
+  opacity: 1; 
+}  
 
 .sidebar {
   flex-direction: column;
@@ -200,7 +162,6 @@ body {
   justify-content: left;
 
 }
-
 
 .sidebar.open{
   width: var(--sidebar-max-width);
