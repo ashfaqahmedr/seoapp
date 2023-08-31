@@ -50,7 +50,7 @@ body {
   height: 20px; /* Adjust as needed */
 }
 
-.header {
+.connected {
   user-select: none;
   display: flex;
   position: relative;
@@ -71,9 +71,28 @@ body {
   box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.4);
 }
 
-.connected {
+.disconected {
+  user-select: none;
+  display: flex;
+  position: relative;
+  justify-content: space-around;
+  align-content: center;
+  text-align: center;
+  padding: 10px;
+  height: var(--header-height);
+  font-size: 22px;
+  font-weight: 600;
+  border-radius: 0px;
   background-color: var(--medium-gray);
+  box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.4);
+  color: var(--color-white);
+  overflow: hidden;
+  position: sticky;
+  z-index: 999;
+  box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.4);
 }
+
+
 
 .profile {
   display: flex;

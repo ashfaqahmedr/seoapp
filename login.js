@@ -2,7 +2,7 @@ let LoggedUsername;
 
 const loginPanel = document.getElementById('loginPanel');     
 
-const headerElement = document.getElementById('header');
+const headerElement = document.getElementById('topTitle');
 
 const spanfullName = document.getElementById('fullName');
 const spanuserName = document.getElementById('userName');
@@ -13,7 +13,7 @@ const profile = document.getElementById('profile');
 const btngetUsers = document.getElementById('getUsers');
 const btnAddNewUser = document.getElementById('AddNewUser');
 const container = document.getElementById('container');
-const txttopTitle = document.getElementById('topTitle');
+const txttopTitle = document.getElementById('header');
 
 
 txttopTitle.innerHTML="SEO Content Machine Web App"
@@ -71,6 +71,7 @@ async function loginUser() {
   
       // Update full name in the header with spaces between uppercase letters
       headerElement.classList.remove('disconected');
+      headerElement.classList.add('connected');
 
       txttopTitle.innerHTML="SEO Content Machine Web App (Connected to Google Sheet)"
 
@@ -142,6 +143,7 @@ async function loginUser() {
             spanfullName.innerHTML = '';
             spanuserType.innerHTML = '';
             spanuserName.innerHTML = '';
+            headerElement.classList.remove('connected');
             headerElement.classList.add('disconected');
             txttopTitle.innerHTML="SEO Content Machine Web App"
             location.reload()
