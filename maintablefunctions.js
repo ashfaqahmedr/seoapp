@@ -8,6 +8,7 @@ let jobid =null;
 let blogsetID=null;
 let folderpath=null;
 let sectiontoshow = null;
+let apiCalltoMake = null;
 let titleID = null;
 let confirmDialogUse = false;
 
@@ -176,9 +177,13 @@ function createTableFromData(data) {
 
         if (Array.isArray(value)) {
           td.textContent = value.join(', ');
+        } else if (isISODate(value)) { // Check if value is in ISO date format
+          const formattedDate = formatDate(value); // Format ISO date to user-friendly format
+          td.textContent = formattedDate;
         } else {
           td.textContent = value !== undefined ? value : '';
         }
+        
         row.appendChild(td);
       }
     });
@@ -221,26 +226,36 @@ function createTableFromData(data) {
 
   function searchTable(searchData) {
     let visibleCount = 0; // Variable to store the count of visible records
-  
+    
     tableRows.forEach((row, i) => {
       let tableData = row.textContent.toLowerCase();
-  
+    
       const isRowVisible = tableData.indexOf(searchData) >= 0;
-      row.classList.toggle('hide', !isRowVisible);
-      row.style.setProperty('--delay', isRowVisible ? visibleCount / 25 + 's' : '0s'); // Delay animation only for visible rows
-  
+      row.classList.toggle('hidden', !isRowVisible);
+      // row.style.setProperty('--delay', isRowVisible ? visibleCount / 25 + 's' : '0s'); // Delay animation only for visible rows
+      
+      // Hide empty rows
+      if (!isRowVisible) {
+        const rowText = row.textContent.trim().toLowerCase();
+        if (rowText === '') {
+          row.classList.add('hidden');
+        }
+      }
+    
       if (isRowVisible) {
         visibleCount++;
       }
     });
-  
+    
     const showingText = `Showing ${visibleCount} of ${totalRecords} record(s)`;
     recordCountElement.textContent = showingText;
-  
-    document.querySelectorAll('tbody tr:not(.hide)').forEach((visibleRow, i) => {
+    
+    document.querySelectorAll('tbody tr:not(.hidden)').forEach((visibleRow, i) => {
       visibleRow.style.backgroundColor = i % 2 == 0 ? 'transparent' : '#0000000b';
     });
   }
+
+  
 
   sortTable(0, true);
 
@@ -283,6 +298,9 @@ function createTableFromData(data) {
   //Custom Right Click Menu
   enableCustomContextMenu("#main tbody", ".wrapper");
 
+  //Update the Custom Right Click Based on the table Data.
+  updateMenuItems(apiCalltoMake);
+
   hideLoader();
 
 
@@ -290,9 +308,18 @@ function createTableFromData(data) {
  
 }
 
+// Function to check if a value is in ISO date format
+function isISODate(value) {
+  return /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z/.test(value);
+}
 
 
-
+// Function to format ISO date to user-friendly format
+function formatDate(isoDate) {
+  const date = new Date(isoDate);
+  const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+  return date.toLocaleString('en-US', options);
+}
 
 // Function to sort the table
 function sortTable(column, sort_asc) {
@@ -461,6 +488,7 @@ const btncreateProjectData = document.getElementById("createProjectData");
 
 async function fetchDataAndHandle(selectedRowId, method) {
   
+  
   const ProjectIDInput = document.getElementById('ProjectID');
   const articleProjectNameInput = document.getElementById('articleProjectName');
   const articleKeywordsFileInput = document.getElementById('articleKeywordsFile');
@@ -524,6 +552,10 @@ async function fetchDataAndHandle(selectedRowId, method) {
       blogGroupInput.value = data[0].group;
       SEOStatusInput.value = data[0].SEOStatus;
 
+
+      Projectdialog.showModal();
+
+
     } else if (method.toUpperCase() === 'POSTDATA') {
      
          const jsonData = {
@@ -568,7 +600,7 @@ async function fetchDataAndHandle(selectedRowId, method) {
         const message = Resdata[0].message;
 
         createToast('success', 'fa-solid fa-circle-check', 'Success', "Success: " + success + " ID: "+ id + ' Message: '+ message);
-
+        Projectdialog.close()
 if (success) {
         // Assuming you have the row index stored in selectedRowIndex
 const table = document.getElementById('main');
@@ -787,7 +819,7 @@ async function fetchAndPopulateDialog() {
     }
     
   setSectionVisibility(hasArticleCreatorData, hasPostUploaderData, hasBlogSettingData);
-  Projectdialog.showModal();
+
   hideLoader();
   createToast('success', 'fa-solid fa-circle-check', 'Success', 'Data from SEO and custom API has been Retrieved!');
 
@@ -927,8 +959,6 @@ await fetchDataAndHandle(selectedRowId, 'POSTDATA'); // Make GET request
 }
   
 
-
-
 function openSettingDialog() {
     // Show the Projectdialog
     showLoader();
@@ -948,6 +978,7 @@ function openSettingDialog() {
 async function getandUpdateProjectSetting(METHOD) {
 
   const filedialog = document.getElementById('fileDialog');
+  
   //custom settings 
 const sheetIDInput = document.getElementById('sheetID');
 const listofContentFilterInput = document.getElementById('listofContentFilter');
@@ -1085,84 +1116,125 @@ const seoStatusInput = document.getElementById('seoStatus');
   }
 }
 
+const userdialog = document.getElementById('userDialog');
 
-function getSelectedUserDialog() {
-  // Show the Projectdialog
+//custom settings 
+const usersheetIDInput = document.getElementById('usersheetID');
+const userFullInputInput = document.getElementById('userFullInput');
+const usernameInputInput = document.getElementById('usernameInput');
+const userpasswordInput = document.getElementById('passwordInput');
+const usertimeCountInput = document.getElementById('timeCount');
+const userTypeInput = document.getElementById('userType');
+const userseoStatusinput = document.getElementById('seoStatusinput');
+
+
+const btnudateUserInfo = document.getElementById('udateUserInfo');
+const btnaddUserInfo = document.getElementById('addUserInfo');
+const btnUsercloseDialog = document.getElementById('UsercloseDialog');
+
+btnaddUserInfo.style.display="none";
+btnudateUserInfo.style.display = 'none';
+
+
+function showAddUserDialog() {
+
   showLoader();
 
-  getandAddUsers("GETDATA");
+  usersheetIDInput.style.display = 'none';
+  btnaddUserInfo.style.display="flex";
+  btnudateUserInfo.style.display = 'none';
+  userdialog.showModal();
+  hideLoader();
 
-  }
+}
 
-async function updateSelectedUserDialog() {
+async function AddUserInfo() {
   showLoader();
-await getandAddUsers("UPDATEDATA"); 
+await getandAddUsers("ADDUSERDATA"); 
+
+}
+
+
+async function updateSelectedUserData() {
+  showLoader();
+  usersheetIDInput.style.display = 'none';
+  btnaddUserInfo.style.display="none";
+  btnudateUserInfo.style.display = 'flex';
+
+  showLoader();
+
+  getandAddUsers("GETUSERDATA", selectedRowId);
+
+
+}
+
+async function updateUserDatabtnclk() {
+  showLoader();
+await getandAddUsers("UPDATEUSERDATA", selectedRowId); 
+
+}
+
+
+async function deleteSelectedUserData() {
+  showLoader();
+await getandAddUsers("DELETEUSERDATA", selectedRowId); 
 
 }
 
 
 // Function to populate the dialog with retrieved settings data
-async function getandAddUsers(METHOD) {
+async function getandAddUsers(METHOD, selectedUserId) {
 
-const filedialog = document.getElementById('userDialog');
-//custom settings 
-const sheetIDInput = document.getElementById('usersheetID');
-const userFullInputInput = document.getElementById('userFullInput');
-const usernameInputInput = document.getElementById('usernameInput');
-const passwordInputInput = document.getElementById('passwordInput');
-const timeCountInput = document.getElementById('timeCount');
-const userTypeInput = document.getElementById('userType');
-const seoStatusinputInput = document.getElementById('seoStatusinput');
 
-if (METHOD==="GETDATA") {
+    if (METHOD==="GETUSERDATA") {
  
   try {  
     const response = await fetch(seourl, {
     method: 'POST',
-    body: JSON.stringify({ action: 'getUsers', dataId: sheetIDInput.value, username: LoggedUsername }), // Include the action
+    body: JSON.stringify({ action: 'getUsers', dataId: selectedUserId, username: LoggedUsername }), // Include the action
   });
 
   if (response.ok) {
     const data = await response.json();
 
+
     // Populate the input elements with the retrieved values
-    sheetIDInput.value = data[0].SheetID;
+    usersheetIDInput.value = data[0].SheetID;
     userFullInputInput.value = data[0].FullName;
     usernameInputInput.value = data[0].userName;
-    passwordInputInput.value = data[0].Password;
-    timeCountInput.value = data[0].TimeOutMinute;
+    userpasswordInput.value = data[0].Password;
+    usertimeCountInput.value = data[0].TimeOutMinute;
     userTypeInput.value = data[0].Type;
-    seoStatusinputInput.value = data[0].SEOStatus;
+    userseoStatusinput.value = data[0].seoStatus;
 
     hideLoader();
     createToast('success', 'fa-solid fa-circle-check', 'Success', 'Settings has been loaded!');
-    filedialog.showModal();
+    userdialog.showModal();
   
       }  else {
         console.error('Error retrieving settings:');
         hideLoader();
-        createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Error retrieving settings: ' + error);
+        createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while Getting User Data: ' + error);
     }
       } catch (error) {
         console.error('Error retrieving settings:', error);
-        createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Error retrieving settings: ' + error);
+        createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while Getting User Data : ' + error);
         hideLoader();
       }
     }
 
-    if (METHOD==="ADDDATA") {
+    if (METHOD==="ADDUSERDATA") {
       try {
-        
+
         const jsonData = {
           action: 'addUsersData',
           username: LoggedUsername,
           dataItems: [
             {
-             "SheetID": "",
             "Type": userTypeInput.value,
-            "TimeOutMinute": parseInt(timeCountInput.value),
-            "userName": parseInt(usernameInputInput.value),
-            "Password":  parseInt(passwordInputInput.value),
+            "TimeOutMinute": parseInt(usertimeCountInput.value),
+            "userName": usernameInputInput.value,
+            "Password":  userpasswordInput.value,
             "FullName":  userFullInputInput.value,
             "SEOStatus": "pending"
           }
@@ -1195,62 +1267,117 @@ if (METHOD==="GETDATA") {
       
          catch (error) {
       
-          createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while Updating the Project Setting' +error);
+          createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while Adding User Data' +error);
           hideLoader();
           filedialog.close()
         } 
+    }
+
+    if (METHOD==="UPDATEUSERDATA") {
+
+      try {
+        
+        const jsonData = {
+          action: 'updateUsersData',
+          username: LoggedUsername,
+          dataItems: [
+            {
+            "SheetID": selectedUserId,
+            "Type": userTypeInput.value,
+            "TimeOutMinute": parseInt(usertimeCountInput.value),
+            "userName": usernameInputInput.value,
+            "Password":  userpasswordInput.value,
+            "FullName":  userFullInputInput.value,
+            "SEOStatus": "pending"
+          }
+        ]
+      };
+
+      console.table(jsonData)
+
+        // Send the updated settings to the server
+        const response = await fetch(seourl, {
+          method: 'POST',
+          body: JSON.stringify(jsonData), // Include the action
+        });
+
+        if (response.ok) {
+
+          const Resdata = await response.json();
+
+          console.table(Resdata);
+
+            const success = Resdata[0].success;
+            const id =  Resdata[0].SheetID;
+            const message = Resdata[0].message;
+
+          createToast('success', 'fa-solid fa-circle-check', 'Success', "Success: " + success + " <br> ID: "+ id + ' <br> Message: '+ message);
+          userdialog.close()
+          hideLoader();
+        }
       }
 
-if (METHOD==="UPDATEDATA") {
-try {
-  
-  const jsonData = {
-    action: 'updateUsersData',
-    username: LoggedUsername,
-    dataItems: [
-      {
-       "SheetID": sheetIDInput.value,
-      "Type": userTypeInput.value,
-      "TimeOutMinute": parseInt(timeCountInput.value),
-      "userName": parseInt(usernameInputInput.value),
-      "Password":  parseInt(passwordInputInput.value),
-      "FullName":  userFullInputInput.value,
-      "SEOStatus": "pending"
+        catch (error) {
+
+          createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while Updating User Data' +error);
+          hideLoader();
+          userdialog.close()
+        } 
     }
-  ]
-};
 
-console.table(jsonData)
+      //Delete Data
+    if (METHOD==="DELETEUSERDATA") {
+        try {
+          
+          const jsonData = {
+            action: 'deleteUsersData',
+            username: LoggedUsername,
+            dataItems: [
+              {
+              "SheetID": selectedUserId
+            }
+          ]
+        };
+  
+        console.table(jsonData)
+  
+          // Send the updated settings to the server
+          const response = await fetch(seourl, {
+            method: 'POST',
+            body: JSON.stringify(jsonData), // Include the action
+          });
+  
+          if (response.ok) {
+  
+            const Resdata = await response.json();
+  
+            console.table(Resdata);
+  
+              const success = Resdata[0].success;
+              const id =  Resdata[0].SheetID;
+              const message = Resdata[0].message;
 
-  // Send the updated settings to the server
-  const response = await fetch(seourl, {
-    method: 'POST',
-    body: JSON.stringify(jsonData), // Include the action
-  });
+                      // Assuming you have the row index stored in selectedRowIndex
+            const table = document.getElementById('main');
 
-  if (response.ok) {
+            if (selectedRowIndex >= 0) {
+              table.deleteRow(selectedRowIndex);
+            }
+  
+            createToast('success', 'fa-solid fa-circle-check', 'Success', "Success: " + success + " <br> ID: "+ id + ' <br> Message: '+ message);
+            userdialog.close()
+            hideLoader();
+          }
+        }
+  
+          catch (error) {
+  
+            createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while deleting User Data' +error);
+            hideLoader();
+            userdialog.close()
+          } 
+    }
 
-    const Resdata = await response.json();
-
-    console.table(Resdata);
-
-      const success = Resdata[0].success;
-      const id =  Resdata[0].SheetID;
-      const message = Resdata[0].message;
-
-    createToast('success', 'fa-solid fa-circle-check', 'Success', "Success: " + success + " <br> ID: "+ id + ' <br> Message: '+ message);
-    filedialog.close()
-    hideLoader();
-  }
-}
-
-   catch (error) {
-
-    createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while Updating the Project Setting' +error);
-    hideLoader();
-    filedialog.close()
-  } 
-}
 }
 // Function to update the settings
 
@@ -1380,7 +1507,7 @@ closeBtn.addEventListener('click', () => {
 const table_rows = document.querySelectorAll('tbody tr');
 const table_headings = document.querySelectorAll('thead th');
 
-const customers_table = document.querySelector('.table__body');
+const SEOTable = document.querySelector('.table__body');
 const tabletoExport = document.querySelector('#main');
 
 // Converting HTML table to JSON, CSV, Excel, and PDF files
@@ -1403,7 +1530,7 @@ const toJSON = function(table) {
     t_cells.forEach((t_cell, cell_index) => {
       const img = t_cell.querySelector('img');
       if (img) {
-        row_object['customer image'] = decodeURIComponent(img.src);
+        row_object['user image'] = decodeURIComponent(img.src);
       }
       row_object[headings[cell_index]] = t_cell.textContent.trim();
     });
@@ -1525,15 +1652,15 @@ const downloadFile = function(data, fileType, fileName = '') {
 // Bind click event for JSON button
 const json_btn = document.querySelector('#jsonBtn');
 json_btn.onclick = () => {
-  const tableData = toJSON(customers_table);
-  downloadFile(tableData, 'json', 'customer_orders.json');
+  const tableData = toJSON(SEOTable);
+  downloadFile(tableData, 'json', 'SEO_Data.json');
 };
 
 // Bind click event for CSV button
 const csv_btn = document.querySelector('#csvBtn');
 csv_btn.onclick = () => {
-  const tableData = toCSV(customers_table);
-  downloadFile(tableData, 'csv', 'customer_orders.csv');
+  const tableData = toCSV(SEOTable);
+  downloadFile(tableData, 'csv', 'SEO_Data.csv');
 };
 
 // Bind click event for Excel button
@@ -1541,13 +1668,13 @@ const excel_btn = document.querySelector('#excelBtn');
 excel_btn.onclick = () => {
   const includeImages = false; // Set this to true if you want to include image links, false or omit for a simple table
   const tableData = toExcel(tabletoExport, includeImages);
-  downloadFile(tableData, 'excel', 'customer_orders.xlsx');
+  downloadFile(tableData, 'excel', 'SEO_Data.xlsx');
 };
 
 // Bind click event for PDF button
 const pdf_btn = document.querySelector('#pdfBtn');
 pdf_btn.onclick = () => {
-  toPDF(customers_table);
+  toPDF(SEOTable);
 };
 
 

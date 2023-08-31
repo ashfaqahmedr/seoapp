@@ -1,5 +1,4 @@
 
-// let sectiontoshow ='AllDatatoshow'
 
 let notifications = document.querySelector('.notifications');
 
@@ -25,6 +24,7 @@ function createToast(type, icon, title, text){
 //Main DashBoard Function to Create Dashboard.
 async function fetchAPI() {
   sectiontoshow='AllDatatoshow'
+  apiCalltoMake = 'ProjectsData';
     // Show Animation
     showLoader();
   
@@ -54,6 +54,7 @@ async function fetchAPI() {
   //Function to show Aricle Creator Projects
   async function fetchArticleCreator() {
     sectiontoshow = 'articleCreator'
+    apiCalltoMake = 'ProjectsData';
      // Show Animation
      showLoader();
   
@@ -84,7 +85,9 @@ async function fetchAPI() {
 
   //Function to show Aricle Creator Projects
   async function fetchUsers() {
-    sectiontoshow = 'userData'
+    
+    apiCalltoMake = 'usersData';
+
      // Show Animation
      showLoader();
   
@@ -100,7 +103,6 @@ async function fetchAPI() {
              createTableFromData(responseData);
              console.table(responseData);
  
-   
      } catch (error) {
        console.error('Error fetching projects data:', error);
        let type = 'error';
@@ -117,6 +119,7 @@ async function fetchAPI() {
 async function fetchPostUploader() {
 
   sectiontoshow = 'postuploader'
+  apiCalltoMake = 'ProjectsData';
      // Show Animation
      showLoader();
   
@@ -147,6 +150,7 @@ async function fetchPostUploader() {
 async function ReadJsonFile() {
 
   sectiontoshow = 'jsondata'
+  apiCalltoMake = 'ProjectsData';
 
   // Show Animation
   showLoader();
@@ -178,6 +182,7 @@ async function ReadJsonFile() {
 // Function to show Article Creator Projects
 async function fetchArticleCreatorbyStatus(articleStatus) {
  sectiontoshow='AllDatatoshow'
+ apiCalltoMake = 'ProjectsData';
   // Show Animation
   showLoader();
 
@@ -251,31 +256,26 @@ function updateDashboardCounts(counts) {
   }
 }
 
-
-  
-  
-
- //custom Right Click Menu
- function enableCustomContextMenu(tableSelector, menuSelector) {
+//custom Right Click Menu
+function enableCustomContextMenu(tableSelector, menuSelector) {
   const contextMenu = document.querySelector(menuSelector);
   const table = document.querySelector(tableSelector);
 
   table.addEventListener("contextmenu", e => {
     const target = e.target;
-    // if (target.tagName === "TD" && target.cellIndex === 0) {
+
     if (target.tagName === "TD") {
-      
       e.preventDefault();
 
       const row = target.parentNode;
-      selectedRowId = target.textContent.trim();
+      const firstCell = row.querySelector("td:first-child"); // Get the first cell of the row
+      selectedRowId = firstCell.textContent.trim();
 
-       // Get the row index number
-    selectedRowIndex = row.rowIndex;
-    
+      selectedRowIndex = row.rowIndex;
+
       console.log("First TD Text:", selectedRowId);
       console.log("Row Index Number:", selectedRowIndex );
-      
+
       const mousePosX = e.pageX;
       const mousePosY = e.pageY;
       const menuWidth = contextMenu.offsetWidth;
@@ -301,9 +301,55 @@ function updateDashboardCounts(counts) {
   document.addEventListener("click", () => {
     contextMenu.style.visibility = "hidden";
   });
-
 }
 
+
+function updateMenuItems(apiCall) {
+  const editItem = document.getElementById('customEditData');
+  const deleteItem = document.getElementById('customDeleteData');
+  const addItem = document.getElementById('customAddData');
+  
+  // Update menu item text and onclick event based on the API call
+  switch (apiCall) {
+    case 'usersData':
+
+      editItem.querySelector('span').textContent = 'Edit User Data';
+      deleteItem.querySelector('span').textContent = 'Delete User Data';
+      addItem.querySelector('span').textContent = 'Add User Data';
+
+     editItem.querySelector('i').className = 'far fa-user-edit';
+     addItem.querySelector('i').className = 'fas fa-user-plus';
+     deleteItem.querySelector('i').className = 'far fa-user-minus';
+
+      editItem.onclick = updateSelectedUserData;
+      deleteItem.onclick = deleteSelectedUserData;
+      addItem.onclick = showAddUserDialog;
+      // Update other items as needed
+      break;
+
+    case 'ProjectsData':
+      editItem.querySelector('span').textContent = 'Edit Project Data';
+      deleteItem.querySelector('span').textContent = 'Delete Project Data';
+      addItem.querySelector('span').textContent = 'Add Project Data';
+
+      editItem.querySelector('i').className = 'far fa-edit';
+      addItem.querySelector('i').className = 'fas fa-plus';
+      deleteItem.querySelector('i').className = 'fas fa-trash-alt';
+
+
+      editItem.onclick = fetchAndPopulateDialog;
+      deleteItem.onclick = deleteUsingAPI;
+      addItem.onclick = createnewJobID;
+      // Update other items as needed
+      break;
+
+    // Add cases for other API calls
+
+    default:
+      // Default case if apiCall doesn't match any known API calls
+      break;
+  }
+}
 
 
 //  Function to remove trailing "..." from a status

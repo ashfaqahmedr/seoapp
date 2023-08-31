@@ -10,18 +10,25 @@ const spanuserType = document.getElementById('UserType');
 const userIconElement = document.getElementById('userIcon'); // Get the userIcon span
 
 const profile = document.getElementById('profile');
-
-profile.style.display = 'none';
-
+const btngetUsers = document.getElementById('getUsers');
+const btnAddNewUser = document.getElementById('AddNewUser');
 const container = document.getElementById('container');
-const sidebar = document.getElementById('sidebar');
-const mainSectionTable = document.getElementById('mainSectionTable');
+const txttopTitle = document.getElementById('topTitle');
 
-headerElement.classList.add('connected');
-container.classList.add('hidden');
+
+txttopTitle.innerHTML="SEO Content Machine Web App"
+
 
 document.getElementById('popupContainer').style.display = 'none';
 document.getElementById('loadingOverlay').style.display = 'none';
+
+profile.style.display = 'none';
+btngetUsers.style.display = 'none';
+btnAddNewUser.style.display = 'none';
+
+headerElement.classList.add('disconected');
+
+container.style.display = 'none';
 
 function formatName(name) {
   return name
@@ -63,21 +70,30 @@ async function loginUser() {
     console.log("userToken: , Cookie Value:"+ cookieValue);
   
       // Update full name in the header with spaces between uppercase letters
+      headerElement.classList.remove('disconected');
+
+      txttopTitle.innerHTML="SEO Content Machine Web App (Connected to Google Sheet)"
+
         spanfullName.innerHTML = fullName;
         spanuserType.innerHTML  = formatName(userType);
         spanuserName.innerHTML = formatName(username);
-
+        
        // Update icon based on user type in the sidebar
        userIconElement.classList.remove('fas', 'fa-crown', 'fa-briefcase', 'fa-users', 'fa-user');
 
        switch (userType) {
          case 'SuperAdmin':
            userIconElement.classList.add('fas', 'fa-crown');
+           btngetUsers.style.display = 'flex';
+           btnAddNewUser.style.display = 'flex';
+
            break;
          case 'Admin':
            userIconElement.classList.add('fas', 'fa-briefcase');
+           btngetUsers.style.display = 'flex';
+           btnAddNewUser.style.display = 'flex';
            break;
-         case 'User':
+          case 'User':
            userIconElement.classList.add('fas', 'fa-users');
            break;
          // Add more cases for other user types
@@ -88,12 +104,8 @@ async function loginUser() {
         // profile.classList.remove('hidden');
         
         profile.style.display = 'flex';
-
-        // Add the 'hidden' class to the elements
-        sidebar.classList.remove('hidden');
-        mainSectionTable.classList.remove('hidden');
-        loginPanel.classList.add('hidden');
-        mainSectionTable.classList.add('table');
+        container.style.display = 'flex';
+        loginPanel.style.display = 'none';
         
         createToast('success', 'fa-solid fa-circle-check', 'Success', 'Logged In successfully.');
         hideLoader();
@@ -122,13 +134,17 @@ async function loginUser() {
 }
   function logout() {
             // Add the 'hidden' class to the elements
-            sidebar.classList.add('hidden');
+            sidebar.style.display = 'none';
             profile.style.display = 'none';
-            mainSectionTable.classList.add('hidden');
-            loginPanel.classList.remove('hidden');
+            mainSectionTable.style.display = 'none';
+            loginPanel.style.display = 'flex';
             // mainSectionTable.classList.remove('table');
-            document.getElementById('fullName').innerHTML = '';
-            document.getElementById('userType').innerHTML = '';
+            spanfullName.innerHTML = '';
+            spanuserType.innerHTML = '';
+            spanuserName.innerHTML = '';
+            headerElement.classList.add('disconected');
+            txttopTitle.innerHTML="SEO Content Machine Web App"
+            location.reload()
 
     
   }

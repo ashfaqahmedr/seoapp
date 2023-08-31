@@ -1,0 +1,21 @@
+
+
+
+updateMenuItems(apiCallToMake);
+
+
+
+apiCalltoMake = 'usersData';
+
+apiCalltoMake = 'ProjectsData';
+
+
+
+fetchAndPopulateDialog()
+deleteUsingAPI()
+createnewJobID()
+
+
+AddUserInfo()
+updateSelectedUserData()
+deleteSelectedUserData()

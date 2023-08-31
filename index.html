@@ -30,14 +30,17 @@
 </div>
 
   <div id="header" class="header">
-    <span  >SEO Content Machine Web App (Connected to Google Sheet) </span>
+    <span id="topTitle">SEO Content Machine Web App (Connected to Google Sheet) </span>
     <div id="profile" class="profile">
       <i class="fas fa-user-circle"></i>
-      <span class="fullname" id="fullName">
-      </span> 
-      <button class="btnLogout" onclick="logout()"><i class="fas fa-sign-out-alt"></i>Logout</button> 
+    
+      <div class="logoutcls">
+        <span class="fullname" id="fullName">
+        </span>
+      <button class="btnLogout New-Button" onclick="logout()" data-tooltip="Logout"><i class="fas fa-sign-out-alt"></i></button> 
       </div>
     </div>
+      </div>
   
 <section id="loginPanel" class="loginPanel">
  
@@ -47,16 +50,16 @@
       <div class="title">Sign In</div>
       <div class="login__field">
         <i class="fas fa-user"></i>
-        <input type="text" placeholder=" " class="login__input" name="username" autocomplete="on" required id="username">
-        <label class="login__label">User name</label>
+        <input type="text" placeholder=" " class="login__input" name="username" id="username" autocomplete="off"   required>
+        <label class="login__label">User Name</label>
       </div>
       <div class="login__field">
         <i class="fas fa-lock"></i>
-        <input id="password" type="password" name="password" class="login__input" placeholder=" " autocomplete="on" required>
+        <input id="password" type="password" name="password" class="login__input" placeholder="" autocomplete="off" required>
         <label class="login__label">Password</label>
       </div>
     </div>
-    <button onclick="loginUser()" class="button login__submit button__text"> Sign In  ></button>
+    <button onclick="loginUser()" class="button login__submit button__text"> Sign In   ></button>
     <div class="screen__background">
       <span class="screen__background__shape screen__background__shape4"></span>
       <span class="screen__background__shape screen__background__shape3"></span>
@@ -68,37 +71,39 @@
 </section>
 
 <div class="container" id="container">
-  <div class="header-spacer"></div>
+     <div class="header-spacer"></div>
   <div class="sidebar close" id="sidebar">
 
-    <div class="top-sidebar">
-      <ul class="nav-list">
+    <ul class="nav-list">
       <div class="logo_details">
         <i class="bx bxl-audible icon"></i>
         <div class="logo_name">SEO App</div>
         <i class="bx bx-menu" id="btn"></i>
-        <span class="tooltip" id="btnToolTip">Show Sidebar</span>
+        <span class="tooltip hidden" id="btnToolTip">Show Sidebar</span>
       </div>
-    </ul>
-    </div>
 
-
-  <div class="middle-sidebar">
-
-    <ul class="nav-list">
-
-      <li class="user-details">
+      <ul class="user-details">
         <span id="userIcon" class="user-icon"></span>
         <span id="userName"></span>
         <span id="UserType"></span>
-      </li>
+      </ul>
+      <ul id="getUsers" class="nav-list">
+        <li class="divider">
+        <a href="#" id="getUser-link" onclick="fetchUsers()">
+          <i class="fas fa-users"></i>
+        <span class="link_name">Get Users Info</span>
+        <span class="tooltip hidden">Get Users Info</span>
+        </a> 
+      </li> 
+    </ul> 
+
 
       <ul>
           <li class="divider">
             
           <a href="#" id="dashboard-link"  onclick="fetchAPI()">
             <i class='bx bx-grid-alt' ></i> </i><span class="link_name">Dashboard</span>
-          <span class="tooltip">Dashboard</span>
+          <span class="tooltip hidden">Dashboard</span>
           </a> 
         </li> 
       </ul> 
@@ -108,7 +113,7 @@
           <i class="fas fa-project-diagram "></i>
         <span class="link_name">All Projects</span>
         <span class="count sticky" id="allproject-count"></span>
-        <span class="tooltip">All Projects</span>
+        <span class="tooltip hidden">All Projects</span>
         <!-- </a> -->
       </li>
 
@@ -117,7 +122,7 @@
             <i class="fas fa-pencil-alt "></i>
               <span class="link_name">Article Creator</span>
               <span class="count sticky" id="creator-count"></span>
-              <span class="tooltip">Article Creator</span>
+              <span class="tooltip hidden">Article Creator</span>
             </a>
           </a>
         </li>
@@ -127,7 +132,7 @@
             <i class="fas fa-cloud-upload "></i>
           <span class="link_name">Post Uploader </span>
           <span class="count sticky" id="poster-count"></span>
-          <span class="tooltip">Post Uploader</span>
+          <span class="tooltip hidden">Post Uploader</span>
         </a>
       </li>
 
@@ -136,7 +141,7 @@
           <i class="fas fa-file-code"></i>
         <span class="link_name">Read JSON </span>
         <span class="count sticky" id="json-count"></span>
-        <span class="tooltip">Read JSON File</span>
+        <span class="tooltip hidden">Read JSON File</span>
       </a>
      </li>
 
@@ -144,7 +149,7 @@
             <!-- <a href="#" id="status-link" onclick="fetchAPI()"> -->
             <i class="fas fa-chart-bar "></i>
             <span class="link_name">Status</span>
-            <span class="tooltip">Status</span>
+            <span class="tooltip hidden">Status</span>
             <!-- </a> -->
       </li>
 
@@ -154,7 +159,7 @@
         <i class="fas fa-file "></i>
         <span class="link_name">Draft</span>
         <span class="count" id="draft-count"></span>
-        <span class="tooltip">Draft</span>
+        <span class="tooltip hidden">Draft</span>
         </a> 
       </li>     
 
@@ -163,7 +168,7 @@
         <i class="fas fa-hourglass "></i>
         <span class="link_name">Waiting</span>
         <span class="count sticky" id="waiting-count"></span>
-        <span class="tooltip">Waiting</span>
+        <span class="tooltip hidden">Waiting</span>
         </a>
       </li>    
 
@@ -173,7 +178,7 @@
             <i class="fas fa-exclamation "></i> 
             <span class="link_name"> Failed </span>
             <span class="count sticky" id="failed-count"></span>
-            <span class="tooltip">Failed</span>
+            <span class="tooltip hidden">Failed</span>
             </a>
             
         </li>
@@ -184,7 +189,7 @@
             <i class="fas fa-ban "></i>
           <span class="link_name">Aborted</span>
           <span class="count sticky" id="aborted-count"></span>
-          <span class="tooltip">Aborted</span>
+          <span class="tooltip hidden">Aborted</span>
           </a>
         
         </li>
@@ -194,7 +199,7 @@
           <i class="fas fa-check "></i>
           <span class="link_name">Completed</span>
           <span class="count sticky" id="complete-count"></span>
-          <span class="tooltip">Completed</span>
+          <span class="tooltip hidden">Completed</span>
           </a>
         </li>
 
@@ -205,7 +210,7 @@
           <i class="fas fa-play "></i>
           <span class="link_name">Running</span>
           <span class="count sticky" id="running-count"></span>
-          <span class="tooltip">Running</span>
+          <span class="tooltip hidden">Running</span>
           </a>
         
         </li>
@@ -214,55 +219,21 @@
           <i class="fas fa-stop "></i>
           <span class="link_name">Aborting...</span>
           <span class="count sticky" id="aborting-count"></span>
-          <span class="tooltip">Aborting...</span>
+          <span class="tooltip hidden">Aborting...</span>
           </a> 
         </li>
-    </ul>   
-   </div>
-      <div class="bottom-sidebar">
-        <ul class="nav-list">
-          <li class="divider">
-          <!-- <a href="#" id="setting-link"  onclick="fetchAPI()"> -->
-            <i class="fas fa-cog"></i>
-            <span class="link_name"></i>Setting</span>
-            <span class="tooltip">Setting</span>
-        <!-- </a>    -->
-          </li>
-            <li>
-              <a href="#" id="project-setting-link" onclick="openSettingDialog()">
-                <i class="fas fa-cogs"></i>
-            <span class="link_name">Project Setting</span>
-            <span class="tooltip">Project Setting</span>
-          </a>
-          </li>
+       </ul>   
+    
 
-            <li class="divider">
-              <a href="#" id="project-reload-link" onclick="location.reload()">
-                <i class="fas fa-sync-alt"></i> 
-            <span class="link_name">Re-Load App</span>
-            <span class="tooltip">Re-Load App</span>
-          </a>
-            </li>
-          <li class="divider">
-            <a href="#" id="project-close-link" onclick="window.close()"> 
-              <i class="fas fa-times"></i>
-          <span class="link_name">Close App</span>
-        <span class="tooltip">Close App</span>
-          </a> 
-          </li>
-       
-        </ul> 
-     </div>
-       
-    </div>
+  </div>
  
    <!-- <section class="home-section"> -->
     <div class="table_box" id="mainSectionTable">
       <div class="table__header">
+         
+          <button id="AddProject" class="New-Button" data-tooltip="Add New Project" onclick="createnewJobID()"> <i class="fas fa-plus-circle"></i> Add Project</button>
+          <button id="AddNewUser" class="New-Button" data-tooltip="Add New User" onclick="showAddUserDialog()"> <i class="fas fa-user-plus"></i>Add User</button>
 
-        <button id="AddProject" class="New-Buton" onclick="createProjects()"> <i class="fas fa-plus-circle"></i>  Add New Project </button>
-        <button id="AddUser" class="New-Buton" onclick="createProjects()"> <i class="fas fa-user-plus"></i>  Add New User </button>
-        
           <span id="recordCount"></span>
           <div class="input-group">
               <input type="search" id="search-input" placeholder="Search...">
@@ -282,15 +253,14 @@
             </div>
           </div>          
 
-             <button id="updateProjectSettings" class="New-Buton" onclick="openSettingDialog()"> <i class="fas fa-cog"></i>  Update Project Settings</button>
-              <!-- <button id="Run-Buton" class="New-Buton" onclick=" toggleNotificationPanel()"> <i class="fas fa-play"></i>  Running </button> -->
+             <button id="updateProjectSettings" class="New-Button" data-tooltip="Change Project Settings" onclick="openSettingDialog()"> <i class="fas fa-cog"></i>Settings</button>
+              <!-- <button id="Run-Buton" class="New-Button" onclick=" toggleNotificationPanel()"> <i class="fas fa-play"></i>  Running </button> -->
         </div >
 
         <div class="table__body">  
-          <table id="main" class="customers_table"></table>
+          <table id="main" class="SEOTable"></table>
         </div >
-      </div >
-     
+      </div > 
 </div> 
 
  <!-- Custom Context Menu -->
@@ -298,26 +268,28 @@
   <div class="wrapper">
     <div class="content">
       <ul class="menu">
-        <li class="item" onclick=" fetchAndPopulateDialog()">
-          <i class="far fa-edit"></i>
-          <span>Edit</span>
-        </li>
 
-        <li class="item" onclick="deleteUsingAPI()">
-          <i class="fas fa-trash-alt"></i>
-          <span>Delete</span>
-        </li>
-
-        <li class="item" onclick=" createnewJobID()">
-          <i class="fas fa-plus"></i>
+        <li class="item" id="customAddData">
+          <i></i>
           <span>Create Project</span>
         </li>
 
-        <li class="item" onclick="runProjectById()">
-          <i class="fas fa-play"></i>
-          <span>Run Project</span>
+        <li class="item" id="customEditData">
+          <i></i>
+          <span>Edit</span>
         </li>
 
+        <li class="item" id="customDeleteData">
+          <i></i>
+          <span>Delete</span>
+        </li>
+
+        <!-- <li class="item" onclick="runProjectById()">
+          <i class="fas fa-play"></i>
+          <span>Run Project</span>
+        </li> -->
+        
+        <br>
         <li class="item" onclick="openSettingDialog()">
           <i class="fas fa-cog"></i>
           <span>Project Default Settings</span>
@@ -370,22 +342,22 @@
         
       <label for="ProjectID">Article Creator ID:</label>
       
-      <input type="text" id="ProjectID" name="ProjectID">
+      <input type="text" id="ProjectID" name="ProjectID" readonly>
 
       <label for="articleProjectName">Article Project Name:</label>
       
-      <input type="text" id="articleProjectName" name="ProjectName">
+      <input type="text" id="articleProjectName" name="ProjectName" required>
 
         <label for="articleKeywordsFile">Article Keywords: </label>
-        <input type="text" id="articleKeywordsFile"  name="ProjectKeywords">
+        <input type="text" id="articleKeywordsFile"  name="ProjectKeywords" required>
     
       <label for="articleCategories">Article Categories: </label>
       
-      <input type="text" id="articleCategories" name="ProjectCategories">
+      <input type="text" id="articleCategories" name="ProjectCategories" required>
 
       <label for="ProjectStatus">Article Creartor Status:</label>
       
-      <input type="text" id="ProjectStatus" name="ProjectStatus">
+      <input type="text" id="ProjectStatus" name="ProjectStatus" readonly>
 
     </div>
 
@@ -395,16 +367,16 @@
       
       <label for="PostUploaderId">Post Uploader ID:</label>
       
-      <input type="text" id="PostUploaderId" name="PostUploaderId">
+      <input type="text" id="PostUploaderId" name="PostUploaderId" readonly>
 
       <label for="postJobName">Post Job Name:</label>
-      <input type="text" id="postJobName" name="PostUploaderName">
+      <input type="text" id="postJobName" name="PostUploaderName" required>
 
       <label for="PostUploaderStatus">Post Uploader Status:</label>
-      <input type="text" id="PostUploaderStatus" name="PostUploaderStatus">
+      <input type="text" id="PostUploaderStatus" name="PostUploaderStatus" readonly>
 
       <label for="postDate">Post Date:</label>
-      <input type="date" id="postDate" name="PostStartDate">
+      <input type="date" id="postDate" name="PostStartDate" required>
 
     </div>
 
@@ -415,23 +387,23 @@
 
       <label for="BlogIdId">Blog ID:</label>
       
-      <input type="text" id="BlogId" name="BlogId">
+      <input type="text" id="BlogId" name="BlogId" readonly>
 
 
       <label for="blogUserName">Blog User Name:</label>
-      <input type="text" id="blogUserName" name="username">
+      <input type="text" id="blogUserName" name="username" required>
     
       <label for="blogPassword">Blog Password:</label>
-      <input type="text" id="blogPassword" name="password"> 
+      <input type="text" id="blogPassword" name="password" required> 
 
       <label for="blogUrl">Blog URL:</label>
-      <input type="text" id="blogUrl" name="url">
+      <input type="text" id="blogUrl" name="url" required>
 
       <label for="blogGroup">Blog Group:</label>
-      <input type="text" id="blogGroup" name="group">
+      <input type="text" id="blogGroup" name="group" required>
 
       <label for="SEOStatus">SEO Status:</label>
-      <input type="text" id="SEOStatus" name="SEOStatus">
+      <input type="text" id="SEOStatus" name="SEOStatus" readonly>
     
     </div>
 
@@ -471,12 +443,12 @@
 
       <div class="full-width-input">
         <label for="listofContentFilter">List of Content Filter:</label>
-        <input type="text" id="listofContentFilter">
+        <input type="text" id="listofContentFilter" required>
       </div>
       
       <div class="subsection">
         <label for="urlsDownloadResultLimits">URLs Download Result Limits:</label>
-        <input type="number" id="urlsDownloadResultLimits" >
+        <input type="number" id="urlsDownloadResultLimits" required>
       </div>
 
       <div class="subsection">
@@ -485,11 +457,11 @@
       </div>
       <div class="subsection">
         <label for="insertNoofImagesFROM">Insert No of Images FROM:</label>
-        <input type="number" id="insertNoofImagesFROM">
+        <input type="number" id="insertNoofImagesFROM" required>
       </div>
       <div class="subsection">
         <label for="insertNoofImagesTO">Insert No of Images TO:</label>
-        <input type="number" id="insertNoofImagesTO">
+        <input type="number" id="insertNoofImagesTO" required>
       </div>
 
 
@@ -510,23 +482,15 @@
       </div>
 
 
-      <!-- <div class="subsection">
-        <label for="imageInserType">Wordpress Image Upload Options:</label>
-        <input type="text" list="contentSourceOptions" id="imageInserType" name="contentSource" value="local">
-        <datalist id="contentSourceOptions">
-          <option value="hotlink">Image Links</option>
-          <option value="base64">base64 URLs</option>
-          <option value="local">Save Locally</option>
-        </datalist>
-      </div> -->
-
-       <div class="subsection">
-        <label for="imageInserType">Wordpress Image Upload Options</label>
-        <select id="imageInserType" name="imageInserType">
-          <option value="hotlink">Image Links</option>
-          <option value="base64">base64 URLs</option>
-          <option value="local" selected>Save Locally</option>
-        </select>
+      <div class="subsection">
+          <label for="imageInserType">Wordpress Image Upload Options</label>
+          <select id="imageInserType" name="imageInserType" required>
+            <option value="hotlink"> &#128279; Image Links</option>
+            <option value="base64"> &#128295; base64 URLs</option>
+            <option value="local" selected>  &#128190;Save Locally</option>
+          </select>
+      </div>
+      
 
       <div class="subsection">
         <div class="toggle-button">
@@ -583,19 +547,19 @@
 
       <div class="subsection">
         <label for="postsperDay">Posts per Day:</label>
-        <input type="number" id="postsperDay">
+        <input type="number" id="postsperDay" required>
       </div>
       <div class="subsection">
         <label for="postIntervaldaysFROM">Post Interval days FROM:</label>
-        <input type="number" id="postIntervaldaysFROM">
+        <input type="number" id="postIntervaldaysFROM" required>
       </div>
       <div class="subsection">
         <label for="postIntervaldaysTO">Post Interval days TO:</label>
-        <input type="number" id="postIntervaldaysTO">
+        <input type="number" id="postIntervaldaysTO" required>
       </div>
       <div class="subsection">
         <label for="postarticleTitle">Article Title:</label>
-        <input type="text" id="postarticleTitle">
+        <input type="text" id="postarticleTitle" required>
       </div>
 
       <div class="subsection">
@@ -619,61 +583,63 @@
 
   <dialog id="userDialog" class="dialog">
 
-
-
     <div id="dialogTitle">Add New Users to Google Sheet</div>
-
+    
+      
     <div class="subheading">Add User's Info</div>
 
-    <div class="dialog-section"> 
+    <div class="dialog-section" section3> 
 
-      <div class="subsection">
-        <label for="usersheetID">Google Sheet ID:</label>
-        <input type="text" id="usersheetID">
+          <div class="subsection">
+            <label for="usersheetID">Google Sheet ID:</label>
+            <input type="text" id="usersheetID" readonly>
+          </div>
+
+          <div class="subsection">
+            <label for="userFullInput">User Full Name</label>
+            <input type="text" id="userFullInput" required>
+          </div>
+          
+          <div class="subsection">
+            <label for="usernameInput">User Name</label>
+            <input type="text" id="usernameInput" required>
+          </div>
+          
+          <div class="subsection">
+            <label for="passwordInput">User Password</label>
+            <input type="text" id="passwordInput" required>
+          </div>
+
+          <div class="subsection">
+            <label for="timeCount">Default User Logout Time</label>
+            <input type="number" id="timeCount" required>
+          </div>
+
+          <div class="subsection">
+
+            <label for="userType">User Type</label>
+            <select id="userType" name="userType" required>
+              <option value="SuperAdmin">&#128081; SuperAdmin</option>
+              <option value="Admin" selected>&#128084; Admin</option>
+              <option value="User"> &#128105; User</option>
+
+            </select>
+          </div>   
+
+          <div class="subsection">
+            <label for="SEOdInput">SEO Status</label>
+            <input type="text" id="seoStatusinput" readonly>
+          </div>
+        
       </div>
-
-      <div class="subsection">
-        <label for="userFullInput">User Full Name</label>
-        <input type="text" id="userFullInput">
-      </div>
-      
-      <div class="subsection">
-        <label for="usernameInput">User Name</label>
-        <input type="text" id="usernameInput">
-      </div>
-      
-      <div class="subsection">
-        <label for="passwordInput">User Password</label>
-        <input type="text" id="passwordInput" >
-      </div>
-
-      <div class="subsection">
-        <label for="timeCount">Default User Logout Time</label>
-        <input type="number" id="timeCount">
-      </div>
-
-
-       <div class="subsection">
-        <label for="userType">User Type</label>
-        <select id="userType" name="userType">
-          <option value="Admin">Admin</option>
-          <option value="User">User</option>
-        </select>
-      </div>     
-    </div>
-
-    <div class="subsection">
-      <label for="seoStatusinput">Default User Logout Time</label>
-      <input type="number" id="seoStatusinput">
-    </div>
 
 
   <span class="btn">
-    <button class="btn closeDialog" id="udateUserInfo" onclick="updateUserInfo()">
+    <button class="btn closeDialog" id="udateUserInfo" onclick="updateUserDatabtnclk()">
       <i class="fas fa-sync"></i> Update
     </button>
 
-    <button class="btn closeDialog" id="addUserInfor" onclick="createUser()">
+    <button class="btn closeDialog" id="addUserInfo" onclick="showAddUserDialog()">
       <i class="fas fa-plus"></i> Add User
     </button>
 

@@ -139,7 +139,7 @@ z-index: 999;
 }
 
 
-.New-Buton {
+.New-Button {
   display: flex;
   align-items: center;
   background-color: var(--color-default);
@@ -149,26 +149,54 @@ z-index: 999;
   text-align: center;
   outline: none;
   text-decoration: none;
-  /* align-self: auto; */
   width: auto;
   cursor: pointer;
-  /* border: 3px solid var(--color-white); */
+ border: 3px solid var(--color-white);
   border: none;
   border-radius: 20px;
+  position: relative; 
+  z-index: 101;
+
 }
 
-.New-Buton > i{
+.New-Button > i{
   padding: 5px 5px 5px 5px;
-  
+
 }
 
 .New-Buton:hover {
-/* scale: 1.025; */
+  position: absolute;
+scale: 1.025;
 background-color: var(--color-white);
 color: var(--color-default);
 border: 3px solid var(--color-buttons);
-/* border: none; */
+border: none;
+z-index: 100;
 
+}
+
+
+/* Style the tooltip */
+.New-Button::before {
+  content: attr(data-tooltip); /* Tooltip text */
+  position: absolute;
+  top: calc(100% + 10px); /* Position it below the button with 10px gap */
+  left: 50%; /* Center it horizontally */
+  transform: translateX(-50%); /* Center it perfectly */
+  padding: 8px;
+  background-color: var(--color-yellow);
+  color: white;
+  border-radius: 50px;
+  font-size: 15px;
+  white-space: nowrap; /* Prevent text from wrapping */
+  opacity: 0; /* Initially hidden */
+  pointer-events: none; /* Allow clicks to pass through the tooltip */
+  transition: opacity 0.2s ease;
+  /* z-index: 999; */
+}
+
+.New-Button:hover::before {
+  opacity: 1; /* Show tooltip on hover */
 }
 
 
@@ -192,6 +220,8 @@ border: 3px solid var(--color-buttons);
     box-shadow: 0 .1rem .4rem #0002;
 }
 
+
+
 .table__header .input-group input {
     padding: 0 .5rem 0 .3rem;
     background-color: transparent;
@@ -205,10 +235,7 @@ border: 3px solid var(--color-buttons);
   padding-bottom: 1px;
   padding-left: 3px;
   padding-right: 3px;
-
   box-sizing: border-box;
-  /* width: 100dvh;
-  max-height: 100dvh; */
   background-color: rgba(158, 155, 155, 0.616);
   margin: 0.3rem auto;
   border-radius: 0.8rem;
@@ -219,7 +246,7 @@ border: 3px solid var(--color-buttons);
   overflow-x: scroll;
   scrollbar-width: thin;
   scroll-snap-type: x mandatory;
-  animation: revealAndSqueeze 1s ease-in-out;
+  /* animation: revealAndSqueeze 1s ease-in-out; */
 }
 
 @keyframes revealAndSqueeze {
@@ -270,7 +297,7 @@ thead th {
   cursor: pointer;
   border-radius: 5px;
   text-transform: capitalize;
-  animation: revealAndSqueeze 1s ease-in-out;
+  /* animation: revealAndSqueeze 1s ease-in-out; */
 }
 
 
@@ -280,7 +307,7 @@ thead th {
 
 #main > tbody > tr {
   transition: 0.5s ease-in-out, background-color 0.1s;
-  animation: revealAndSqueeze 1s ease-in-out;
+  /* animation: revealAndSqueeze 1s ease-in-out; */
 }
 
 #main > tbody > tr.hide {

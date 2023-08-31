@@ -7,7 +7,6 @@
   --color-body:#e4e9f7;
   --color-light:#5405ad;
   --color-ul:#58cae794;
-
   --accent-color: rgb(204, 0, 0);
   --lightest-gray: rgb(10, 10, 8);
   --light-gray: rgb(144, 144, 144);
@@ -20,7 +19,7 @@
   --sidebar-min-width: 100px;
   --sidebar-max-width: 200px;
 
-  --header-height: 40px;
+  --header-height: 35px;
 
 }
 
@@ -52,11 +51,13 @@ body {
 }
 
 .header {
-  box-sizing: border-box;
+  user-select: none;
   display: flex;
   position: relative;
-  position: sticky;
-  width: 100vw;
+  justify-content: space-around;
+  align-content: center;
+  text-align: center;
+  padding: 10px;
   height: var(--header-height);
   font-size: 22px;
   font-weight: 600;
@@ -64,75 +65,106 @@ body {
   background-color: var(--color-second);
   box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.4);
   color: var(--color-white);
-  padding: 10px;
   overflow: hidden;
-  text-align: center;
-  align-items: center;
-  justify-content: space-between;
-  align-content: space-between;
-  z-index: 1;
-  animation-fill-mode: both;
-  transition: all 0.5s ease-in-out;
+  position: sticky;
+  z-index: 999;
+  box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.4);
+}
+
+.connected {
+  background-color: var(--medium-gray);
 }
 
 .profile {
-  align-items: flex-end;
-  justify-content: flex-end; /* Align elements to the right */
-  align-items: center;
+  display: flex;
+   justify-content: center;
+  align-content: center;
 
 }
 
-.profile  i.fas {
+.profile i.fas {
+  color: var(--color-yellow);
+  font-size: 30px;
+  font-weight: 800; 
+}
+
+
+.profile .logoutcls {
   
-  text-align: center;
-  align-items: center;
-  border: none;
-  background-color: var(--color-default);
-  color: var(--color-yellow);
-  font-size: 25px;
-  font-weight: 800;
-  border-radius: 10px;  
+  display: flex;
+  position: relative;
+  /* justify-content: flex-end;
+  align-content: flex-end; */
+  right: 50px;
+  justify-content: center;
+  align-content: center;
+/* width: 50%; */
 }
 
-.fullname{ 
+
+.profile .logoutcls .btnLogout, .profile .logoutcls .fullname {
   border: none;
-  padding-left: 10px;
-  padding-right: 10px;
-  margin-left: 10px;
-  /* background-color: var(--color-default); */
-  color: var(--color-yellow);
+  right: 20px;
+  top: 4px;
+  justify-content: center;
+  align-content: center;
+  color: var(--color-light);
   font-size: 20px;
+  /* width: 50px; */
+  height: 50px;
   font-weight: 800;
   border-radius: 50px;
+  cursor: pointer;
+  position: fixed; 
+}
+
+.profile .logoutcls .fullname{ 
+  right: 100px;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: nowrap;
+  /* word-wrap: break-word; */
+  width: 200px;
+  top: 10px;
+  color: var(--color-white);
+  font-size: 20px;
+  font-weight: 800;
   user-select: none;
 }
 
-.btnLogout {
-
- align-items: flex-end;
-  justify-content: flex-end;
-
-  margin-left: 10px;
+.profile .logoutcls .btnLogout:hover {
+  background-color: var(--color-ul);
+  color: var(--color-default);
+  scale: 1.1;
   border: none;
-  padding: 10px;
-  background-color: var(--color-default);
-  color: var(--color-yellow);
-  font-size: 18px;
-  font-weight: 800;
-  border-radius: 30px;
-  cursor: pointer;
+
 }
 
-.btnLogout:hover {
+/* Style the tooltip */
+.profile .logoutcls .New-Button::before {
+  content: attr(data-tooltip); /* Tooltip text */
+  position: absolute;
+  top: calc(100% + 10px); /* Position it below the button with 10px gap */
+  left: 50%; /* Center it horizontally */
+  transform: translateX(-50%); /* Center it perfectly */
+  padding: 8px;
   background-color: var(--color-yellow);
-  background-color: var(--color-ul);
-  color: var(--color-defaul);
-  transition: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  scale: 1.1;
+  color: white;
+  border-radius: 50px;
+  font-size: 15px;
+  white-space: nowrap; /* Prevent text from wrapping */
+  opacity: 0; /* Initially hidden */
+  pointer-events: none; /* Allow clicks to pass through the tooltip */
+  transition: opacity 0.2s ease;
+  z-index: 1000;
+}
 
+.profile .logoutcls .New-Button:hover::before {
+  opacity: 1; /* Show tooltip on hover */
 }
 
 .sidebar {
+  flex-direction: column;
   top: var(--header-height);
   left: 0;
   box-sizing: border-box;
@@ -148,80 +180,72 @@ body {
   align-content: center;
   justify-content: left;
 
-  overflow: auto;
-    /* overflow: overlay; */
-  overflow-x: scroll;
-  scrollbar-width: thin;
-  scroll-snap-type: x mandatory;
-  overflow: visible;
 }
 
-.sidebar::-webkit-scrollbar{
-  width: 0.5rem;
-  height: 0.5rem;
-  cursor: grabbing;
-  overflow: hidden;
-}
-
-.sidebar::-webkit-scrollbar-thumb{
-  border-radius: .5rem;
-  background-color: rgba(0, 0, 0, 0.63);
-  visibility: hidden;
-  cursor: grabbing;
- 
-}
-
-.sidebar:hover::-webkit-scrollbar-thumb{ 
-  visibility: visible;
-  cursor: grabbing;
-
-}
 
 .sidebar.open{
   width: var(--sidebar-max-width);
   transition: all .5s ease;
   border-radius: 10px;
-  overflow: visible;
+  overflow-x: scroll;
+  overflow-x: hidden; /* Disable horizontal scrolling */
 }
 
 
-.sidebar .top-sidebar {
-  flex-direction: column;
-  align-items: flex-start;
-  margin-bottom: 5px;
+.sidebar.open::-webkit-scrollbar{
+  width: 0.5rem;
+}
+
+.sidebar.open::-webkit-scrollbar-thumb{
+  visibility: hidden;
+}
+
+.sidebar.open:hover::-webkit-scrollbar-thumb{ 
+  visibility: visible;
+  border-radius: .5rem;
+  background-color: var(--color-yellow);
+}
+
+/* Optional: Adjust scrollbar track appearance */
+.sidebar.open::-webkit-scrollbar-track {
+  background-color: var(--color-light);
 }
 
 
 /* Simplified CSS for logo details in the sidebar */
 .sidebar .logo_details {
   display: flex;
-  align-items: flex-start;
+  align-items: first baseline;
   position: relative;
   transition: all 0.5s ease;
+  
 }
 
 .sidebar .logo_details .icon {
   font-size: 23px;
   cursor: pointer;
   transition: all 0.5s ease;
-  display: block;
+  display: flex;
 }
 
 .sidebar .logo_details .logo_name,
 .sidebar .logo_details .tooltip {
   color: var(--color-white);
-  margin-top: 5px;
   font-size: 22px;
   font-weight: 600;
-  text-align: center;
-  transition: all 0.5s ease;
+  white-space: nowrap; 
   display: none;
+  position: relative;
 }
 
 .sidebar.open .logo_details .logo_name,
 .sidebar.open .logo_details .tooltip {
   display: flex;
-  /* top: 50%; */
+  position: relative;
+  position: relative;
+  left: 10px;
+  margin-top: 5px;
+  top: 10%;
 }
 
 .sidebar .logo_details #btn {
@@ -233,7 +257,7 @@ body {
   text-align: right;
   align-content: center;
   cursor: pointer;
-  transition: all 0.5s ease;
+  /* transition: all 0.5s ease; */
 }
 
 .sidebar.open .logo_details #btn {
@@ -249,16 +273,17 @@ body {
 
 
 .sidebar .user-details {
-  display: block;
+  display: flex;
+  align-items: center; /* Center items vertically */
   font-size: 10px;
-  margin-bottom: 0.5rem;
+  /* margin-top: 0.5rem;
+  margin-bottom: 0.5rem; */
 }
 
 .sidebar .user-details #userName {
   padding: 0px;
-  font-weight: 800; 
+  font-weight: 800;
   font-size: 15px;
-
   color: var(--color-white);
 }
 
@@ -268,12 +293,11 @@ body {
   padding-left: 8px;
   color: rgb(243, 181, 11);
   display: none;
-
 }
 
 .sidebar.open .user-details #UserType {
   display: flex;
-
+  align-items: center; /* Center UserType with UserName vertically */
 }
 
 .sidebar .user-details .user-icon {
@@ -283,24 +307,8 @@ body {
   color: rgb(243, 181, 11);
 }
 
-.sidebar .middle-sidebar {
-  flex-grow: 0.1;
-  margin: 0;
-}
-
-.sidebar .middle-sidebar,
-.sidebar .bottom-sidebar {
-  width: 100%;
-}
 
 
-/* .sidebar .nav-list{
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-} */
-
-/* Nav List Styles */
 .sidebar .nav-list {
   width: 100%;
   display: flex;
@@ -318,17 +326,17 @@ body {
 
 .sidebar i{
   color:var(--color-white);
-  height: 30px;
-  line-height: 60px;
+  line-height: 20px;
   width: 60px;
-  font-size: 25px;
-  text-align: le;
+  font-size: 20px;
+  text-align: center;
   justify-content: center;
   align-items: center;
+  left: 5px;
 }
 
 .sidebar li {
-  flex: 1;
+  flex: 0.5;
   position: relative;
   margin-left: 10px;
   list-style: none;
@@ -337,8 +345,8 @@ body {
 .sidebar li.divider {
   display: flex;
   margin-left: 0px;
-  margin-top: 8px;
-  margin-bottom: 8px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   align-items: center;
   justify-content: left;
   text-decoration: none;
@@ -353,8 +361,6 @@ body {
 .sidebar li.divider::after {
   content: "";
   position: absolute;
-  /* width: 100%;
-  height: 100%; */
   transform: scaleX(0);
   border-radius: 50px;
   /* transition: transform 0.3s ease-in-out; */
@@ -363,12 +369,13 @@ body {
 }
 
 .sidebar li.divider .link_name {
-  color: var(--color-white);
-  font-size: 15px;
-  font-weight: 400;
+  font-size: 18px;
+  font-weight: 600;
   white-space: nowrap;
   pointer-events: auto;
-  transition: all 0.4s ease;
+  color: var(--color-yellow);
+  /* background-color: var(--color-default); */
+  /* transition: all 0.4s ease; */
   pointer-events: none;
   opacity: 0;
 }
@@ -377,6 +384,7 @@ body {
 .sidebar.open li.divider .link_name {
   opacity: 1;
   pointer-events: none;
+
 }
 
 .sidebar li.divider i {
@@ -388,9 +396,10 @@ body {
 
 
 .tooltip {
-  position: fixed;
+  /* flex: 1; */
+  position: relative;
   top: 50%;
-  left: calc(100% + 300px);
+  left: calc(100% + 500px);
   transform: translateY(-50%);
   z-index: 1000;
   background-color: var(--color-default);
@@ -412,23 +421,23 @@ body {
 
 .sidebar li a{
   display: flex;
-  height: 100%;
-  width: 100%;
+  width: 100%; /*   very Important */
   left: 0px;
   color:var(--color-white);
   align-items: center;
   text-decoration: none;
   background-color: var(--color-default);
   position: relative;
-  transition: all .5s ease;
+
+  /* transition: all .5s ease; */
   z-index: 12;
 }
 
 .sidebar li a::after{
   content: "";
-  position: absolute;
-  width: 100%;
-  height: 100%;
+  position: absolute; /*   very Important */
+  width: 100%;   /*   very Important */
+  height: 100%;  /*   very Important */
   transform: scaleX(0);
   background-color: var(--color-white);
   border-radius: 50px;
@@ -439,50 +448,47 @@ body {
 
 .sidebar li a:hover::after{
   transform: scaleX(1);
-  left: -5px;
+  left: 5px;
   color:var(--color-default)
 }
 
 .sidebar li a .link_name{
 
   font-size: 15px;
-  font-weight: 400;
+  font-weight: 600;
   white-space: nowrap;
   pointer-events: auto;
-  transition: all 0.4s ease;
+  /* transition: all 0.4s ease; */
   pointer-events: none;
   opacity: 0;
 }
 
 .sidebar li a:hover .link_name,
 .sidebar li a:hover i{
-  left:0;
+  left:0px;
   transition: all 0.5s ease;
   color:var(--color-default)
 }
 
 .sidebar.open li a .link_name{
   opacity: 1;
+  left: 30px;
   pointer-events: auto;
 }
 
 .sidebar li i{
-  height: 40px;
-  line-height: 40px;
-  width: 40px;
-  font-size: 20px;
+  height: 30px;
+  line-height: 30px;
+  width: 30px;
+  font-size: 18px;
   text-align: center;
   justify-content: center;
   align-items: center;
-  /* position: absolute; */
-  left: 0;
-  transition: color 0.3s ease, background-color 0.3s ease;
+  position: relative;
+  right: 5px;
+  /* transition: color 0.3s ease, background-color 0.3s ease; */
 }
 
- /* .sidebar li i:hover {
-  color: var(--color-light);
-  background-color: var(--color-ul); 
- } */
 
 .sidebar li a.active {
   background-color: var(--color-white);
@@ -510,11 +516,11 @@ body {
 .sidebar li .count {
   position: absolute;
   top: 50%;
-  right: -0px; 
+  right: -0px; /*   very Important for count position*/
   transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
-  line-height: 20px;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
   font-size: 12px;
   font-weight: bold;
   text-align: center;
@@ -526,11 +532,11 @@ body {
 
 #project-reload-link, #project-close-link  {
   background-color: #57c757;
-  width: 95%;
+  width: 80%;
   border-radius: 50px;
   font-weight: bold;
   /* width: auto; */
-  padding: 2px;
+  /* padding: 2px; */
 }
 
 #project-close-link {
