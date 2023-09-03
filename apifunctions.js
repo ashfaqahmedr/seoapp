@@ -1,3 +1,15 @@
+//count Total Records
+let totalRecords = 0
+// Store the selected row ID
+let selectedRowId = null;
+let selectedRowIndex =null;
+let jobid =null;
+let blogsetID=null;
+let folderpath=null;
+let sectiontoshow = null;
+let apiCalltoMake = null;
+let titleID = null;
+let confirmDialogUse = false;
 
 
 let notifications = document.querySelector('.notifications');
@@ -25,6 +37,8 @@ function createToast(type, icon, title, text){
 async function fetchAPI() {
   sectiontoshow='AllDatatoshow'
   apiCalltoMake = 'ProjectsData';
+  DataHeaders.innerText="Showing All Project(s) Data"
+
     // Show Animation
     showLoader();
   
@@ -55,6 +69,7 @@ async function fetchAPI() {
   async function fetchArticleCreator() {
     sectiontoshow = 'articleCreator'
     apiCalltoMake = 'ProjectsData';
+    DataHeaders.innerText="Showing Article Creator Project(s) Data"
      // Show Animation
      showLoader();
   
@@ -87,6 +102,7 @@ async function fetchAPI() {
   async function fetchUsers() {
     
     apiCalltoMake = 'usersData';
+    DataHeaders.innerText="Showing Users(s) Data"
 
      // Show Animation
      showLoader();
@@ -120,6 +136,7 @@ async function fetchPostUploader() {
 
   sectiontoshow = 'postuploader'
   apiCalltoMake = 'ProjectsData';
+  DataHeaders.innerText="Showing Post Uploader Project(s) Data"
      // Show Animation
      showLoader();
   
@@ -152,6 +169,8 @@ async function ReadJsonFile() {
   sectiontoshow = 'jsondata'
   apiCalltoMake = 'ProjectsData';
 
+  DataHeaders.innerText="Showing JSON Data"
+
   // Show Animation
   showLoader();
    // Show Animation
@@ -183,6 +202,7 @@ async function ReadJsonFile() {
 async function fetchArticleCreatorbyStatus(articleStatus) {
  sectiontoshow='AllDatatoshow'
  apiCalltoMake = 'ProjectsData';
+ DataHeaders.innerText="Showing All Project(s) Data"
   // Show Animation
   showLoader();
 
@@ -228,9 +248,16 @@ async function updateStatusCounts() {
     });
 
     const data = await response.json();
+    console.table(data)
     updateDashboardCounts(data); // Assuming `statusCounts` is available in the scope where this function is called.
   } catch (error) {
+    let type = 'error';
+      let icon = 'fa-solid fa-circle-exclamation';
+      let title = 'Error';
+      let text = 'Error fetching ID count' + error;
+      createToast(type, icon, title, text);
     console.error('Error fetching ID count:', error);
+
   }
 }
 
@@ -259,6 +286,7 @@ function updateDashboardCounts(counts) {
 //custom Right Click Menu
 function enableCustomContextMenu(tableSelector, menuSelector) {
   const contextMenu = document.querySelector(menuSelector);
+  contextMenu.style.display="flex";
   const table = document.querySelector(tableSelector);
 
   table.addEventListener("contextmenu", e => {
@@ -292,13 +320,17 @@ function enableCustomContextMenu(tableSelector, menuSelector) {
 
       contextMenu.style.left = `${menuPosX}px`;
       contextMenu.style.top = `${menuPosY}px`;
+      customMenu.style.display = 'block';
       contextMenu.style.visibility = "visible";
+     
     } else {
+      customMenu.style.display = 'none';
       contextMenu.style.visibility = "hidden";
     }
   });
 
   document.addEventListener("click", () => {
+    customMenu.style.display = 'none';
     contextMenu.style.visibility = "hidden";
   });
 }
@@ -308,10 +340,14 @@ function updateMenuItems(apiCall) {
   const editItem = document.getElementById('customEditData');
   const deleteItem = document.getElementById('customDeleteData');
   const addItem = document.getElementById('customAddData');
+ 
+  
   
   // Update menu item text and onclick event based on the API call
   switch (apiCall) {
     case 'usersData':
+
+
 
       editItem.querySelector('span').textContent = 'Edit User Data';
       deleteItem.querySelector('span').textContent = 'Delete User Data';

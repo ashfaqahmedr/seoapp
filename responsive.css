@@ -1,0 +1,113 @@
+/*responsive*/
+
+@media(max-width: 1400px){
+    .text-hide {
+        display: none;
+     }
+
+    
+     #recordCount, #currentshownData {
+        text-align: left;
+        font-size: 0.8rem;
+        width: max-content;
+      
+      }
+  
+
+      .New-Buton:hover {
+      scale: 1;
+
+      
+      }
+
+
+      .New-Button::before {
+        font-size: 0.8rem;
+        font-weight: 600;
+        z-index: 1001;
+      }
+
+
+      
+.table__header .input-group {
+    width: 150px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    align-items: center;
+   justify-content: center;
+   
+  }
+  
+  .table__header .input-group i {
+    font-size: 0.8rem;
+    font-weight: 600;
+    }
+  
+}
+
+/* For Table */
+@media(max-width: 1000px){
+
+    .container, .table__body {
+     margin: 0;
+     padding: 0;
+     box-sizing: border-box;
+     display: flex;
+ 
+   }
+ 
+ /* Table Display css */
+   .SEOTable,
+   .SEOTable tbody,
+   .SEOTable tr, .SEOTable td  {
+     display: flex;
+     flex-direction: column;
+     border: solid 1px #044612;
+     
+ 
+   }
+ 
+   .SEOTable thead {
+     display: none; 
+   }
+ 
+ 
+     .SEOTable tr{
+         margin-bottom:5px;
+     border: solid 1px #044612;
+     
+     }
+ 
+   .SEOTable tbody tr:nth-child(even) {
+     background-color: var(--light-gray);
+   }
+   
+   .SEOTable tbody tr:nth-child(odd) {
+     background-color: var(--color-body); 
+   }
+   
+ .SEOTable td::before {
+   content: attr(data-label);
+         font-size:15px;
+         font-weight: bold;
+     padding-top: 2px;
+     padding-bottom: 2px;
+     padding-left: 5px;
+     padding-right: 5px;
+     border-radius: 10px;
+     background-color: var( --color-second);
+ }
+ 
+ .SEOTable .status-pill {
+   display: flex;
+   padding-left: 30px;
+   margin-top: 5px;
+   width: auto;
+   border-radius: 20px;
+   text-align: center;
+ }
+ 
+ 
+ }
+ 
+ 

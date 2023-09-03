@@ -1,16 +1,5 @@
 
-//count Total Records
-let totalRecords = 0
-// Store the selected row ID
-let selectedRowId = null;
-let selectedRowIndex =null;
-let jobid =null;
-let blogsetID=null;
-let folderpath=null;
-let sectiontoshow = null;
-let apiCalltoMake = null;
-let titleID = null;
-let confirmDialogUse = false;
+
 
 const seourl ='https://script.google.com/macros/s/AKfycbxgyT3rHw0zc7xeF_HWP3fxiy9VjaBcwzE18b6eA7HzFejEvCQEJewrJSzDFkeaUa4m/exec'
 const apiurl = `${seourl}/?`
@@ -23,45 +12,38 @@ window.onload = async () =>{
 
   }
 
-// const menuIconButton = document.querySelector("[data-menu-icon-btn]")
-// const sidebar = document.querySelector("[data-sidebar]")
-
-// menuIconButton.addEventListener("click", () => {
-//   sidebar.classList.toggle("open")
-// })
-
 
   function showAdminPanel() {
     
-  const sidebar = document.querySelector(".sidebar");
-  const tooltip = document.getElementById('tooltip');
-  const closeBtn = document.querySelector("#btn");
-  const link = document.querySelectorAll('.sidebar');
+    const sidebar = document.getElementById("sidebar");
+    const tooltip = document.getElementById('tooltip');
+    const closeBtn = document.querySelector("#btn");
+    const link = document.querySelectorAll('.sidebar');
+    
+    // Logic to show the sidebar and tooltip on mouse over
+  function showSidebar() {
+    sidebar.classList.add('open');
+    tooltip.classList.remove('open');
+  }
   
-  // Logic to show the sidebar and tooltip on mouse over
-function showSidebar() {
-  sidebar.classList.add('open');
-  tooltip.classList.remove('open');
-}
-
-// Logic to hide the sidebar and tooltip on mouse out
-function hideSidebar() {
-  sidebar.classList.remove('open');
-  tooltip.classList.add('open');
-}
-
-// Loop through all the elements with the class 'sidebar-link' and add event listeners
-link.forEach(linkElement => {
-  linkElement.addEventListener('mouseover', showSidebar);
-  linkElement.addEventListener('mouseout', hideSidebar);
-});
-
-  closeBtn.addEventListener("click", function(){
-      sidebar.classList.toggle("open");
-      tooltip.classList.toggle('open');
-      menuBtnChange();
-
+  // Logic to hide the sidebar and tooltip on mouse out
+  function hideSidebar() {
+    sidebar.classList.remove('open');
+    tooltip.classList.add('open');
+  }
+  
+  // Loop through all the elements with the class 'sidebar-link' and add event listeners
+  link.forEach(linkElement => {
+    linkElement.addEventListener('mouseover', showSidebar);
+    linkElement.addEventListener('mouseout', hideSidebar);
   });
+  
+    closeBtn.addEventListener("click", function(){
+        sidebar.classList.toggle("open");
+        tooltip.classList.toggle('open');
+        menuBtnChange();
+  
+    });
   
 
   //Call Main Function to Fetch  the Data
@@ -83,13 +65,13 @@ link.forEach(linkElement => {
 
   // Function to toggle the visibility of the notification panel
 const toggleNotificationPanel = () => {
-  const popupContainer = document.getElementById('popupContainer');
-  if (popupContainer.style.display === 'none') {
+  const dialogpopupContainer = document.getElementById('popupContainer');
+  if (dialogpopupContainer.style.display === 'none') {
     // Show the notification panel
-    popupContainer.style.display = 'block';
+    dialogpopupContainer.style.display = 'block';
   } else {
     // Hide the notification panel
-    popupContainer.style.display = 'none';
+    dialogpopupContainer.style.display = 'none';
   }
 };
 
@@ -398,27 +380,23 @@ function applyConditionalFormatting() {
 
 
 //Loadoverlay Div
-const loadingOverlay = document.getElementById('loadingOverlay');
 // Function to show the loader
 function showLoader() {
   // alert('Loader')
   document.body.style.cursor = 'none';
-  loadingOverlay.style.display = 'block';
+  dialogloadingOverlay.style.display = 'block';
 }
 
 // Function to hide the loader
 function hideLoader() {
   document.body.style.cursor = 'auto';
-  loadingOverlay.style.display = 'none';
+  dialogloadingOverlay.style.display = 'none';
 }
 
 
 // Get the table and context menu elements
 const table = document.getElementById('main');
 const contextMenu = document.querySelector('.menu');
-
-   // Get the dialog element and its content areas
-const Projectdialog = document.getElementById('myDialog');
 
 const closeButton = document.getElementById('closeDialogButton');
 
@@ -554,8 +532,10 @@ async function fetchDataAndHandle(selectedRowId, method) {
       blogGroupInput.value = data[0].group;
       SEOStatusInput.value = data[0].SEOStatus;
 
+      dialogProjectsDialog.style.display="block";
 
-      Projectdialog.showModal();
+      dialogProjectsDialog.showModal();
+
 
 
     } else if (method.toUpperCase() === 'POSTDATA') {
@@ -602,7 +582,8 @@ async function fetchDataAndHandle(selectedRowId, method) {
         const message = Resdata[0].message;
 
         createToast('success', 'fa-solid fa-circle-check', 'Success', "Success: " + success + " ID: "+ id + ' Message: '+ message);
-        Projectdialog.close()
+        dialogProjectsDialog.style.display="none";
+        dialogProjectsDialog.close()
 if (success) {
         // Assuming you have the row index stored in selectedRowIndex
 const table = document.getElementById('main');
@@ -744,7 +725,8 @@ console.table(Resdata);
     newRow.cells[15].appendChild(statusSpan3);
 
     console.log('Article Creator Data has been saved!');
-    Projectdialog.close();
+    dialogProjectsDialog.style.display="none";
+    dialogProjectsDialog.close();
     hideLoader();
   }
   }
@@ -946,7 +928,9 @@ await fetchDataAndHandle(selectedRowId, 'POSTDATA'); // Make GET request
   
     btncreateProjectData.style.display="flex";
    updateButton.style.display = 'none';
-   Projectdialog.showModal();
+
+   dialogProjectsDialog.style.display="block";
+   dialogProjectsDialog.showModal();
   
    hideLoader();
   
@@ -962,7 +946,7 @@ await fetchDataAndHandle(selectedRowId, 'POSTDATA'); // Make GET request
   
 
 function openSettingDialog() {
-    // Show the Projectdialog
+    // Show the dialogProjectsDialog
     showLoader();
  
     getandUpdateProjectSetting("GETDATA");
@@ -978,8 +962,6 @@ function openSettingDialog() {
 
 // Function to populate the dialog with retrieved settings data
 async function getandUpdateProjectSetting(METHOD) {
-
-  const filedialog = document.getElementById('fileDialog');
   
   //custom settings 
 const sheetIDInput = document.getElementById('sheetID');
@@ -1039,11 +1021,13 @@ const seoStatusInput = document.getElementById('seoStatus');
  
       hideLoader();
       createToast('success', 'fa-solid fa-circle-check', 'Success', 'Settings has been loaded!');
-      filedialog.showModal();
+      dialogfileDialog.style.display="block";
+      dialogfileDialog.showModal();
     
         }  else {
           console.error('Error retrieving settings:');
           hideLoader();
+         
           createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Error retrieving settings: ' + error);
       }
         } catch (error) {
@@ -1104,7 +1088,8 @@ const seoStatusInput = document.getElementById('seoStatus');
         const message = Resdata[0].message;
 
       createToast('success', 'fa-solid fa-circle-check', 'Success', "Success: " + success + " <br> ID: "+ id + ' <br> Message: '+ message);
-      filedialog.close()
+      dialogfileDialog.style.display="none";
+      dialogfileDialog.close()
       hideLoader();
     }
   }
@@ -1113,12 +1098,11 @@ const seoStatusInput = document.getElementById('seoStatus');
 
       createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while Updating the Project Setting' +error);
       hideLoader();
-      filedialog.close()
+      dialogfileDialog.style.display="none";
+      dialogfileDialog.close()
     } 
   }
 }
-
-const userdialog = document.getElementById('userDialog');
 
 //custom settings 
 const usersheetIDInput = document.getElementById('usersheetID');
@@ -1145,7 +1129,9 @@ function showAddUserDialog() {
   usersheetIDInput.style.display = 'none';
   btnaddUserInfo.style.display="flex";
   btnudateUserInfo.style.display = 'none';
-  userdialog.showModal();
+
+  dialoguserDialog.style.display="block";
+  dialoguserDialog.showModal();
   hideLoader();
 
 }
@@ -1211,7 +1197,8 @@ async function getandAddUsers(METHOD, selectedUserId) {
 
     hideLoader();
     createToast('success', 'fa-solid fa-circle-check', 'Success', 'Settings has been loaded!');
-    userdialog.showModal();
+    dialoguserDialog.style.display="block";
+    dialoguserDialog.showModal();
   
       }  else {
         console.error('Error retrieving settings:');
@@ -1262,7 +1249,8 @@ async function getandAddUsers(METHOD, selectedUserId) {
             const message = Resdata[0].message;
       
           createToast('success', 'fa-solid fa-circle-check', 'Success', "Success: " + success + " <br> ID: "+ id + ' <br> Message: '+ message);
-          filedialog.close()
+          dialoguserDialog.style.display="none";
+          dialoguserDialog.close()
           hideLoader();
         }
       }
@@ -1271,7 +1259,8 @@ async function getandAddUsers(METHOD, selectedUserId) {
       
           createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while Adding User Data' +error);
           hideLoader();
-          filedialog.close()
+          dialoguserDialog.style.display="none";
+          dialoguserDialog.close()
         } 
     }
 
@@ -1314,7 +1303,8 @@ async function getandAddUsers(METHOD, selectedUserId) {
             const message = Resdata[0].message;
 
           createToast('success', 'fa-solid fa-circle-check', 'Success', "Success: " + success + " <br> ID: "+ id + ' <br> Message: '+ message);
-          userdialog.close()
+          dialoguserDialog.close()
+          dialoguserDialog.style.display="none";
           hideLoader();
         }
       }
@@ -1323,7 +1313,8 @@ async function getandAddUsers(METHOD, selectedUserId) {
 
           createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while Updating User Data' +error);
           hideLoader();
-          userdialog.close()
+          dialoguserDialog.style.display="none";
+          dialoguserDialog.close()
         } 
     }
 
@@ -1367,7 +1358,8 @@ async function getandAddUsers(METHOD, selectedUserId) {
             }
   
             createToast('success', 'fa-solid fa-circle-check', 'Success', "Success: " + success + " <br> ID: "+ id + ' <br> Message: '+ message);
-            userdialog.close()
+            dialoguserDialog.close()
+            dialoguserDialog.style.display="none";
             hideLoader();
           }
         }
@@ -1376,7 +1368,8 @@ async function getandAddUsers(METHOD, selectedUserId) {
   
             createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while deleting User Data' +error);
             hideLoader();
-            userdialog.close()
+            dialoguserDialog.close()
+            dialoguserDialog.style.display="none";
           } 
     }
 
@@ -1386,6 +1379,7 @@ async function getandAddUsers(METHOD, selectedUserId) {
 // Function to close the dialog
 function closeDialog(dialogname) {
   const fileDialog = document.getElementById(dialogname);
+  fileDialog.style.display="none";
   fileDialog.close();
   hideLoader();
 // Event listeners
@@ -1393,7 +1387,7 @@ function closeDialog(dialogname) {
 
 
 const notificationTableBody = document.getElementById('notificationTableBody');
-const popupContainer = document.getElementById('popupContainer');
+
 
 function createNotification(allProjectData) {
   toggleNotificationPanel();
@@ -1401,12 +1395,12 @@ function createNotification(allProjectData) {
   if (allProjectData.length === 0) {
     // If there is no data, hide the notification and remove the HTML elements
     // createToast('info', 'fa-solid fa-info-circle', 'Info', 'No projects are currently running.');
-    popupContainer.style.display = 'none';
+    dialogpopupContainer.style.display = 'none';
     notificationTableBody.innerHTML = '';
     return;
   } else {
     // Show the notification and update the table body with the new data
-    popupContainer.style.display = 'block';
+    dialogpopupContainer.style.display = 'block';
 
     const existingProjectIds = new Set(); // To store existing project IDs
 

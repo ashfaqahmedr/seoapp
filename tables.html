@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+
+.table {
+    th, td {
+        padding: 0.4em;
+        vertical-align: top;
+        border-top: 1px solid grey;
+    }
+
+    th {
+        text-align: left;
+        vertical-align: bottom;
+        border-bottom: 2px solid grey;
+    }
+
+    thead th {
+        border-top: 0;
+    }
+
+    table > tbody {
+        border-bottom: 1px solid grey;
+    }
+}
+
+@mixin table--labelled {
+    thead {
+        display: none;
+    }
+    td[data-label]:before {
+        content: attr(data-label) ":";
+        display: inline-block;
+        margin-right: 0.1em;
+    }
+}
+
+@media(max-width: 52em) {
+  .table {
+    @include table--labelled;
+  }
+}
+    </style>
+</head>
+<body>
+    <h1>Labelled Table 🏓</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Option</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td data-label="Option">showSpeed</td>
+      <td data-label="Default">15</td>
+      <td data-label="Description">The speed of the show/reveal</td>
+    </tr>
+    <tr>
+      <td data-label="Option">showEasing</td>
+      <td data-label="Default">'linear'</td>
+      <td data-label="Description">The easing of the show/reveal</td>
+    </tr>
+    <tr>
+      <td data-label="Option">hideSpeed</td>
+      <td data-label="Default">50</td>
+      <td data-label="Description">The speed of the hide/conceal</td>
+    </tr>
+    <tr>
+      <td data-label="Option">hideEasing</td>
+      <td data-label="Default">'linear'</td>
+      <td data-label="Description">The easing of the hide/conceal</td>
+    </tr>					
+    <tr>
+      <td data-label="Option">width</td>
+      <td data-label="Default">'auto'</td>
+      <td data-label="Description">The width that the data will be truncated to - <em>('auto' or px amount)</em></td>
+    </tr>
+    <tr>
+      <td data-label="Option">ellipsis</td>
+      <td data-label="Default">true</td>
+      <td data-label="Description">Set to true to enable the ellipsis</td>
+    </tr>
+    <tr>
+      <td data-label="Option">title</td>
+      <td data-label="Default">false</td>
+      <td data-label="Description">Set to true to show the full data on hover</td>
+    </tr>
+    <tr>
+      <td data-label="Option">afterShow</td>
+      <td data-label="Default"> $.noop</td>
+      <td data-label="Description">The callback fired after the show/reveal</td>
+    </tr>
+    <tr>
+      <td data-label="Option">afterHide</td>
+      <td data-label="Default">$.noop</td>
+      <td data-label="Description">The callback fired after the hide/conceal</td>
+    </tr>
+    <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>   <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>   <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>   <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>   <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>   <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>   <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>   <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>   <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+      <tr>
+        <td data-label="Option">afterHide</td>
+        <td data-label="Default">$.noop</td>
+        <td data-label="Description">The callback fired after the hide/conceal</td>
+      </tr>
+  </tbody>
+</table>
+</body>
+</html>

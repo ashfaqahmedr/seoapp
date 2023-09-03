@@ -1,0 +1,441 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+    <style>
+        :root{
+  --color-default:#004f83;
+  --color-second:#126d6d;
+  --color-white:#e4e2e2;
+  --color-body:#84a5f8;
+  --color-light:#5405ad;
+  --color-ul:#58cae794;
+  --accent-color: rgb(204, 0, 0);
+  --lightest-gray: rgb(212, 212, 206);
+  --light-gray: rgb(170, 169, 169);
+  --medium-gray: rgb(96, 96, 96);
+  --dark-gray: rgb(13, 13, 13);
+  --color-yellow: rgb(243, 181, 11);
+  --animation-duration: 200ms;
+  --animation-timing-curve: ease-in-out;
+
+  --sidebar-min-width: 100px;
+  --sidebar-max-width: 200px;
+
+  --header-height: 20px;
+
+}
+        body {
+             margin: 0;
+            left: 0;
+        }
+
+        .loginPanel {
+          background: linear-gradient(to bottom right, #ff8c00, #ff5f6d, #ffcc00);
+          margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            /* background-blend-mode: multiply; */
+        }
+        
+         .container-login {
+            border: 2px solid #ccc;
+            background: linear-gradient(to right, #ff8c00, #ff5f6d);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            width: 50%;
+            height: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            /* background-blend-mode: multiply; */
+        }
+
+
+    .icon-box {
+    /* background-color: yellow; */
+    background: linear-gradient(90deg, var(--color-second), #1486c9);
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    z-index: 1;
+    transform: translateX(-50%);
+    box-shadow: 5px 5px 10px #fad017;
+  
+  }
+
+.icon-box i {
+    font-size: 3em;
+}
+
+        .login-text {
+            font-size: 30px;
+            font-weight: bold;
+            margin-top: 0px;
+            position: static;
+            z-index: 1;
+ 	         background-color: transparent;
+           
+        }
+
+.input-box {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            position: relative;
+            width: 100%;
+            z-index: 1;
+	
+        }
+
+        .input-box i {
+            margin-right: 10px;
+        }
+
+        .input-box input {
+		 background-color: transparent;
+            padding: 10px;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            outline: none;
+            flex: 1;
+        }
+
+        .input-box label {
+            position: absolute;
+           padding: 10px;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: all 0.3s ease;
+ 		color: #000;
+        }
+
+        .input-box input:focus + label,
+        .input-box input:valid + label {
+            top: -0px;
+            font-size: 16px;
+            color: yellow; /* Label color on focus */
+        }
+
+	 .input-box input:focus {
+            border-bottom: 3px solid yellow; /* Thick border on focus */
+        }	
+
+    .submit-button {
+    background: linear-gradient(to right, #ff8c00, #ff5f6d);
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    position: absolute;
+    bottom: -20px; /* Adjust this value as needed */
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.submit-button:active,
+.submit-button:focus,
+.submit-button:hover {
+  background: linear-gradient(90deg, #45c50f, #D35400);
+color: #fff;    
+border:none;
+
+} 
+
+
+.connected,
+.disconnected {
+  user-select: none;
+  display: flex;
+  overflow: hidden;
+  position: sticky;
+  position: relative;
+  justify-content: center;
+  align-content: center;
+  text-align: center;
+  font-size: 25px;
+  font-weight: bolder;
+  border-radius: 0px;
+  box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.4);
+  color: var(--color-white);
+ 
+  z-index: 999;
+}
+
+.connected {
+  background-color: var(--color-second);
+}
+
+.disconnected {
+  background-color: var(--medium-gray);
+}
+
+#header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
+
+.hidden {
+    display: none;
+  }
+
+
+  .profile {
+  /* display: flex;
+  justify-content: space-between; */
+  align-items: center;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+
+.user-icon {
+  margin-right: 8px; /* Add left margin to the icon */
+}
+
+
+.profile i.fas {
+  color: var(--color-yellow);
+  font-size: 30px;
+  font-weight: 600; 
+}
+
+
+.profile .logoutcls {
+  display: flex;
+  position: relative;
+  right: 50px;
+  justify-content: center;
+  align-content: center;
+}
+
+
+
+.profile .logoutcls .btnLogout,
+.profile .logoutcls .fullname {
+  border: none;
+  right: 20px;
+  top: 0px;
+  justify-content: center;
+  align-content: center;
+  color: var(--color-light);
+  font-size: 1.5rem;
+  /* height: 50px; */
+  font-weight: 400;
+  border-radius: 10px;
+  cursor: pointer;
+  position: fixed;
+}
+
+.profile .logoutcls .fullname{ 
+  right: 100px;
+  margin-left: 4px;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: nowrap;
+  width: 200px;
+  /* top: 5px; */
+  color: var(--color-white);
+  font-size: 20px;
+  font-weight: 600;
+  user-select: none;
+}
+
+.profile .logoutcls .btnLogout:hover {
+  background-color: var(--color-ul);
+  color: var(--color-default);
+  scale: 1.1;
+  border: none;
+
+} 
+
+.profile .logoutcls .New-Button::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 10px); 
+  left: 50%; 
+  transform: translateX(-50%); 
+  padding: 8px;
+  background-color: var(--color-yellow);
+  color: white;
+  border-radius: 50px;
+  font-size: 1rem;
+  white-space: nowrap;
+  opacity: 0; 
+  pointer-events: none; 
+  transition: opacity 0.2s ease;
+  z-index: 1000;
+}
+
+.profile .logoutcls .New-Button:hover::before {
+  opacity: 1; 
+}  
+
+
+
+.screen__background {        
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 0;
+        -webkit-clip-path: inset(0 0 0 0);
+        clip-path: inset(0 0 0 0);    
+    }
+
+    .screen__background__shape {
+        transform: rotate(45deg);
+        position: absolute;
+        /* mix-blend-mode: screen; */
+        mix-blend-mode:color-dodge;
+    }
+
+    .screen__background__shape1 {
+        height: 100%; /* Adjusted height */
+        width: 100%; /* Adjusted width */
+        background: #0e8da3;    
+        top: -25%;
+        left: -50%;    
+        border-radius: 72px 72px 72px 72px;
+        z-index: -1;
+    }
+
+    .screen__background__shape2 {
+        height: 70%; /* Adjusted height */
+        width: 70%; /* Adjusted width */
+        background: #b4b238;    
+        top: -45%;
+        right: -0%;    
+        border-radius: 72px 72px 72px 72px;
+        z-index: 3;
+    }
+
+    .screen__background__shape3 {
+        height: 100%; /* Adjusted height */
+        width: 50%; /* Adjusted width */
+        background: linear-gradient(270deg, #55ec55     , #75706d  );   
+        /* background: linear-gradient(270deg, #ED508F, #F1609A); */
+        top: 5%;
+        right: 20%;    
+        border-radius: 32px;
+        z-index: 1;
+    }
+
+    .screen__background__shape4 {
+        height: 100%; /* Adjusted height */
+        width: 100%; /* Adjusted width */
+        background: linear-gradient(270deg, #1ed3f3, #ee823f);      
+        top: 100%;
+        right: -50%;    
+        border-radius: 60px;
+        z-index: 2;
+    }
+
+    </style>
+</head>
+<body>
+    
+  <div class="loginPanel">
+    <div class="container-login">
+        <div class="icon-box">
+            <i class="fas fa-user fa-3x"></i>
+        </div>
+        <div class="login-text">Login</div>
+        <div class="input-box">
+            <i class="fas fa-user"></i>
+           <input type="text" id="username" required>
+            <label for="username">Username</label>
+            
+        </div>
+        <div class="input-box">
+            <i class="fas fa-lock"></i>
+           <input type="password" id="password" required>
+            <label for="password">Password</label>
+            
+        </div>
+        <button class="submit-button" id="submit-button" onclick="loginUser()">Log In   ></button>
+
+        <div class="screen__background">
+         
+          <span class="screen__background__shape screen__background__shape4"></span>
+          <span class="screen__background__shape screen__background__shape3"></span>        
+          <span class="screen__background__shape screen__background__shape2"></span>
+          <span class="screen__background__shape screen__background__shape1"></span>
+         
+      </div>    
+    </div>
+  </div>
+
+
+    <div id="header" class="connected">
+      <span id="topTitle">SEO Content Machine Web App </span>
+  
+      <div id="profile" class="profile">
+        <div class="user-info">
+          <i class="fas fa-user-circle user-icon"></i>
+          <span class="fullname" id="fullName"></span>
+        </div>
+        <div class="logoutcls">
+          <button class="New-Button btnLogout" onclick="logout()" data-tooltip="Logout">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  <script>
+        window.addEventListener('load', function () {
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const submitButton = document.getElementById('submit-button');
+
+            // Function to check if both fields are filled
+            function checkInputs() {
+                if (usernameInput.value.trim() !== '' && passwordInput.value.trim() !== '') {
+                    submitButton.style.display = 'block';
+		  
+
+                } else {
+                    submitButton.style.display = 'none';
+                }
+            }
+	
+		 // Add event listeners to both input fields to check on input changes
+            // Initially, check the inputs when the page loads
+ 		checkInputs();
+            usernameInput.addEventListener('input', checkInputs);
+            passwordInput.addEventListener('input', checkInputs);
+
+        });
+	  window.addEventListener('load', function () {
+          
+            document.getElementById('username').focus();
+		  
+        });
+    </script>
+</body>
+</html>

@@ -1,30 +1,87 @@
 let LoggedUsername;
 
-const loginPanel = document.getElementById('loginPanel');     
+const loginPanel = document.getElementById('loginPanel');   
 
-
+const usernameInput = document.getElementById('username');
+const passwordInput = document.getElementById('password');
+const submitButton = document.getElementById('submit-button');
 
 const spanfullName = document.getElementById('fullName');
 const spanuserName = document.getElementById('userName');
 const spanuserType = document.getElementById('UserType');
-const userIconElement = document.getElementById('userIcon'); // Get the userIcon span
 
-const profile = document.getElementById('profile');
+const userIconElement = document.getElementById('userIcon');
+
+
+const DataHeaders = document.getElementById('currentshownData');
+
+
+ // Get the userIcon span
+
+const userHeaderprofile  = document.getElementById('userHeader');
+
 const btngetUsers = document.getElementById('getUsers');
 const btnAddNewUser = document.getElementById('AddNewUser');
 const container = document.getElementById('container');
 
-const headerElement = document.getElementById('header');
-
 const txttopTitle = document.getElementById('topTitle');
 
-document.getElementById('popupContainer').style.display = 'none';
-document.getElementById('loadingOverlay').style.display = 'none';
+const dialogpopupContainer = document.getElementById('popupContainer');
+const dialogloadingOverlay = document.getElementById('loadingOverlay');
 
-profile.style.display = 'none';
+const dialogconfrimDialog = document.getElementById('confrimDialog');
+
+const dialoguserDialog = document.getElementById('userDialog');
+const dialogfileDialog = document.getElementById('fileDialog');
+const dialogProjectsDialog = document.getElementById('myDialog');
+
+const customMenu = document.getElementById('wrapper');
+
+
+
+dialogpopupContainer.style.display = 'none'
+dialogloadingOverlay.style.display = 'none'
+dialogconfrimDialog.style.display = 'none'
+dialoguserDialog.style.display = 'none'
+dialogfileDialog.style.display = 'none'
+dialogProjectsDialog.style.display = 'none'
+
+userHeaderprofile.style.display = 'none';
 btngetUsers.style.display = 'none';
 btnAddNewUser.style.display = 'none';
 container.style.display = 'none';
+
+submitButton.style.display = 'none';
+
+customMenu.style.display = 'none';
+
+window.addEventListener('load', function () {
+ 
+
+  // Function to check if both fields are filled
+  function checkInputs() {
+      if (usernameInput.value.trim() !== '' && passwordInput.value.trim() !== '') {
+          submitButton.style.display = 'block';
+
+
+      } else {
+          submitButton.style.display = 'none';
+      }
+  }
+
+// Add event listeners to both input fields to check on input changes
+  // Initially, check the inputs when the page loads
+checkInputs();
+  usernameInput.addEventListener('input', checkInputs);
+  passwordInput.addEventListener('input', checkInputs);
+
+});
+window.addEventListener('load', function () {
+
+document.getElementById('username').focus();
+
+});
+
 
 function formatName(name) {
   return name
@@ -36,9 +93,9 @@ function formatName(name) {
 
 async function loginUser() {
   showLoader();
-
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+  
+    const username = usernameInput.value;
+    const password = passwordInput.value;
   
     const response = await fetch(seourl, {
       method: 'POST',
@@ -64,11 +121,7 @@ async function loginUser() {
     // Get the value of the cookie and display it
     var cookieValue = getCookie('userToken');
     console.log("userToken: , Cookie Value:"+ cookieValue);
-  
-      // Update full name in the header with spaces between uppercase letters
-      headerElement.classList.remove('disconnected');
-      headerElement.classList.add('connected');      
-
+   
       txttopTitle.textContent="SEO Content Machine Web App (Connected to Google Sheet)"
 
         spanfullName.innerHTML = fullName;
@@ -98,7 +151,7 @@ async function loginUser() {
            userIconElement.classList.add('fas', 'fa-user');
        }      
 
-        profile.style.display = 'flex';
+       userHeaderprofile.style.display = 'flex';
         container.style.display = 'flex';
         loginPanel.style.display = 'none';
 

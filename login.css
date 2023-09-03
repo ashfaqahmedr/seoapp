@@ -1,281 +1,234 @@
+.body {
+  overflow: hidden;
+ 
+  /* background-blend-mode: multiply; */
+}
 
+body, h1, h2, h3, h4, h5, h6, p, ul, ol, li {
+  margin: 0;
+  padding: 0;
+}
+
+.login-Header {
+  display: block;
+  user-select: none;
+  text-align: center;
+  font-size: 25px;
+  font-weight: bolder;
+  overflow:hidden;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  background-color: var(--medium-gray);
+  border-radius: 0px;
+  box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.4);
+  color: var(--color-white);
+}
 
 .loginPanel {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-  
-  .screen {
-    position: relative;
-    width: 400px; /* Adjust as needed */
-    height: 400px; /* Adjust as needed */
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    border-radius: 15px;
-    overflow: visible; /* Adjusted to allow content overflow */
-  }
-  
-  .userIcon {
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    top: -60px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    border: none;
-    background: linear-gradient(90deg, var(--color-second), #1486c9);
-    border-radius: 50%;
-    width: 120px;
-    height: 120px;
-    font-weight: 700;
-    font-size: 80px;
-    transition: 0.2s;
-    box-shadow: 5px 5px 10px #fad017;
-    color: rgb(248, 241, 241);
-    z-index: 99;
-  }
-  
-  .login__submit {
-    position: absolute;
-    bottom: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 12px 16px; /* Adjust padding */
-    font-size: 12px;
-    background: linear-gradient(90deg, #e0f3d8, #19bcee);
-    color: #050505;
-    border-radius: 26px;
-    border: rgba(250, 87, 12, 0.938) solid 3px;
-    text-transform: uppercase;
-    font-weight: 700;
-    cursor: pointer;
-    transition: 0.2s;
-    z-index: 99;
-  }
-  
-  
-.login__submit:active,
-.login__submit:focus,
-.login__submit:hover {
-background:  #D35400;
+background: linear-gradient(180deg,  #2d2e2e, #6f996f, #ebf0ed);   
+margin: 0;
+background-blend-mode: multiply;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ height: 100dvh;
+ width: 100dvw;
+ overflow: hidden;
+}
+
+.container-login {
+ border: 2px solid #ccc;
+ background: linear-gradient(to right, #ff8c00, #ff5f6d);
+ box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+ text-align: center;
+ padding: 20px;
+ border-radius: 10px;
+ width: 30%;
+ height: 50%;
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ position: relative;
+ 
+}
+
+
+.icon-box {
+  background: linear-gradient(90deg, var(--color-second), #1486c9);
+border-radius: 50%;
+width: 100px;
+height: 100px;
+display: flex;
+justify-content: center;
+align-items: center;
+position: absolute;
+top: -50px;
+left: 50%;
+z-index: 4;
+transform: translateX(-50%);
+box-shadow: 5px 10px 10px var(--color-yellow);
+}
+
+.icon-box i {
+font-size: 3em;
+}
+
+.login-text {
+  z-index: 5;
+ font-size: 30px;
+ font-weight: bold;
+ margin-top: 0px;
+ position: absolute;
+ top: 20%;
+
+/* background-color: transparent; */
+
+}
+
+.input-box {
+ display: flex;
+ align-items: center;
+ margin: 10px 0;
+ padding: 10px;
+ position: relative;
+ width: 100%;
+ z-index: 5;
+
+}
+
+.input-box i {
+ margin-right: 10px;
+ color: #e7f709;
+}
+
+.input-box input {
+background-color: transparent;
+ padding: 10px;
+ border: none;
+ width: 100%;
+ border-bottom: 3px solid #f3ebeb;
+ outline: none;
+ /* flex: 1; */
+ font-size: 20px;
+ font-weight: 600;
+}
+
+.input-box label {
+ position: absolute;
+padding: 10px;
+ left: 30px;
+ top: 50%;
+ font-weight: 600;
+ font-size: 20px; 
+ transform: translateY(-50%);
+ transition: all 0.5s ease-in-out;
+color: #000;
+}
+
+.input-box input:focus + label,
+.input-box input:valid + label {
+ top: 0px;
+ font-size: 16px;
+ color: var(--color-white); /* Label color on focus */
+}
+
+.input-box input:focus {
+ border-bottom: 3px solid yellow; /* Thick border on focus */
+}	
+
+.submit-button {
+background: linear-gradient(to right, var(--color-light), var(--color-yellow));
+color: #fff;
+padding: 10px 20px;
+border: none;
+border-radius: 50px;
+font-size: 16px;
+font-weight: 600;
+cursor: pointer;
+position: absolute;
+bottom: -20px; /* Adjust this value as needed */
+left: 50%;
+box-shadow: 5px 5px 5px var(--color-light);
+
+transform: translateX(-50%);
+}
+
+.submit-button:active,
+.submit-button:focus,
+.submit-button:hover {
+background: linear-gradient(90deg, #565855, #e28140);
 color: #fff;    
 border:none;
- border: rgba(198, 250, 12, 0.884) solid 3px;
-/* box-shadow: 5px 5px 15px #195e04; */
-}
+box-shadow: 5px 10px 2px var(--color-yellow);
 
-  .title {
-    margin-top: 10px !important; /* Adjust margin-top as needed */
-    margin-left: 50px;
-    background: none;
-    font-weight: bold;
-    width: 100%;
-    font-size: 20px;
-    text-align: center;
-    color: rgb(253, 249, 249);
-    padding-bottom: 5px;
-  }
-  
-  /* Rest of your CSS remains the same */
-  
+} 
 
-
-.screen__content {
-    z-index: 1;
-    position: relative;     
-    height: 100%;
-}
-
-.screen__background {        
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 0;
-    -webkit-clip-path: inset(0 0 0 0);
-    clip-path: inset(0 0 0 0);    
-}
-
-.screen__background__shape {
-    transform: rotate(45deg);
-    position: absolute;
-}
-
-.screen__background__shape1 {
-    height: 420px; /* Adjusted height */
-    width: 420px; /* Adjusted width */
-    background: #04b17d;    
-    top: -30px;
-    right: 150px;    
-    border-radius: 0 72px 0 0;
-}
-
-.screen__background__shape2 {
-    height: 180px; /* Adjusted height */
-    width: 180px; /* Adjusted width */
-    background: #f76905 ;    
-    top: -130px;
-    right: 0;    
-    border-radius: 32px;
-}
-
-.screen__background__shape3 {
-    height: 500px; /* Adjusted height */
-    width: 160px; /* Adjusted width */
-    background: linear-gradient(270deg, #55ec55 , #1b5585  );   
-    /* background: linear-gradient(270deg, #ED508F, #F1609A); */
-    top: -50x;
-    right: 0;    
-    border-radius: 32px;
-}
-
-.screen__background__shape4 {
-    height: 360px; /* Adjusted height */
-    width: 180px; /* Adjusted width */
-    background: #88e488     ;    
-    top: 400px;
-    right: 50px;    
-    border-radius: 60px;
-}
-
-.login {
-    width: 280px; /* Adjusted width */
-    padding: 20px;
-    padding-top: 80px; /* Adjusted padding-top */
-}
-
-.login__field {
-    padding: 16px 0px; /* Adjusted padding */
-    position: relative; 
-    
-}
-
-
-
-.login__input {
-    border: none;
-    border-bottom: 2px solid #6e655d;
-    background: none;
-    padding: 8px;
-    left: 25px; 
-    padding-left: 7px;
-    font-weight: 700;
-    font-weight: bold;
-    width: 90%;
-    font-size: 14px;
-    transition: .2s;
-    color: rgb(248, 241, 241);
-}
-
-.login__input:active,
-.login__input:focus,
-.login__input:hover {
-    outline: none;
-    border-bottom-color: #fdfdfd;
-    background: none;
-}
-
-.login__input:focus ~ .login__label,
-.login__input:not(:placeholder-shown) ~ .login__label {
-    top: -3px; /* Adjusted top position */
-    font-size: 14px; /* Adjusted font-size */
-    left: 25px; 
-    font-weight: bold;
-    color: #050505;
-     transition: .5s;
-}
-
-.login__label {
-    position: absolute;
-    top: 25px; /* Adjusted top position */
-    left: 25px; /* Adjusted left position */
-    color: #050505;
-    pointer-events: none;
-    transition: 1s;
-    font-weight: bold;
-    font-size: 14px; /* Adjusted font-size */
-}
-
-
-
-.connected,
-.disconnected {
-  user-select: none;
-  display: flex;
-  position: relative;
-  justify-content: space-around;
-  align-content: center;
-  text-align: center;
-  padding: 10px;
-  height: var(--header-height);
-  font-size: 1.5rem;
-  font-weight: bolder;
-  border-radius: 0px;
-  box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.4);
-  color: var(--color-white);
-  overflow: hidden;
-  position: sticky;
-  z-index: 999;
-}
-
-.connected {
-  background-color: var(--color-second);
-}
-
-.disconnected {
-  background-color: var(--medium-gray);
-}
 
 .hidden {
     display: none;
   }
 
 
-/* Media query for screens up to 768px width (adjust as needed) */
-@media (max-width: 768px) {
-  .screen {
-    width: 90%; /* Adjust width for mobile screens */
-    height: 50%; /* Allow height to adjust based on content */
-    padding: 0px; /* Adjust padding */
-    top: -100px;
-    background-color: #55ec55;
-    box-shadow: none; /* Remove box shadow for mobile screens */
-  }
-
-.userIcon,
-.screen__background {
-  display: none;
+.screen__background {        
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  -webkit-clip-path: inset(0 0 0 0);
+  clip-path: inset(0 0 0 0);    
 }
 
-.login, .login__field {
-  display: flex;
-  width: 90%;
-  height: 40%;
-  padding: 10px;
-  padding-top: -100px;
-  display: flex;
-  flex-direction: column; /* Stack the input fields vertically */
-  /* align-items: center; */
+.screen__background__shape {
+  transform: rotate(45deg);
+  position: absolute;
+  /* mix-blend-mode: screen; */
+  mix-blend-mode:screen;
 }
 
-  .login__input {
-    /* Adjust font size and padding for mobile screens */
-    font-size: 8px;
-    padding: 2px;
-    
-  }
+.screen__background__shape1 {
+  height: 100%; /* Adjusted height */
+  width: 100%; /* Adjusted width */
+  background: linear-gradient(270deg, #797c76, #7f22aa  );   
+ 
+  top: -25%;
+  left: -50%;    
+  border-radius: 72px 72px 72px 72px;
+  z-index: -1;
+}
 
-  .login__submit {
-    margin-top: -100px;
-    padding: 5px 5px;
-    background-color: var(--color-default);
-    color: var(--color-white);
+.screen__background__shape2 {
+  height: 70%; /* Adjusted height */
+  width: 70%; /* Adjusted width */
+  background: linear-gradient(270deg, #676867, #742e03  );   
+ 
+  top: -45%;
+  right: -0%;    
+  border-radius: 72px 72px 72px 72px;
+  z-index: 3;
+}
 
-  }
-  
+.screen__background__shape3 {
+  height: 100%; /* Adjusted height */
+  width: 50%; /* Adjusted width */
+  background: linear-gradient(270deg, #676867, #742e03  );   
+  /* background: linear-gradient(270deg, #ED508F, #F1609A); */
+  top: 5%;
+  right: 20%;    
+  border-radius: 32px;
+  z-index: 1;
+}
+
+.screen__background__shape4 {
+  height: 100%; /* Adjusted height */
+  width: 100%; /* Adjusted width */
+  background: linear-gradient(270deg, #1ed3f3, #ee823f);      
+  top: 100%;
+  right: -50%;    
+  border-radius: 60px;
+  z-index: 2;
 }

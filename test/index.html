@@ -1,79 +1,77 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"></html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
 <title>SEO Content Machine App</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
   <link rel="stylesheet" href="login.css">
   <link rel="stylesheet" href="dialogs.css">
+
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <link rel="stylesheet" href="sidebarcss.css">
   <link rel="stylesheet" href="tablecss.css">
-  <link rel="stylesheet" href="responsive.css">
-
+  
 </head>
 <body>
  
+  
+   <!-- //Loader Animation -->
+   <div id="loadingOverlay">
+    <div class="loader-container" id="loader-container">
+      <div class="loader"></div>
+    </div>
+</div>
+
+ <!-- //Toast Notification -->
+ <div class="notifications"> 
+</div>
+
+  <div id="header">
+    <span id="topTitle">SEO Content Machine Web App (Connected to Google Sheet) </span>
+    <div id="profile" class="profile">
+      <i class="fas fa-user-circle"></i>
+    
+      <div class="logoutcls">
+        <span class="fullname" id="fullName">
+        </span>
+      <button class="btnLogout New-Button" onclick="logout()" data-tooltip="Logout"><i class="fas fa-sign-out-alt"></i></button> 
+      </div>
+    </div>
+      </div>
+  
+<section id="loginPanel" class="loginPanel">
  
-   
-  <div id="loginPanel" class="loginPanel">
-    
-    <span class="login-Header">SEO Content Machine Web App </span>
-    
-    <div class="container-login">
-
-      <div class="screen__background">
-         
-        
-        <span class="screen__background__shape screen__background__shape4"></span>
-        <span class="screen__background__shape screen__background__shape3"></span>        
-        <span class="screen__background__shape screen__background__shape2"></span>
-        <span class="screen__background__shape screen__background__shape1"></span>
-       
-    </div>    
-
-        <div class="icon-box">
-            <i class="fas fa-user fa-3x"></i>
-        </div>
-        <div class="login-text">Login</div>
-        <div class="input-box">
-            <i class="fas fa-user"></i>
-           <input type="text" id="username" required>
-            <label for="username">Username</label>
-            
-        </div>
-        <div class="input-box">
-            <i class="fas fa-lock"></i>
-           <input type="password" id="password" required>
-            <label for="password">Password</label>
-            
-        </div>
-        <button class="submit-button" id="submit-button" onclick="loginUser()">Log In   ></button>
-       
+  <div class="screen">
+    <div class="userIcon"><i class="fas fa-user"></i></div>
+    <div class="screen__content login">
+      <div class="title">Sign In</div>
+      <div class="login__field">
+        <i class="fas fa-user"></i>
+        <input type="text" placeholder=" " class="login__input" name="username" id="username" autocomplete="off"   required>
+        <label class="login__label">User Name</label>
+      </div>
+      <div class="login__field">
+        <i class="fas fa-lock"></i>
+        <input id="password" type="password" name="password" class="login__input" placeholder="" autocomplete="off" required>
+        <label class="login__label">Password</label>
+      </div>
+    </div>
+    <button onclick="loginUser()" class="button login__submit button__text"> Sign In   ></button>
+    <div class="screen__background">
+      <span class="screen__background__shape screen__background__shape4"></span>
+      <span class="screen__background__shape screen__background__shape3"></span>
+      <span class="screen__background__shape screen__background__shape2"></span>
+      <span class="screen__background__shape screen__background__shape1"></span>
     </div>
   </div>
-
-<div class="header-content" id="userHeader">
-  <span id="topTitle" class="sidebar-Header"></span>
-  <div class="user-info">
-    <i class="fas fa-user-circle text-hide" id="user-icon"></i>
-    <span class="fullname text-hide" id="fullName"></span>
-    <button id="logoutButton"  data-tooltip="Log Out" class="New-Button" onclick="logout()" >
-
-      <i class="fas fa-sign-out-alt"></i>
-      <span class="text-hide"> Log Out</span>
-    </button>
-</div>
-
-</div>
+  
+</section>
 
 <div class="container" id="container">
-
-
+     <div class="header-spacer"></div>
   <div class="sidebar close" id="sidebar">
 
     <ul class="nav-list">
@@ -114,7 +112,7 @@
         <!-- <a href="#" id="project-link"  onclick="fetchAPI()"> -->
           <i class="fas fa-project-diagram "></i>
         <span class="link_name">All Projects</span>
-        <span class="count" id="allproject-count"></span>
+        <span class="count sticky" id="allproject-count"></span>
         <span class="tooltip hidden">All Projects</span>
         <!-- </a> -->
       </li>
@@ -123,7 +121,7 @@
           <a href="#" id="article-link"  onclick="fetchArticleCreator()">
             <i class="fas fa-pencil-alt "></i>
               <span class="link_name">Article Creator</span>
-              <span class="count" id="creator-count"></span>
+              <span class="count sticky" id="creator-count"></span>
               <span class="tooltip hidden">Article Creator</span>
             </a>
           </a>
@@ -133,7 +131,7 @@
           <a href="#" id="post-link"  onclick="fetchPostUploader()">
             <i class="fas fa-cloud-upload "></i>
           <span class="link_name">Post Uploader </span>
-          <span class="count" id="poster-count"></span>
+          <span class="count sticky" id="poster-count"></span>
           <span class="tooltip hidden">Post Uploader</span>
         </a>
       </li>
@@ -142,7 +140,7 @@
         <a href="#" id="read-json-link"  onclick="ReadJsonFile()">
           <i class="fas fa-file-code"></i>
         <span class="link_name">Read JSON </span>
-        <span class="count" id="json-count"></span>
+        <span class="count sticky" id="json-count"></span>
         <span class="tooltip hidden">Read JSON File</span>
       </a>
      </li>
@@ -169,7 +167,7 @@
         <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('waiting')">
         <i class="fas fa-hourglass "></i>
         <span class="link_name">Waiting</span>
-        <span class="count" id="waiting-count"></span>
+        <span class="count sticky" id="waiting-count"></span>
         <span class="tooltip hidden">Waiting</span>
         </a>
       </li>    
@@ -179,7 +177,7 @@
             <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('failed')">
             <i class="fas fa-exclamation "></i> 
             <span class="link_name"> Failed </span>
-            <span class="count" id="failed-count"></span>
+            <span class="count sticky" id="failed-count"></span>
             <span class="tooltip hidden">Failed</span>
             </a>
             
@@ -190,7 +188,7 @@
           <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('aborted')">
             <i class="fas fa-ban "></i>
           <span class="link_name">Aborted</span>
-          <span class="count" id="aborted-count"></span>
+          <span class="count sticky" id="aborted-count"></span>
           <span class="tooltip hidden">Aborted</span>
           </a>
         
@@ -200,7 +198,7 @@
           <a href="#" class="sidebar-link"  onclick="fetchArticleCreatorbyStatus('complete')">
           <i class="fas fa-check "></i>
           <span class="link_name">Completed</span>
-          <span class="count" id="complete-count"></span>
+          <span class="count sticky" id="complete-count"></span>
           <span class="tooltip hidden">Completed</span>
           </a>
         </li>
@@ -211,7 +209,7 @@
           <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('running')">
           <i class="fas fa-play "></i>
           <span class="link_name">Running</span>
-          <span class="count" id="running-count"></span>
+          <span class="count sticky" id="running-count"></span>
           <span class="tooltip hidden">Running</span>
           </a>
         
@@ -220,7 +218,7 @@
           <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('aborting...')">
           <i class="fas fa-stop "></i>
           <span class="link_name">Aborting...</span>
-          <span class="count" id="aborting-count"></span>
+          <span class="count sticky" id="aborting-count"></span>
           <span class="tooltip hidden">Aborting...</span>
           </a> 
         </li>
@@ -230,52 +228,44 @@
   </div>
  
    <!-- <section class="home-section"> -->
- <div class="table_box" id="mainSectionTable">
-
+    <div class="table_box" id="mainSectionTable">
       <div class="table__header">
+         
+          <button id="AddProject" class="New-Button" data-tooltip="Add New Project" onclick="createnewJobID()"> <i class="fas fa-plus-circle"></i> Add Project</button>
+          <button id="AddNewUser" class="New-Button" data-tooltip="Add New User" onclick="showAddUserDialog()"> <i class="fas fa-user-plus"></i>Add User</button>
 
-        <span id="currentshownData" class="text-Header">Showing All Projects Data </span>
-        <span id="recordCount" class="text-Header"></span>
-        
-        <span class="input-group">
-          <input type="search" id="search-input" placeholder="Search...">
-          <i class="fas fa-search"></i>
-        </span>
-       
-        
-        <div class="custom-select" id="table-filter">
-          <div class="selected-option"> <i class="fas fa-list-ul"></i> <span class="text-hide">All Projects </span> <span class="arrow"></span></div>
-          <div class="options">
-            <div class="option" data-value=""><i class="fas fa-list-ul"></i> All Projects</div>
-            <div class="option" data-value="running"><i class="fas fa-play"></i> Running</div>
-            <div class="option" data-value="complete"><i class="fas fa-check"></i> Complete</div>
-            <div class="option" data-value="failed"><i class="fas fa-exclamation"></i> Failed</div>
-            <div class="option" data-value="waiting"><i class="fas fa-hourglass"></i> Waiting</div>
-            <div class="option" data-value="aborted"><i class="fas fa-ban"></i> Aborted</div>
-            <div class="option" data-value="draft"><i class="fas fa-file"></i> Draft</div>
-            <div class="option" data-value="aborting..."><i class="fas fa-stop"></i> Aborting...</div>
+          <span id="recordCount"></span>
+          <div class="input-group">
+              <input type="search" id="search-input" placeholder="Search...">
+              <i class="fas fa-search"></i>
           </div>
-        </div>    
+          <div class="custom-select" id="table-filter">
+            <div class="selected-option"><i class="fas fa-list-ul"></i> All Projects  <span class="arrow"></span></div>
+            <div class="options">
+              <div class="option" data-value=""><i class="fas fa-list-ul"></i> All Projects</div>
+              <div class="option" data-value="running"><i class="fas fa-play"></i> Running</div>
+              <div class="option" data-value="complete"><i class="fas fa-check"></i> Complete</div>
+              <div class="option" data-value="failed"><i class="fas fa-exclamation"></i> Failed</div>
+              <div class="option" data-value="waiting"><i class="fas fa-hourglass"></i> Waiting</div>
+              <div class="option" data-value="aborted"><i class="fas fa-ban"></i> Aborted</div>
+              <div class="option" data-value="draft"><i class="fas fa-file"></i> Draft</div>
+              <div class="option" data-value="aborting..."><i class="fas fa-stop"></i> Aborting...</div>
+            </div>
+          </div>          
 
-          <button id="AddProject" class="New-Button" data-tooltip="Add New Project" onclick="createnewJobID()"> <i class="fas fa-plus-circle"></i><span class="text-hide"> Add Project</span></button>
-          <button id="AddNewUser" class="New-Button" data-tooltip="Add New User" onclick="showAddUserDialog()"> <i class="fas fa-user-plus"></i> <span class="text-hide">Add User</span></button>
-
-
-               
-
-             <button id="updateProjectSettings" class="New-Button" data-tooltip="Change Project Settings" onclick="openSettingDialog()"> <i class="fas fa-cog"></i> <span class="text-hide">Settings</span></button>
+             <button id="updateProjectSettings" class="New-Button" data-tooltip="Change Project Settings" onclick="openSettingDialog()"> <i class="fas fa-cog"></i>Settings</button>
               <!-- <button id="Run-Buton" class="New-Button" onclick=" toggleNotificationPanel()"> <i class="fas fa-play"></i>  Running </button> -->
-      </div >
+        </div >
 
-      <div class="table__body">  
+        <div class="table__body">  
           <table id="main" class="SEOTable"></table>
-      </div >
-  </div > 
+        </div >
+      </div > 
 </div> 
 
  <!-- Custom Context Menu -->
 
-  <div class="wrapper" id="wrapper">
+  <div class="wrapper">
     <div class="content">
       <ul class="menu">
 
@@ -661,7 +651,8 @@
   </dialog>
 
 
-  <div id="popupContainer">
+  <div id="popupContainer" style="display: none;">
+  
     <div class="project-popup" id="notificationTableTemplate">
       <h3 class="notification-title-container">List of Active Projects(s)</h3>
       <button class="close-btn"> <i class="fas fa-times"></i> clear Notification</button>
@@ -704,18 +695,6 @@
 
 
 
-     <!-- //Loader Animation -->
-     <div id="loadingOverlay">
-      <div class="loader-container" id="loader-container">
-        <div class="loader"></div>
-      </div>
-  </div>
-  
-   <!-- //Toast Notification -->
-   <div class="notifications"> 
-  </div>
-
-  
 <!--Closing of Custom Dialog Box for Showing and updating the default Project Settings-->
 <script src="./login.js"></script>
 <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>

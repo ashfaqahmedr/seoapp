@@ -297,7 +297,7 @@
     flex-grow: 2;
   }
   
-  input:focus {
+  .dialog-section input:focus {
     border-bottom: 2px solid #4d027c;
     background-color: rgba(175, 144, 158, 0.753);
     
@@ -328,11 +328,11 @@
    
   }
   
-  input[type="text"] {
+  .dialog-section input[type="text"] {
     width: 87%;
   }
   
-  input[type="number"] {
+  .dialog-section input[type="number"] {
     width: 60px;
   }
 
