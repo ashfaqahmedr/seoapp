@@ -14,15 +14,23 @@ const userIconElement = document.getElementById('userIcon');
 
 
 const DataHeaders = document.getElementById('currentshownData');
-
-
- // Get the userIcon span
-
 const userHeaderprofile  = document.getElementById('userHeader');
+
+
+userHeaderprofile.style.display = 'none';
 
 const btngetUsers = document.getElementById('getUsers');
 const btnAddNewUser = document.getElementById('AddNewUser');
-const container = document.getElementById('container');
+const userDialogTitle = document.getElementById('userDialogTitle');
+const userDialogSubTitle = document.getElementById('userDialogSubTitle');
+
+
+
+const UserDialogsheetID = document.getElementById('userDialogsheetIDTitle');
+const UserDialogSeoStatus = document.getElementById('userDialogSeoStatus');
+
+
+const siderbar_Table = document.getElementById('container');
 
 const txttopTitle = document.getElementById('topTitle');
 
@@ -31,25 +39,29 @@ const dialogloadingOverlay = document.getElementById('loadingOverlay');
 
 const dialogconfrimDialog = document.getElementById('confrimDialog');
 
+const dialogProjectsDialog = document.getElementById('ProjectsDialog');
 const dialoguserDialog = document.getElementById('userDialog');
-const dialogfileDialog = document.getElementById('fileDialog');
-const dialogProjectsDialog = document.getElementById('myDialog');
+const customSettingDialog = document.getElementById('customSettingDialog');
+
+
+
 
 const customMenu = document.getElementById('wrapper');
-
 
 
 dialogpopupContainer.style.display = 'none'
 dialogloadingOverlay.style.display = 'none'
 dialogconfrimDialog.style.display = 'none'
 dialoguserDialog.style.display = 'none'
-dialogfileDialog.style.display = 'none'
+customSettingDialog.style.display = 'none'
 dialogProjectsDialog.style.display = 'none'
 
-userHeaderprofile.style.display = 'none';
+
 btngetUsers.style.display = 'none';
 btnAddNewUser.style.display = 'none';
-container.style.display = 'none';
+
+
+siderbar_Table.style.display = 'none';
 
 submitButton.style.display = 'none';
 
@@ -152,7 +164,7 @@ async function loginUser() {
        }      
 
        userHeaderprofile.style.display = 'flex';
-        container.style.display = 'flex';
+       siderbar_Table.style.display = 'flex';
         loginPanel.style.display = 'none';
 
         

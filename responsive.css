@@ -13,20 +13,17 @@
       
       }
   
-
       .New-Buton:hover {
       scale: 1;
-
+      z-index: 11111;
       
       }
-
 
       .New-Button::before {
         font-size: 0.8rem;
         font-weight: 600;
-        z-index: 1001;
+        z-index: 11110;
       }
-
 
       
 .table__header .input-group {
@@ -48,7 +45,7 @@
 /* For Table */
 @media(max-width: 1000px){
 
-    .container, .table__body {
+    .table__body {
      margin: 0;
      padding: 0;
      box-sizing: border-box;

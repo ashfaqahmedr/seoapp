@@ -1,14 +1,3 @@
-.body {
-  overflow: hidden;
- 
-  /* background-blend-mode: multiply; */
-}
-
-body, h1, h2, h3, h4, h5, h6, p, ul, ol, li {
-  margin: 0;
-  padding: 0;
-}
-
 .login-Header {
   display: block;
   user-select: none;
@@ -28,7 +17,6 @@ body, h1, h2, h3, h4, h5, h6, p, ul, ol, li {
 
 .loginPanel {
 background: linear-gradient(180deg,  #2d2e2e, #6f996f, #ebf0ed);   
-margin: 0;
 background-blend-mode: multiply;
  display: flex;
  justify-content: center;
@@ -52,9 +40,13 @@ background-blend-mode: multiply;
  justify-content: center;
  align-items: center;
  position: relative;
+ /* overflow: hidden; */
  
 }
 
+label {
+  user-select: none;
+}
 
 .icon-box {
   background: linear-gradient(90deg, var(--color-second), #1486c9);

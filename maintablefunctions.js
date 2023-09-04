@@ -16,31 +16,31 @@ window.onload = async () =>{
   function showAdminPanel() {
     
     const sidebar = document.getElementById("sidebar");
-    const tooltip = document.getElementById('tooltip');
     const closeBtn = document.querySelector("#btn");
-    const link = document.querySelectorAll('.sidebar');
-    
     // Logic to show the sidebar and tooltip on mouse over
   function showSidebar() {
-    sidebar.classList.add('open');
-    tooltip.classList.remove('open');
+    sidebar.classList.add("open");
+    // tooltip.classList.remove('open');
   }
   
   // Logic to hide the sidebar and tooltip on mouse out
   function hideSidebar() {
-    sidebar.classList.remove('open');
-    tooltip.classList.add('open');
+    sidebar.classList.remove("open");
+    // tooltip.classList.add('open');
   }
   
-  // Loop through all the elements with the class 'sidebar-link' and add event listeners
-  link.forEach(linkElement => {
-    linkElement.addEventListener('mouseover', showSidebar);
-    linkElement.addEventListener('mouseout', hideSidebar);
-  });
+  sidebar.addEventListener('mouseover', showSidebar);
+  sidebar.addEventListener('mouseout', hideSidebar);
+
+  // // Loop through all the elements with the class 'sidebar-link' and add event listeners
+  // link.forEach(linkElement => {
+  //   linkElement.addEventListener('mouseover', showSidebar);
+  //   linkElement.addEventListener('mouseout', hideSidebar);
+  // });
   
     closeBtn.addEventListener("click", function(){
         sidebar.classList.toggle("open");
-        tooltip.classList.toggle('open');
+        // tooltip.classList.toggle('open');
         menuBtnChange();
   
     });
@@ -95,13 +95,10 @@ const toggleNotificationPanel = () => {
     }
 
 
-
   function menuBtnChange(){
-
 
       if(sidebar.classList.contains("open")){
           closeBtn.classList.replace("bx-menu","bx-menu-alt-right");
-
 
       }else{
           closeBtn.classList.replace("bx-menu-alt-right","bx-menu");
@@ -446,22 +443,7 @@ function removeTransition(event) {
   
 }
 
-const DialogTitle =  document.getElementById('dialogTitle')
-    
-const cnsarticleCreatorTitle = document.getElementById("articlecreator");
-const cnsarticleCreatorSection = document.getElementById("articleCreatorSection")
 
-const cnspostUploaderTitle = document.getElementById("postuploader");
-const cnspostUploaderSection = document.getElementById("postUploaderSection");
-
-const postDateInput = document.getElementById('postDate');
-
-const cnsblogSettingTitle = document.getElementById('blogIdNo');
-const cnsblogSettingSection = document.getElementById("blogSettingSection");
-
-const btnupdateProjectData = document.getElementById("updateProjectData");
-
-const btncreateProjectData = document.getElementById("createProjectData");
 
 
 
@@ -533,6 +515,8 @@ async function fetchDataAndHandle(selectedRowId, method) {
       SEOStatusInput.value = data[0].SEOStatus;
 
       dialogProjectsDialog.style.display="block";
+
+
 
       dialogProjectsDialog.showModal();
 
@@ -917,6 +901,24 @@ await fetchDataAndHandle(selectedRowId, 'POSTDATA'); // Make GET request
   }
   
   
+const DialogTitle =  document.getElementById('dialogTitle')
+    
+const cnsarticleCreatorTitle = document.getElementById("articlecreator");
+const cnsarticleCreatorSection = document.getElementById("articleCreatorSection")
+
+const cnspostUploaderTitle = document.getElementById("postuploader");
+const cnspostUploaderSection = document.getElementById("postUploaderSection");
+
+const postDateInput = document.getElementById('postDate');
+
+const cnsblogSettingTitle = document.getElementById('blogIdNo');
+const cnsblogSettingSection = document.getElementById("blogSettingSection");
+
+const btnupdateProjectData = document.getElementById("updateProjectData");
+
+const btncreateProjectData = document.getElementById("createProjectData");
+
+  
   function createnewJobID() {
 
     showLoader();
@@ -929,6 +931,10 @@ await fetchDataAndHandle(selectedRowId, 'POSTDATA'); // Make GET request
     btncreateProjectData.style.display="flex";
    updateButton.style.display = 'none';
 
+   DialogTitle.textContent="Add New Project to Google Sheets"
+   cnsarticleCreatorTitle.textContent="Add Article Creator Data here" 
+   cnspostUploaderTitle.textContent="Add Post Uploader Data here"
+   cnsblogSettingTitle.textContent="Add JSON Data here"
    dialogProjectsDialog.style.display="block";
    dialogProjectsDialog.showModal();
   
@@ -936,6 +942,8 @@ await fetchDataAndHandle(selectedRowId, 'POSTDATA'); // Make GET request
   
   }
   
+
+
   // Function to complete all commands
   async function createProjects() {
       // alert('New Article Creator ID: ' + newArticleCreatorID + ' New Post Uploader ID: ' + newPostUploaderID + ' New Blog ID: ' + newBlogID);
@@ -964,7 +972,7 @@ function openSettingDialog() {
 async function getandUpdateProjectSetting(METHOD) {
   
   //custom settings 
-const sheetIDInput = document.getElementById('sheetID');
+const sheetIDInput = document.getElementById('CustomDialogsheetID');
 const listofContentFilterInput = document.getElementById('listofContentFilter');
 const urlsDownloadResultLimitsInput = document.getElementById('urlsDownloadResultLimits');
 const articleCountInput = document.getElementById('articleCount');
@@ -1021,8 +1029,8 @@ const seoStatusInput = document.getElementById('seoStatus');
  
       hideLoader();
       createToast('success', 'fa-solid fa-circle-check', 'Success', 'Settings has been loaded!');
-      dialogfileDialog.style.display="block";
-      dialogfileDialog.showModal();
+      customSettingDialog.style.display="block";
+      customSettingDialog.showModal();
     
         }  else {
           console.error('Error retrieving settings:');
@@ -1088,8 +1096,8 @@ const seoStatusInput = document.getElementById('seoStatus');
         const message = Resdata[0].message;
 
       createToast('success', 'fa-solid fa-circle-check', 'Success', "Success: " + success + " <br> ID: "+ id + ' <br> Message: '+ message);
-      dialogfileDialog.style.display="none";
-      dialogfileDialog.close()
+      customSettingDialog.style.display="none";
+      customSettingDialog.close()
       hideLoader();
     }
   }
@@ -1098,13 +1106,14 @@ const seoStatusInput = document.getElementById('seoStatus');
 
       createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while Updating the Project Setting' +error);
       hideLoader();
-      dialogfileDialog.style.display="none";
-      dialogfileDialog.close()
+      customSettingDialog.style.display="none";
+      customSettingDialog.close()
     } 
   }
 }
 
-//custom settings 
+
+//Add Users Sheet Dialog
 const usersheetIDInput = document.getElementById('usersheetID');
 const userFullInputInput = document.getElementById('userFullInput');
 const usernameInputInput = document.getElementById('usernameInput');
@@ -1126,28 +1135,44 @@ function showAddUserDialog() {
 
   showLoader();
 
-  usersheetIDInput.style.display = 'none';
+userDialogTitle.innerText="Add New User's to Google Sheet"
+userDialogSubTitle.innerText="Add User's Info"
+
+  UserDialogsheetID.style.display = 'none';
+  UserDialogSeoStatus.style.display = 'none';
+
   btnaddUserInfo.style.display="flex";
   btnudateUserInfo.style.display = 'none';
 
-  dialoguserDialog.style.display="block";
+
+
+  dialoguserDialog.style.display="flex";
   dialoguserDialog.showModal();
+
   hideLoader();
 
 }
 
+
+// Add Users Info
 async function AddUserInfo() {
   showLoader();
 await getandAddUsers("ADDUSERDATA"); 
 
 }
 
-
+// Update Users Info
 async function updateSelectedUserData() {
+
   showLoader();
-  usersheetIDInput.style.display = 'none';
+
   btnaddUserInfo.style.display="none";
   btnudateUserInfo.style.display = 'flex';
+
+  userDialogTitle.innerText="Update User's to Google Sheet"
+userDialogSubTitle.innerText="Update the Required User's Info"
+
+
 
   showLoader();
 
@@ -1197,7 +1222,11 @@ async function getandAddUsers(METHOD, selectedUserId) {
 
     hideLoader();
     createToast('success', 'fa-solid fa-circle-check', 'Success', 'Settings has been loaded!');
-    dialoguserDialog.style.display="block";
+
+    UserDialogsheetID.style.display = 'flex';
+    UserDialogSeoStatus.style.display = 'flex';
+
+    dialoguserDialog.style.display="flex";
     dialoguserDialog.showModal();
   
       }  else {

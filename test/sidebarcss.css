@@ -27,10 +27,7 @@
   font-family: 'Poppins', sans-serif;
 }
 
-body, h1, h2, h3, h4, h5, h6, p, ul, ol, li {
-  margin: 0;
-  padding: 0;
-}
+
 
 body {
   background: linear-gradient(180deg,  #2d2e2e, #6f996f, #ebf0ed);   

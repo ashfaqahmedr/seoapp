@@ -353,9 +353,9 @@ function updateMenuItems(apiCall) {
       deleteItem.querySelector('span').textContent = 'Delete User Data';
       addItem.querySelector('span').textContent = 'Add User Data';
 
-     editItem.querySelector('i').className = 'far fa-user-edit';
+     editItem.querySelector('i').className = 'fas fa-user-edit';
      addItem.querySelector('i').className = 'fas fa-user-plus';
-     deleteItem.querySelector('i').className = 'far fa-user-minus';
+     deleteItem.querySelector('i').className = 'fas fa-user-times';
 
       editItem.onclick = updateSelectedUserData;
       deleteItem.onclick = deleteSelectedUserData;

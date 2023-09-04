@@ -16,12 +16,23 @@
   --color-header: rgb(176, 223, 101);
   --animation-duration: 200ms;
   --animation-timing-curve: ease-in-out;
-
   --sidebar-min-width: 100px;
-  --sidebar-max-width: 400px;
+  --sidebar-max-width: 200px;
+  --header-height: 30px;
 
-  --header-height: 40px;
+}
 
+body, h1, h2, h3, h4, h5, h6, p, ul, ol, li {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: linear-gradient(180deg,  #2d2e2e, #6f996f, #ebf0ed);   
+  background-blend-mode: multiply;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 *{
@@ -30,24 +41,23 @@
 
 
 .header-content {
-  display: flex;
   user-select: none;
-  text-align: center;
-  font-size: 25px;
-  font-weight: bolder;
+  display: flex;
   position: relative;
   justify-content: space-around;
-  align-items: center;
-  position: sticky;
-  width: 100%;
-  overflow: hidden;
+  align-content: center;
+  text-align: center;
+  padding: 10px;
   height: var(--header-height);
-  /* height:50px; */
-  background-color: var(--color-second);
+  font-size: 22px;
+  font-weight: 600;
   border-radius: 0px;
-  box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.4);
+  background-color: var(--color-second);
+  box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.616);
   color: var(--color-white);
-  z-index: 10000;
+  overflow: hidden;
+  position: sticky;
+  z-index: 1;
 }
 
 
@@ -60,7 +70,7 @@
   width: 30%;
   user-select: none;
   text-align: center;
-  z-index: 10000;
+  z-index: 2;
 }
 
 #user-icon {
@@ -90,30 +100,30 @@
 #logoutButton {
   position: absolute;
   right: 0px;
+  top: -5px;
   padding: 8px;
   background-color: var(--color-yellow);
   color: white;
-  border-radius: 50px;
-  cursor: pointer;
-  font-size: 0.8rem;
-  font-weight: 800;
-  z-index: 10000;
+  z-index: 4;
 }
 
 #logoutButton:hover {
   background-color: var(--color-default);
-  z-index: 10000;
+  z-index: 5;
 }
 
 
 .container {
   display: flex;
-  height: calc(100vh - var(--header-height)); /* Adjust height accordingly */
-  overflow: hidden; /* Prevent content overflow */
+  flex-direction: row;
+  height: calc(100dvh - var(--header-height));
   background: linear-gradient(180deg,  #2d2e2e, #a8aaa8, #1368e7d2);   
-  
+  overflow: hidden;
+  position: relative;
+ height: 100dvh;
+  width: 100dvw;
+ 
 }
-
 
 
 .sidebar {
@@ -136,8 +146,7 @@
 }
 
 
-
-.sidebar .open{
+.sidebar.open{
   width: var(--sidebar-max-width);
   transition: all .5s ease;
   border-radius: 10px;
@@ -205,9 +214,9 @@
 .sidebar .logo_details #btn {
   position: absolute;
   top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
-  transform: translateX(50%);
+  right: 30px;
+  transform: translateY(-90%);
+  transform: translateX(60%);
 
   font-size: 23px;
   text-align: right;
@@ -217,9 +226,11 @@
 }
 
 .sidebar.open .logo_details #btn {
-  text-align: right;
-  right: -50px; 
-  transform: translateX(200%);
+  text-align: left;
+  left: 150px;
+  /* transform: translateY(-50%); */
+  transform: translateY( -100%);
+  transform: translateX(30%);
   color: var(--color-yellow);
 }
 

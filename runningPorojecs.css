@@ -1,0 +1,124 @@
+  
+  
+/* Project Notifications for Running Projects*/
+
+
+.notification-row > .data-cell > .status-pill {
+    display: inline-block;
+    padding: 4px 4px;
+    width: 100%;
+    border-radius: 50px;
+    color: #000;
+    margin: 4px, 4px, 4px, 4px;
+   
+  } 
+  
+  
+  /* CSS for the title container */
+  .notification-title-container {
+    text-align: left;
+    color: #000;
+    margin-bottom: 10px;
+    font-weight: bolder;
+    border-bottom: 1px solid royalblue;
+  }
+  
+  .project-popup {
+    position: fixed;
+    max-width: auto; /* You can adjust the width as needed */
+    background-color: #80dbf1fd;
+    border: 2px solid #444;
+    padding: 5px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    z-index: 9999;
+    box-shadow: 4px 0px 4px 4px rgba(238, 34, 34, 0.548);
+    right: 20px;
+    bottom: 20px;
+  }
+  
+  .notification-table {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 5px;
+    /* border-collapse: separate; */
+    border-spacing: 0;
+  }
+  
+  .notification-header {
+    display: flex;
+    font-weight: bold;
+    text-align: left;
+    background-color: #ccc;
+    color: #000;
+    border-bottom: 1px solid royalblue;
+  }
+  
+  .header-cell,
+  .data-cell {
+    flex: 1;
+    padding: 5px;
+    overflow: hidden;
+    text-align: left;
+    color: #000;
+    /* border: 1px solid #444;  */
+  }
+  
+  /* Define the custom widths for the cells */
+  .header-cell:nth-child(1),
+  .data-cell:nth-child(1) {
+    flex-basis: 300px;
+  }
+  
+  .header-cell:nth-child(2),
+  .data-cell:nth-child(2) {
+    flex-basis: 200px;
+  }
+  
+  .header-cell:nth-child(3),
+  .data-cell:nth-child(3) {
+    flex-basis: 150px;
+  }
+  
+  .header-cell:nth-child(4),
+  .data-cell:nth-child(4) {
+    flex-basis: 150px;
+    color: black;
+  }
+  
+  .notification-row {
+    border-bottom: 1px solid royalblue;
+    display: flex;
+    border-collapse: collapse;
+    padding: 0.7rem;
+    text-align: left;
+    word-wrap: break-word;
+    align-items: flex-start;
+    border-radius: 5px;
+    margin: 2px 0;
+    background-color: #c0c0b9;
+  }
+  
+  .notification-row:nth-child(even) {
+    background-color: #f8d1b4;
+  }
+  
+  .notification-row:hover {
+    background-color: #fff6 !important;
+    transform: scale(1.02);
+    cursor: pointer;
+  }
+  
+  .project-popup .close-btn {
+    background-color: var(--color-default);
+    color: #fff;
+    border-radius: 50px;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
+  
