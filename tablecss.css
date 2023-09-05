@@ -361,6 +361,15 @@ z-index: 1001;
   border-style: solid;
 }
 
+.SEOTable th:first-child,
+.SEOTable td:first-child {
+  width: 10px;
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis;
+}
+
+
 .status-pill {
   display: inline-block;
   padding: 2px 2px 2px 2px;

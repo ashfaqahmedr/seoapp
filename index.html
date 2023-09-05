@@ -56,13 +56,13 @@
         <div class="login-text">Login</div>
         <div class="input-box">
             <i class="fas fa-user"></i>
-           <input type="text" id="username" required>
+           <input type="text" id="username" required autocomplete="off">
             <label for="username">Username</label>
             
         </div>
         <div class="input-box">
             <i class="fas fa-lock"></i>
-           <input type="password" id="password" required>
+           <input type="password" id="password" required autocomplete="off">
             <label for="password">Password</label>
             
         </div>
@@ -258,13 +258,15 @@
             <div class="option" data-value="aborted"><i class="fas fa-ban"></i> Aborted</div>
             <div class="option" data-value="draft"><i class="fas fa-file"></i> Draft</div>
             <div class="option" data-value="aborting..."><i class="fas fa-stop"></i> Aborting...</div>
+            <div class="option" data-value="pending"><i class="fas fa-hourglass-half"></i> Pending</div>
+
           </div>
         </div>    
 
           <button id="AddProject" class="New-Button" data-tooltip="Add New Project" onclick="createnewJobID()"> <i class="fas fa-plus-circle"></i><span class="text-hide"> Add Project</span></button>
           <button id="AddNewUser" class="New-Button" data-tooltip="Add New User" onclick="showAddUserDialog()"> <i class="fas fa-user-plus"></i> <span class="text-hide">Add User</span></button>
             
-          <button id="confirmdialog" class="New-Button" data-tooltip="Show Confrim Dialog" onclick="openDialog()"> <i class="fas fa-cog"></i> <span class="text-hide">View Confirm</span></button>
+          <!-- <button id="confirmdialog" class="New-Button" data-tooltip="Show Confrim Dialog" onclick="openDialog()"> <i class="fas fa-cog"></i> <span class="text-hide">View Confirm</span></button> -->
 
           <button id="updateProjectSettings" class="New-Button" data-tooltip="Change Project Settings" onclick="openSettingDialog()"> <i class="fas fa-cog"></i> <span class="text-hide">Settings</span></button>
               <!-- <button id="Run-Buton" class="New-Button" onclick=" toggleNotificationPanel()"> <i class="fas fa-play"></i>  Running </button> -->
@@ -350,115 +352,129 @@
 
       <div id="articleCreatorSection" class="dialog-section">
 
-        <div class="full-width-input">
-        <!-- FORM START -->
-        <!-- <form id="createProjectForm" class="createProjectForm"> -->
-          
-          <div id="DivProjectCreatoID">
-          <label for="ProjectID">Article Creator ID:</label>
-          <input type="text" id="ProjectID" name="ProjectID" readonly>
-        </div>
-        </div>
+       
       <div class="full-width-input">
         <label for="articleProjectName">Article Project Name:</label>
         
-        <input type="text" id="articleProjectName" name="ProjectName" required>
+        <input type="text" id="articleProjectName" name="ProjectName" required autocomplete="off">
 
       </div>
 
       <div class="full-width-input">
 
           <label for="articleKeywordsFile">Article Keywords: </label>
-          <input type="text" id="articleKeywordsFile"  name="ProjectKeywords" required>
+          <input type="text" id="articleKeywordsFile"  name="ProjectKeywords" required autocomplete="off">
       </div>
       <div class="full-width-input">
         <label for="articleCategories">Article Categories: </label>
         
-        <input type="text" id="articleCategories" name="ProjectCategories" required>
+        <input type="text" id="articleCategories" name="ProjectCategories" required autocomplete="off">
       </div>  
     
 
-
       <div class="subsection">
-          <div id="DivProjectCreatorStatus">
-          <label for="ProjectStatus">Article Creartor Status:</label>
           
-          <input type="text" id="ProjectStatus" name="ProjectStatus" readonly>
-          </div>
-        </div>
+        <div id="DivProjectCreatoID">
+        <label for="ProjectID">Article Creator ID:</label>
+        <input type="text" id="ProjectID" name="ProjectID" readonly disabled>
+      </div>
+      </div>
+      
+    <div class="subsection">
+      <div id="DivProjectCreatorStatus">
+      <label for="ProjectStatus">Article Creartor Status:</label>
+      
+      <input type="text" id="ProjectStatus" name="ProjectStatus" readonly disabled>
+      </div>
+    </div>
+
     </div>
 
     <div class="subheading" id="postuploader"></div>
 
     <div id="postUploaderSection" class="dialog-section">
       
-      <div class="subsection">
-        <div id="DivProjectPosterrID">
-        <label for="PostUploaderId">Post Uploader ID:</label>
-        
-        <input type="text" id="PostUploaderId" name="PostUploaderId" readonly>
 
-        </div>
-      </div>
       <div class="subsection">
       <label for="postJobName">Post Job Name:</label>
-      <input type="text" id="postJobName" name="PostUploaderName" required>
+      <input type="text" id="postJobName" name="PostUploaderName" required autocomplete="off">
 
     </div>
+
+
     <div class="subsection">
-        <div id="DivProjectPosterStatus">
+      <label for="postDate">Post Date:</label>
+      <input type="date" id="postDate" name="PostStartDate" required autocomplete="off">
+    </div>
+
+
+    <div id="DivProjectPosterrID">
+      <div class="subsection">
+      
+        <label for="PostUploaderId">Post Uploader ID:</label>
+        
+        <input type="text" id="PostUploaderId" name="PostUploaderId" readonly disabled>
+
+        </div>
+      </div>
+
+      <div id="DivProjectPosterStatus">
+        
+      <div class="subsection">
+       
         <label for="PostUploaderStatus">Post Uploader Status:</label>
-        <input type="text" id="PostUploaderStatus" name="PostUploaderStatus" readonly>
+        <input type="text" id="PostUploaderStatus" name="PostUploaderStatus" readonly disabled>
         </div>
 
       </div>
-      <div class="subsection">
-      <label for="postDate">Post Date:</label>
-      <input type="date" id="postDate" name="PostStartDate" required>
-    </div>
+    
     </div>
 
     </div>
 
     <div class="subheading" id="blogIdNo">Blog Setting</div>
 
+
     <div id="blogSettingSection" class="dialog-section">
+
+
+      <div id="DivProjectBlogID">
 
       <div class="subsection">
 
-        <div id="DivProjectBlogID">
         <label for="BlogIdId">Blog ID:</label>
         
-        <input type="text" id="BlogId" name="BlogId" readonly>
+        <input type="text" id="BlogId" name="BlogId" readonly disabled>
         </div>
 
       </div>
 
       <div class="subsection">
       <label for="blogUserName">Blog User Name:</label>
-      <input type="text" id="blogUserName" name="username" required>
+      <input type="text" id="blogUserName" name="username" required autocomplete="off">
       </div>
       <div class="subsection">
 
       <label for="blogPassword">Blog Password:</label>
-      <input type="text" id="blogPassword" name="password" required> 
+      <input type="text" id="blogPassword" name="password" required autocomplete="off"> 
 
     </div>
     <div class="subsection">
 
       <label for="blogUrl">Blog URL:</label>
-      <input type="text" id="blogUrl" name="url" required>
+      <input type="text" id="blogUrl" name="url" required autocomplete="off">
  </div>
       <div class="subsection">
 
       <label for="blogGroup">Blog Group:</label>
-      <input type="text" id="blogGroup" name="group" required>
+      <input type="text" id="blogGroup" name="group" autocomplete="off">
  </div>
-      <div class="subsection">
 
-        <div id="DivProjectSEOStatus">
+
+    <div id="DivProjectSEOStatus">
+      <div class="subsection">
         <label for="SEOStatus">SEO Status:</label>
-        <input type="text" id="SEOStatus" name="SEOStatus" readonly>
+        <input type="text" id="SEOStatus" name="SEOStatus" readonly disabled>
         </div>
 
       </div>
@@ -472,7 +488,7 @@
       </button>
 
       <button class="btn closeDialog" id="createProjectData" onclick="createProjects()">
-        <i class="fas fa-plus"></i> Add
+        <i class="fas fa-plus"></i> <span id="createProjectText"></span>
       </button>
 
       <button  class="btn closeDialog" id="closeDialog" onclick="closeDialog('ProjectsDialog')">
@@ -498,20 +514,20 @@
       <div class="full-width-input">
   
         <label for="sheetID">Google Sheet ID:</label>
-        <input type="text" id="CustomDialogsheetID" readonly>
+        <input type="text" id="CustomDialogsheetID" readonly disabled>
     
     </div>
 
       <div class="full-width-input">
 
         <label for="listofContentFilter">List of Content Filter:</label>
-        <input type="text" id="listofContentFilter" required>
+        <input type="text" id="listofContentFilter" required autocomplete="off">
 
       </div>
       
       <div class="subsection">
         <label for="urlsDownloadResultLimits">URLs Download Result Limits:</label>
-        <input type="number" id="urlsDownloadResultLimits" required>
+        <input type="number" id="urlsDownloadResultLimits" required autocomplete="off">
       </div>
 
       <div class="subsection">
@@ -520,11 +536,11 @@
       </div>
       <div class="subsection">
         <label for="insertNoofImagesFROM">Insert No of Images FROM:</label>
-        <input type="number" id="insertNoofImagesFROM" required>
+        <input type="number" id="insertNoofImagesFROM" required autocomplete="off">
       </div>
       <div class="subsection">
         <label for="insertNoofImagesTO">Insert No of Images TO:</label>
-        <input type="number" id="insertNoofImagesTO" required>
+        <input type="number" id="insertNoofImagesTO" required autocomplete="off">
       </div>
 
 
@@ -586,7 +602,7 @@
 
       <div class="subsection">
         <label for="imageInserType">Wordpress Image Upload Options</label>
-        <select id="imageInserType" name="imageInserType" required>
+        <select id="imageInserType" name="imageInserType" required autocomplete="off">
           <option value="hotlink"> &#128279; Image Links</option>
           <option value="base64"> &#128295; base64 URLs</option>
           <option value="local" selected>  &#128190;Save Locally</option>
@@ -609,24 +625,24 @@
 
       <div class="subsection">
         <label for="postsperDay">Posts per Day:</label>
-        <input type="number" id="postsperDay" required>
+        <input type="number" id="postsperDay" required autocomplete="off">
       </div>
       <div class="subsection">
         <label for="postIntervaldaysFROM">Post Interval days FROM:</label>
-        <input type="number" id="postIntervaldaysFROM" required>
+        <input type="number" id="postIntervaldaysFROM" required autocomplete="off">
       </div>
       <div class="subsection">
         <label for="postIntervaldaysTO">Post Interval days TO:</label>
-        <input type="number" id="postIntervaldaysTO" required>
+        <input type="number" id="postIntervaldaysTO" required autocomplete="off">
       </div>
       <div class="subsection">
         <label for="postarticleTitle">Article Title:</label>
-        <input type="text" id="postarticleTitle" required>
+        <input type="text" id="postarticleTitle" required autocomplete="off">
       </div>
 
       <div class="subsection">
         <label for="seoStatus">SEO Status:</label>
-        <input type="text" id="seoStatus" readonly>
+        <input type="text" id="seoStatus" readonly disabled>
       </div>
 
     </div>
@@ -650,13 +666,15 @@
     
     <div class="subheading" id="userDialogSubTitle">Add User's Info</div>
 
-    <div id="userDialogsheetIDTitle" class="full-width-input">
-      <label for="usersheetID">Google Sheet ID:</label>
-      <input type="text" id="usersheetID" readonly class="full-width-input">
-     </div>
 
     <div class="dialog-section"> 
       
+      <div id="userDialogsheetIDTitle" class="full-width-input">
+        <label for="usersheetID">Google Sheet ID:</label>
+        <input type="text" id="usersheetID" readonly disabled>
+       </div>
+
+       
     <div class="full-width-input">
         <label for="userFullInput">User Full Name</label>
         <input type="text" id="userFullInput" required autocomplete="off">
@@ -673,11 +691,15 @@
         <label for="passwordInput">User Password</label>
         <input type="text" id="passwordInput" required autocomplete="off">
       </div>
+
       <div class="subsection">
 
         <label for="timeCount">Default User Logout Time</label>
         <input type="number" id="timeCount" required autocomplete="off">
         <label for="userType">User Type</label>
+
+      </div>
+      <div class="subsection">
         <select id="userType" name="userType" required>
           <option value="SuperAdmin">&#128081; SuperAdmin</option>
           <option value="Admin" selected>&#128084; Admin</option>
@@ -686,13 +708,12 @@
         </select>
       
       </div>
-      <div class="subsection">
-
+     
         <div id="userDialogSeoStatus">
+          <div class="subsection">
             <label for="SEOdInput">SEO Status</label>
-            <input type="text" id="seoStatusinput" readonly>
+            <input type="text" id="seoStatusinput" readonly disabled>
           </div>
-      
     </div>
 
   </div>

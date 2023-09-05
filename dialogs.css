@@ -16,31 +16,36 @@ dialog::backdrop {
 }
 
 
+  /* Main Project Dialog Width & Height */
 
+  .projectDialog {
+    max-width: 90%;
+    max-height: auto;
+    
+  }
+  
+
+  
 /* Add User Dialog Width and Height */
 
 .userDialog {
-  min-width: 30%;
-  max-width: 50%;
-  min-height: 50%;
-  max-height: 70%;
+ 
+ max-width:50%;
+ max-height: auto;
 }
 
 
 /* Project Setting Dialog Width & Height */
 .settingDialog {
-  min-width: 50%;
-  max-width: 80%;
-  min-height: 80%;
-  max-height: 90%;
+ 
+  max-width:70%;
+  max-height: auto;
 }
 
 /* Confirm Dialog Width & Height */
 .confirmdialog {
-  min-width: 50%;
-  max-width: 80%;
-  min-height: 10%;
-  max-height: 20%;
+  max-width:50%;
+  max-height: auto;
 }
 
 
@@ -61,11 +66,10 @@ dialog::backdrop {
   font-weight: bold;
   margin-top: 10px;
   color: var(--color-white);
-  /* border: 2px solid #ccc; */
   border-radius: 10px 10px 0 0;
   background-color: var(--color-second);
   padding: 5px;
-  /* box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2); */
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 
@@ -109,8 +113,10 @@ dialog::backdrop {
 
     
 .dialog-section input:focus {
-  border-bottom: 2px solid #4d027c;
-  background-color: rgba(175, 144, 158, 0.753);
+  border-bottom: 2px solid var(--color-light);
+  background-color: var(--color-yellow);
+  color: var(--dark-gray);
+
   
 }
   
@@ -122,6 +128,15 @@ dialog::backdrop {
 .dialog-section input[type="number"] {
   width: 50px;
 } 
+
+
+.dialog-section input[type="text"]:read-only, .dialog-section input[type="number"]:read-only, .dialog-section input[type="text"]:disabled, .dialog-section input[type="number"]:disabled  {
+  border-bottom: 2px solid var(-dark-gray);
+  background-color: var(--medium-gray);
+  color: var( --color-white);
+  font-weight: bold;
+}
+
 
 
 /* Flex layout for subsections  */
@@ -149,63 +164,6 @@ dialog::backdrop {
 .full-width-input input{
   width: 100%;
   }
-
-
-  .section1 {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    margin-bottom: 20px;
-    align-items: flex-start;
-    justify-content: space-between;
-  } 
-  
-
-  .section1 label{
-    /* width: fit-content; */
-    height: max-content;
-    }
-  
-    
-  .section1 input{
-    /* flex-basis: 80%; */
-    width: 100%;
-    height: max-content;
-    }
-
-
-
-  .section2 {
-
-    display: grid;
-    grid-template-columns: 1fr 5fr 1 fr 5fr;
-
-    margin-bottom: 20px;
-  } 
-  
-   
-  .section2 label{
-    flex-basis: 15%;
-    height: max-content;
-    }
-  
-    
-  .section2 input{
-    flex-grow: 5;
-    height: max-content;
-    }
-
-     
-     .section3 label{
-      width: 15%;
-     }
-   
-     
-   .section3 input{
-     width: 100%;
-     }
-
-     
 
 
   /* Custom Dialog Toggle Buttons */
@@ -331,54 +289,6 @@ select {
   }
 
 
-  /* Main Project Dialog Width & Height */
 
-.projectDialog {
-  min-width: 70%;
-  max-width: 90%;
-  min-height: 80%;
-  max-height: 90%;
-  display: grid;
-  flex-direction: column;
-  overflow: hidden;
-  box-sizing: border-box;
-    flex-wrap: wrap;
-}
-
-
-/* Display section-input-1 as 1 label and 1 input in one row using CSS Grid */
-.section-input-1 {
-
-  display: grid;
-    align-items:start;
-    justify-content: space-between;
-    grid-template-columns: auto 94%; 
-  
-    grid-gap: 5px; /* Adjust the gap between label and input as needed */
-  }
-  
-   /* Display section-input-2 as 2 labels and 2 inputs in one row using CSS Grid */
-  .section-input-2 {
-    
-    display: grid;
-  
-    justify-content: space-between;
-    grid-template-columns:15% 35% 15% 15%;
-    grid-gap: 5px; /* Adjust the gap between labels and inputs as needed */
-  }
-  
-  /* Display section-input-4 as 4 labels and 4 inputs in one row using CSS Grid */
-  .section-input-4 {
-  margin-bottom: 5px;
-
-  flex-wrap: wrap;
-  display: grid;
-  justify-content: space-between;
-
-    grid-template-columns: 15% 20% 15% 20%;
-    grid-gap: 5px; /* Adjust the gap between labels and inputs as needed */
-  }
-  
-  
 
     

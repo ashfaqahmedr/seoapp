@@ -108,11 +108,22 @@ async function loginUser() {
     const username = usernameInput.value;
     const password = passwordInput.value;
   
-    const response = await fetch(seourl, {
+    const responsePromise = fetch(seourl, {
       method: 'POST',
       body: JSON.stringify({ action: 'login', username, password }), // Include the action
     });
   
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => {
+        reject(new Error('Timeout exceeded (30 seconds)'));
+      }, 30000);
+    });
+
+
+    try {
+      const response = await Promise.race([responsePromise, timeoutPromise]);
+        
+    
     if (response.ok) {
     const { success, username, userType, fullName, token, error } = await response.json();
   
@@ -192,6 +203,12 @@ async function loginUser() {
     return null;
   }
 }
+ catch (error) {
+  createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error.message);
+  hideLoader();
+}
+}
+
   function logout() {
             // // Add the 'hidden' class to the elements
             // sidebar.style.display = 'none';

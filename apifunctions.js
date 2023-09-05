@@ -42,11 +42,23 @@ async function fetchAPI() {
     // Show Animation
     showLoader();
   
+
+    const responsePromise = fetch(seourl, {
+      method: 'POST',
+        body: JSON.stringify({ action: 'getAllProjects', username: LoggedUsername }), // Include the action
+    });
+
+
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => {
+        hideLoader();
+        reject(new Error(createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error)));
+      }, 30000);
+    });
+
+
     try {
-      const response = await fetch(seourl, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'getProjects', username: LoggedUsername }), // Include the action
-      });
+       const response = await Promise.race([responsePromise, timeoutPromise]);
 
         const responseData = await response.json();
             // Task 6: Generate the table based on the final formattedData object
@@ -73,12 +85,20 @@ async function fetchAPI() {
      // Show Animation
      showLoader();
   
-     try {
+     const responsePromise = fetch(seourl, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'getCreatorProjects', username: LoggedUsername }), // Include the action
+    });
 
-      const response = await fetch(seourl, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'getCreatorProjects', username: LoggedUsername }), // Include the action
-      });
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => {
+        hideLoader();
+        reject(new Error(createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error)));
+      }, 30000);
+    });
+  
+    try {
+      const response = await Promise.race([responsePromise, timeoutPromise]);   
 
          const responseData = await response.json();
              // Task 6: Generate the table based on the final formattedData object
@@ -106,13 +126,23 @@ async function fetchAPI() {
 
      // Show Animation
      showLoader();
-  
-     try {
 
-      const response = await fetch(seourl, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'getUsers', username: LoggedUsername }), // Include the action
-      });
+     const responsePromise = fetch(seourl, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'getUsers', username: LoggedUsername }), // Include the action
+  });
+
+  const timeoutPromise = new Promise((_, reject) => {
+    setTimeout(() => {
+      hideLoader();
+      reject(new Error(createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error)));
+    }, 30000);
+  });
+
+  try {
+    const response = await Promise.race([responsePromise, timeoutPromise]);
+
+      
 
          const responseData = await response.json();
              // Task 6: Generate the table based on the final formattedData object
@@ -139,12 +169,23 @@ async function fetchPostUploader() {
   DataHeaders.innerText="Showing Post Uploader Project(s) Data"
      // Show Animation
      showLoader();
+
+    const responsePromise = fetch(seourl, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'getPostProjects', username: LoggedUsername }), // Include the action
+    });
   
-     try {
-       const response = await fetch(seourl, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'getPostProjects', username: LoggedUsername }), // Include the action
-      });
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => {
+        hideLoader();
+        reject(new Error(createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error)));
+      }, 30000);
+    });
+  
+    try {
+      const response = await Promise.race([responsePromise, timeoutPromise]);
+
+      
          const responseData = await response.json();
              // Task 6: Generate the table based on the final formattedData object
              createTableFromData(responseData);
@@ -173,14 +214,24 @@ async function ReadJsonFile() {
 
   // Show Animation
   showLoader();
-   // Show Animation
-   showLoader();
-  
-   try {
-    const response = await fetch(seourl, {
+
+
+    const responsePromise = fetch(seourl, {
       method: 'POST',
       body: JSON.stringify({ action: 'getJSON', username: LoggedUsername }), // Include the action
     });
+  
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => {
+        hideLoader();
+        reject(new Error(createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error)));
+      }, 30000);
+    });
+  
+    try {
+      const response = await Promise.race([responsePromise, timeoutPromise]);
+
+      
        const responseData = await response.json();
            // Task 6: Generate the table based on the final formattedData object
            createTableFromData(responseData);
@@ -206,12 +257,22 @@ async function fetchArticleCreatorbyStatus(articleStatus) {
   // Show Animation
   showLoader();
 
-  try {
-  // Task 1: Fetch all projects and store the required keys in an object
-  const response = await fetch(seourl, {
+
+  const responsePromise = fetch(seourl, {
     method: 'POST',
     body: JSON.stringify({ action: 'getStatus', status: articleStatus, username: LoggedUsername }), // Include the action
   });
+
+  const timeoutPromise = new Promise((_, reject) => {
+    setTimeout(() => {
+      hideLoader();
+      reject(new Error(createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error)));
+    }, 30000);
+  });
+  try {
+    const response = await Promise.race([responsePromise, timeoutPromise]);
+
+
     const formattedData = await response.json();
 
       // Task 6: Generate the table based on the final filteredProjects object
@@ -241,11 +302,24 @@ async function fetchArticleCreatorbyStatus(articleStatus) {
 }  
 
 async function updateStatusCounts() {
-  try {
-    const response = await fetch(seourl, {
+ 
+
+    const responsePromise = fetch(seourl, {
       method: 'POST',
       body: JSON.stringify({ action: 'getProjectCounts', username: LoggedUsername }), // Include the action
     });
+  
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => {
+        hideLoader();
+        reject(new Error(createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error)));
+      }, 30000);
+    });
+  
+    try {
+      const response = await Promise.race([responsePromise, timeoutPromise]);
+
+      
 
     const data = await response.json();
     console.table(data)
@@ -424,14 +498,16 @@ function openConfrimDialog(dialogId, titleHeader, confirmMessage) {
     document.getElementById('confirmButton').addEventListener('click', function() {
       resolve(true); // Resolve the promise with true when confirm button is clicked
       closeDialog(dialogId);
+      confrimdialog.style.display = 'none'
     });
 
     // Event listener for the cancel button
     document.getElementById('cancelButton').addEventListener('click', function() {
       resolve(false); // Resolve the promise with false when cancel button is clicked
       closeDialog(dialogId);
+      confrimdialog.style.display = 'none'
     });
-
+    confrimdialog.style.display = 'flex'
     confrimdialog.showModal();
   });
 }

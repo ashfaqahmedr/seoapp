@@ -282,6 +282,7 @@ function createTableFromData(data) {
   //Update the Custom Right Click Based on the table Data.
   updateMenuItems(apiCalltoMake);
 
+  
   hideLoader();
 
 
@@ -398,6 +399,9 @@ const contextMenu = document.querySelector('.menu');
 const closeButton = document.getElementById('closeDialogButton');
 
 const updateButton = document.getElementById('updateProjectData');
+const addButtonText = document.getElementById('createProjectText');
+
+
 
 // // Get the input elements
 const articleProjectNameInput = document.getElementById('articleProjectName');
@@ -444,10 +448,6 @@ function removeTransition(event) {
 }
 
 
-
-
-
-
 async function fetchDataAndHandle(selectedRowId, method) {
   
   
@@ -469,14 +469,24 @@ async function fetchDataAndHandle(selectedRowId, method) {
   const blogGroupInput = document.getElementById('blogGroup');
   const SEOStatusInput = document.getElementById('SEOStatus');
 
-  try {
+ 
 
     if (method.toUpperCase() === 'GETDATA') {
 
-    const response = await fetch(seourl, {
+    const responsePromise = fetch(seourl, {
       method: 'POST',
       body: JSON.stringify({ action: 'getProjects', dataId: selectedRowId, username: LoggedUsername }), // Include the action
     });
+  
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => {
+        hideLoader();
+        reject(new Error(createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error)));
+      }, 30000);
+    });
+  
+    try {
+      const response = await Promise.race([responsePromise, timeoutPromise])
 
     const data = await response.json();
 
@@ -484,45 +494,52 @@ async function fetchDataAndHandle(selectedRowId, method) {
 
       cnsarticleCreatorTitle.textContent = `Article Creator Details of ID: ${selectedRowId}`;
 
-      ProjectIDInput.value = data[0].ProjectID;
-      articleProjectNameInput.value = data[0].ProjectName;
-      ProjectStatusinput.value = data[0].ProjectStatus;
-      articleKeywordsFileInput.value = data[0].ProjectKeyowrds;
-      articleCategoriesInput.value = data[0].ProjectCatagories;
+          ProjectIDInput.value = data[0].ProjectID;
+          articleProjectNameInput.value = data[0].ProjectName;
+          ProjectStatusinput.value = data[0].ProjectStatus;
+          articleKeywordsFileInput.value = data[0].ProjectKeyowrds;
+          articleCategoriesInput.value = data[0].ProjectCatagories;
 
-      cnspostUploaderTitle.textContent = `Post Uploader Details of ID: ${data[0].PostUploaderId}`;
+          cnspostUploaderTitle.textContent = `Post Uploader Details of ID: ${data[0].PostUploaderId}`;
 
-      // // Fill in the Post Uploader section
-      PostUploaderIdInput.value = data[0].PostUploaderId;
-      postJobNameInput.value = data[0].PostUploaderName;
-      PostUploaderStatusInput.value = data[0].PostUploaderStatus;
+          // // Fill in the Post Uploader section
+          PostUploaderIdInput.value = data[0].PostUploaderId;
+          postJobNameInput.value = data[0].PostUploaderName;
+          PostUploaderStatusInput.value = data[0].PostUploaderStatus;
 
-        // Extract the date part and format it as "YY-MM-DD"
-        const postStartDate = new Date(data[0].PostStartDate);
-        const formattedPostStartDate = postStartDate.toISOString().split('T')[0];
-  
-        // Assign the formatted date to the input value
-        postDateInput.value = formattedPostStartDate;
+    // Extract the date part and format it as "YY-MM-DD"
+    const postStartDate = new Date(data[0].PostStartDate);
+    postStartDate.setUTCHours(0, 0, 0, 0); // Set time to midnight in UTC
 
-      cnsblogSettingTitle.textContent = `Blog Setting details of ID: ${data[0].BlogId} SEO Status ${data[0].SEOStatus}`;
+    // Add one day to the date to account for time zone differences
+    postStartDate.setDate(postStartDate.getDate() + 1);
 
-      // // Fill in the Blog Setting section
-      BlogIdInput.value = data[0].BlogId;
-      blogUserNameInput.value = data[0].username;
-      blogPasswordInput.value = data[0].password;
-      blogUrlInput.value = data[0].url;
-      blogGroupInput.value = data[0].group;
-      SEOStatusInput.value = data[0].SEOStatus;
+    const formattedPostStartDate = postStartDate.toISOString().split('T')[0];
 
-      dialogProjectsDialog.style.display="grid";
+    // Assign the formatted date to the input value
+    postDateInput.value = formattedPostStartDate;
 
 
+          cnsblogSettingTitle.textContent = `Blog Setting details of ID: ${data[0].BlogId} SEO Status ${data[0].SEOStatus}`;
 
-      dialogProjectsDialog.showModal();
+          // // Fill in the Blog Setting section
+          BlogIdInput.value = data[0].BlogId;
+          blogUserNameInput.value = data[0].username;
+          blogPasswordInput.value = data[0].password;
+          blogUrlInput.value = data[0].url;
+          blogGroupInput.value = data[0].group;
+          SEOStatusInput.value = data[0].SEOStatus;
 
+          dialogProjectsDialog.style.display="flex";
 
+          dialogProjectsDialog.showModal();
 
-    } else if (method.toUpperCase() === 'POSTDATA') {
+        } catch (error) {
+          createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error.message);
+          hideLoader();
+        }
+
+    } else if (method.toUpperCase() === 'UPDATEDATA') {
      
          const jsonData = {
         action: 'updateProjectsData',
@@ -551,11 +568,21 @@ async function fetchDataAndHandle(selectedRowId, method) {
 
       console.table(jsonData)
     
-     let response = await fetch(seourl, {
+
+      const responsePromise = fetch(seourl, {
         method: 'POST',
         body: JSON.stringify( jsonData ), // Include the action
-        // body: jsonData, // Include the action
       });
+    
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => {
+          hideLoader();
+          reject(new Error(createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error)));
+        }, 30000);
+      });
+    
+      try {
+        const response = await Promise.race([responsePromise, timeoutPromise])
 
       const Resdata = await response.json();
 
@@ -568,91 +595,101 @@ async function fetchDataAndHandle(selectedRowId, method) {
         createToast('success', 'fa-solid fa-circle-check', 'Success', "Success: " + success + " ID: "+ id + ' Message: '+ message);
         dialogProjectsDialog.style.display="none";
         dialogProjectsDialog.close()
-if (success) {
-        // Assuming you have the row index stored in selectedRowIndex
-const table = document.getElementById('main');
-const row = table.rows[selectedRowIndex];
+  if (success) {
+          // Assuming you have the row index stored in selectedRowIndex
+  const table = document.getElementById('main');
+  const row = table.rows[selectedRowIndex];
 
-if (row) {
-  // Update each cell based on its corresponding input field value
-  row.cells[1].textContent = ProjectIDInput.value;
-  row.cells[2].textContent = articleProjectNameInput.value;
+  if (row) {
+    // Update each cell based on its corresponding input field value
+    // row.cells[2].textContent = ProjectIDInput.value;
+    row.cells[2].textContent = articleProjectNameInput.value;
 
 
-// Update ProjectStatus span element
-const projectStatusSpan = row.cells[3].querySelector('span.status-pill');
-const cleanedProjectStatus = removeTrailingDots(ProjectStatusinput.value);
-projectStatusSpan.textContent = ProjectStatusinput.value;
-projectStatusSpan.className = 'status-pill'; // Remove all classes and set to 'status-pill'
-projectStatusSpan.classList.add(`status-${cleanedProjectStatus.toLowerCase()}`);
+  // Update ProjectStatus span element
+  const projectStatusSpan = row.cells[3].querySelector('span.status-pill');
+  const cleanedProjectStatus = removeTrailingDots(ProjectStatusinput.value);
+  projectStatusSpan.textContent = ProjectStatusinput.value;
+  projectStatusSpan.className = 'status-pill'; // Remove all classes and set to 'status-pill'
+  projectStatusSpan.classList.add(`status-${cleanedProjectStatus.toLowerCase()}`);
 
-  row.cells[4].textContent = articleKeywordsFileInput.value;
-  row.cells[5].textContent = articleCategoriesInput.value;
-  row.cells[6].textContent = PostUploaderIdInput.value;
-  row.cells[7].textContent = postJobNameInput.value;
+    // row.cells[4].textContent = articleKeywordsFileInput.value;
+    // row.cells[5].textContent = articleCategoriesInput.value;
+    // row.cells[6].textContent = PostUploaderIdInput.value;
+    row.cells[4].textContent = postJobNameInput.value;
 
- // Update PostUploaderStatus span element
- const postUploaderStatusSpan = row.cells[8].querySelector('span.status-pill');
- const cleanedPostUploaderStatus = removeTrailingDots(PostUploaderStatusInput.value);
- postUploaderStatusSpan.textContent = PostUploaderStatusInput.value;
- postUploaderStatusSpan.className = 'status-pill'; // Remove all classes and set to 'status-pill'
- postUploaderStatusSpan.classList.add(`status-${cleanedPostUploaderStatus.toLowerCase()}`);
+  // Update PostUploaderStatus span element
+  const postUploaderStatusSpan = row.cells[5].querySelector('span.status-pill');
+  const cleanedPostUploaderStatus = removeTrailingDots(PostUploaderStatusInput.value);
+  postUploaderStatusSpan.textContent = PostUploaderStatusInput.value;
+  postUploaderStatusSpan.className = 'status-pill'; // Remove all classes and set to 'status-pill'
+  postUploaderStatusSpan.classList.add(`status-${cleanedPostUploaderStatus.toLowerCase()}`);
 
-  row.cells[9].textContent = postDateInput.value;
-  row.cells[10].textContent = BlogIdInput.value;
-  row.cells[11].textContent = blogUserNameInput.value;
-  row.cells[12].textContent = blogPasswordInput.value;
-  row.cells[13].textContent = blogUrlInput.value;
-  row.cells[14].textContent = blogGroupInput.value;
-  
- // Update SEOStatus span element
-  const seoStatusSpan = row.cells[15].querySelector('span.status-pill');
-  const cleanedSEOStatus = removeTrailingDots(SEOStatusInput.value);
-  seoStatusSpan.textContent = SEOStatusInput.value;
-  seoStatusSpan.className = 'status-pill'; // Remove all classes and set to 'status-pill'
-  seoStatusSpan.classList.add(`status-${cleanedSEOStatus.toLowerCase()}`);
+    row.cells[6].textContent = postDateInput.value;
+    // row.cells[10].textContent = BlogIdInput.value;
+    // row.cells[11].textContent = blogUserNameInput.value;
+    // row.cells[12].textContent = blogPasswordInput.value;
+    // row.cells[13].textContent = blogUrlInput.value;
+    // row.cells[14].textContent = blogGroupInput.value;
+    
+  // Update SEOStatus span element
+    const seoStatusSpan = row.cells[7].querySelector('span.status-pill');
+    const cleanedSEOStatus = removeTrailingDots(SEOStatusInput.value);
+    seoStatusSpan.textContent = SEOStatusInput.value;
+    seoStatusSpan.className = 'status-pill'; // Remove all classes and set to 'status-pill'
+    seoStatusSpan.classList.add(`status-${cleanedSEOStatus.toLowerCase()}`);
+    }
+    hideLoader();
   }
-  hideLoader();
+ } catch (error) {
+    createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error.message);
+    hideLoader();
+  }
 }
 
-} else if (method.toUpperCase() === 'ADDDATA') {
+ else if (method.toUpperCase() === 'ADDDATA') {
    
-  const currentDate = new Date();
-  const formattedDate = currentDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-
+ 
 const jsonData = {
         action: 'addProjectData',
         username: "ASHFAQ",
         dataItems: [
           {
-            ProjectID: ProjectIDInput.value,
+            ProjectID: "",
             ProjectName: articleProjectNameInput.value,
-            ProjectStatus: ProjectStatusinput.value, // Use corresponding input element
+            ProjectStatus: "draft", // Use corresponding input element
             ProjectKeyowrds: articleKeywordsFileInput.value,
             ProjectCatagories: articleCategoriesInput.value,
-            PostUploaderId: PostUploaderIdInput.value,
+            PostUploaderId: "",
             PostUploaderName: postJobNameInput.value,
-            PostUploaderStatus: PostUploaderStatusInput.value , // Use corresponding input element
-            PostStartDate: formattedDate,
-            BlogId: BlogIdInput.value,
+            PostUploaderStatus: "draft" , // Use corresponding input element
+            PostStartDate: postDateInput.value,
+            BlogId: "",
             username: blogUserNameInput.value,
             password: blogPasswordInput.value,
             url: blogUrlInput.value,
             group: blogGroupInput.value,
-            SEOStatus: SEOStatus.value, // Use corresponding input element
+            SEOStatus: "pending", // Use corresponding input element
           },
         ],
       };
 
 console.table(jsonData)
 
-hideLoader();
-
-let response = await fetch(seourl, {
- method: 'POST',
- body: JSON.stringify( jsonData ), // Include the action
- // body: jsonData, // Include the action
+const responsePromise = fetch(seourl, {
+  method: 'POST',
+  body: JSON.stringify( jsonData ), // Include the action
 });
+
+const timeoutPromise = new Promise((_, reject) => {
+  setTimeout(() => {
+    hideLoader();
+    reject(new Error(createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error)));
+  }, 30000);
+});
+
+try {
+  const response = await Promise.race([responsePromise, timeoutPromise])
 
 const Resdata = await response.json();
 
@@ -665,20 +702,28 @@ console.table(Resdata);
  createToast('success', 'fa-solid fa-circle-check', 'Success', "Success: " + success + " ID: "+ id + ' Message: '+ message);
 
  if (success) {
+  hideLoader();
+
 
     // Add a new row at index 2 (third row)
     const table = document.getElementById('main');
     const newRow = table.insertRow(1);
 
     // Insert cells and set their content
-    for (let i = 0; i < 16; i++) {
+    for (let i = 0; i < 8; i++) {
       const cell = newRow.insertCell(i);
       cell.textContent = '';
     }
 
     // Set specific cell values based on input fields and create status spans
     newRow.cells[0].textContent = id;
-    newRow.cells[1].textContent = ProjectIDInput.value;
+
+        const currentDate = new Date();
+    const formatedDateMMDDYY = currentDate.toISOString().split('T')[0]; // Get the current date in "yyyy-mm-dd" format
+    console.log(formatedDateMMDDYY)
+    
+    newRow.cells[1].textContent =formatedDateMMDDYY;
+    // newRow.cells[1].textContent = ProjectIDInput.value;
     newRow.cells[2].textContent = articleProjectNameInput.value;
 
     const statusSpan1 = document.createElement('span');
@@ -686,41 +731,39 @@ console.table(Resdata);
     statusSpan1.textContent = 'draft';
     newRow.cells[3].appendChild(statusSpan1);
 
-    newRow.cells[4].textContent = articleKeywordsFileInput.value;
-    newRow.cells[5].textContent = articleCategoriesInput.value;
-    newRow.cells[6].textContent = PostUploaderIdInput.value;
-    newRow.cells[7].textContent = postJobNameInput.value;
+    // newRow.cells[4].textContent = articleKeywordsFileInput.value;
+    // newRow.cells[5].textContent = articleCategoriesInput.value;
+    // newRow.cells[6].textContent = PostUploaderIdInput.value;
+    newRow.cells[4].textContent = postJobNameInput.value;
 
     const statusSpan2 = document.createElement('span');
     statusSpan2.className = 'status-pill status-draft';
     statusSpan2.textContent = 'draft';
-    newRow.cells[8].appendChild(statusSpan2);
+    newRow.cells[5].appendChild(statusSpan2);
 
-    newRow.cells[9].textContent = postDateInput.value;
-    newRow.cells[10].textContent = BlogIdInput.value;
-    newRow.cells[11].textContent = blogUserNameInput.value;
-    newRow.cells[12].textContent = blogPasswordInput.value;
-    newRow.cells[13].textContent = blogUrlInput.value;
-    newRow.cells[14].textContent = blogGroupInput.value;
+    newRow.cells[6].textContent = postDateInput.value;
+    // newRow.cells[10].textContent = BlogIdInput.value;
+    // newRow.cells[11].textContent = blogUserNameInput.value;
+    // newRow.cells[12].textContent = blogPasswordInput.value;
+    // newRow.cells[13].textContent = blogUrlInput.value;
+    // newRow.cells[14].textContent = blogGroupInput.value;
 
     const statusSpan3 = document.createElement('span');
     statusSpan3.className = 'status-pill status-pending';
     statusSpan3.textContent = 'pending';
-    newRow.cells[15].appendChild(statusSpan3);
+    newRow.cells[7].appendChild(statusSpan3);
 
     console.log('Article Creator Data has been saved!');
     dialogProjectsDialog.style.display="none";
     dialogProjectsDialog.close();
     hideLoader();
   }
-  }
-
-  } catch (error) {
-    console.error('Error fetching or posting data:', error);
-    hideLoader();
+} catch (error) {
+  createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error.message);
+  hideLoader();
+   }
   }
 }
-
 
 async function fetchAndPopulateDialog() {
 
@@ -779,7 +822,8 @@ async function fetchAndPopulateDialog() {
     if (sectiontoshow === 'AllDatatoshow') {
       // Show the "Update Data" button
       updateButton.style.display = 'flex';
-      btncreateProjectData.style.display = 'none'
+      btncreateProjectData.style.display = 'flex'
+      addButtonText.textContent="Duplicate"
     } else {
       // Hide the "Update Data" button
       updateButton.style.display = 'none';
@@ -833,8 +877,7 @@ showLoader();
  btncreateProjectData.style.display="flex"; 
 updateButton.style.display = 'flex';
  
-
-await fetchDataAndHandle(selectedRowId, 'POSTDATA'); // Make GET request
+await fetchDataAndHandle(selectedRowId, 'UPDATEDATA'); // Make GET request
 
 
     hideLoader();
@@ -853,7 +896,6 @@ await fetchDataAndHandle(selectedRowId, 'POSTDATA'); // Make GET request
   //Delete Selected Project
   async function deleteProjectData(selectedRowId) {
    
-    try {
       showLoader();
       const jsonData = {
         action: 'deleteProjectsData',
@@ -867,11 +909,21 @@ await fetchDataAndHandle(selectedRowId, 'POSTDATA'); // Make GET request
 
       console.table(jsonData)
     
-     let response = await fetch(seourl, {
+
+      const responsePromise = fetch(seourl, {
         method: 'POST',
         body: JSON.stringify( jsonData ), // Include the action
-        // body: jsonData, // Include the action
       });
+    
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => {
+          hideLoader();
+          reject(new Error(createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error)));
+        }, 30000);
+      });
+    
+      try {
+        const response = await Promise.race([responsePromise, timeoutPromise]);
 
       const Resdata = await response.json();
 
@@ -904,11 +956,18 @@ await fetchDataAndHandle(selectedRowId, 'POSTDATA'); // Make GET request
   
 
   //Function to call Delete functions with related IDs
-  function deleteUsingAPI(){
+  async function deleteUsingAPI(){
    
-    deleteProjectData(selectedRowId);      
-   
+ 
+    const confirmDialogUse = await openConfrimDialog('confrimDialog', 'Delete Selected Project ID: ?' + selectedRowId, 'Do you want to DELETE Selected Project?');
+  
+    if (confirmDialogUse) { 
+      showLoader();
+      deleteProjectData(selectedRowId);    
+    }
+  
   }
+  
   
   
 const DialogTitle =  document.getElementById('dialogTitle')
@@ -921,6 +980,11 @@ const cnspostUploaderSection = document.getElementById("postUploaderSection");
 
 const postDateInput = document.getElementById('postDate');
 
+const currentDate = new Date();
+const formatedDateMMDDYY = currentDate.toISOString().split('T')[0]; // Get the current date in "yyyy-mm-dd" format
+console.log(formatedDateMMDDYY)
+
+
 const cnsblogSettingTitle = document.getElementById('blogIdNo');
 const cnsblogSettingSection = document.getElementById("blogSettingSection");
 
@@ -929,16 +993,15 @@ const btnupdateProjectData = document.getElementById("updateProjectData");
 const btncreateProjectData = document.getElementById("createProjectData");
 
   
-  function createnewJobID() {
+// Add New project or Duplicate Project
+function createnewJobID() {
 
     showLoader();
-
-    const currentDate = new Date();
-    const formattedDate = currentDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-  
-    postDateInput.value = formattedDate;
+   
+    postDateInput.value = formatedDateMMDDYY;
   
     btncreateProjectData.style.display="flex";
+    addButtonText.textContent="Add"
    updateButton.style.display = 'none';
 
    DialogTitle.textContent="Add New Project to Google Sheets"
@@ -956,22 +1019,82 @@ const btncreateProjectData = document.getElementById("createProjectData");
  document.getElementById('DivProjectSEOStatus').style.display = 'none';
 
 
-   dialogProjectsDialog.style.display="grid";
-   dialogProjectsDialog.showModal();
+//  clear the Inputs before loading the dialog 
+clearDialog(dialogProjectsDialog);
+
+dialogProjectsDialog.style.display="flex";
+dialogProjectsDialog.showModal();
   
    hideLoader();
   
   }
   
-
   // Function to complete all commands
   async function createProjects() {
       // alert('New Article Creator ID: ' + newArticleCreatorID + ' New Post Uploader ID: ' + newPostUploaderID + ' New Blog ID: ' + newBlogID);
-  showLoader();
-   await fetchDataAndHandle(null, 'ADDDATA'); // Make GET request
-     
+
+
+  // Validate required fields and check if they are all filled
+  const isValid = validateRequiredFields(dialogProjectsDialog);
+
+  if (isValid) {
+    showLoader();
+    await fetchDataAndHandle(null, 'ADDDATA'); // Make GET request
+  } else {
+   createToast('info', 'fa-solid fa-info-circle', 'Info', 'No projects are currently running.');
+  }
 }
   
+//Function to clear filled inputs of previous data.
+function clearDialog(dialog) {
+  const formElements = dialog.querySelectorAll('input, select, textarea');
+
+  formElements.forEach((element) => {
+    switch (element.type) {
+      case 'checkbox':
+        element.checked = false;
+        break;
+      case 'date':
+        // Skip clearing date input and keep it as is
+        break;
+      case 'number':
+        element.value = '1'; // Set to 1 for type "number"
+        break;
+      case 'text':
+        element.value = ''; // Set to an empty string for type "text"
+        break;
+      // Add more cases for other input types if needed
+    }
+  });
+}
+
+// Function to validate required fields and return true if all are filled, false otherwise
+function validateRequiredFields(dialog) {
+  const formElements = dialog.querySelectorAll('[required]');
+
+  let isValid = true;
+
+  formElements.forEach((element) => {
+    if (element.type === 'checkbox' && !element.checked) {
+      isValid = false;
+      element.style.border = '2px solid red';
+      // element.style.backgroundColor = 'red';
+    } else if (element.type !== 'checkbox' && element.value.trim() === '') {
+      isValid = false;
+      element.style.border = '2px solid red';
+      // element.style.backgroundColor = 'red';
+    } else {
+      element.style.border = ''; // Clear the border style
+      element.style.fontWeight = ''; // Clear the font weight
+    }
+  });
+
+  return isValid;
+}
+
+
+
+
 
 
 function openSettingDialog() {
@@ -1020,11 +1143,22 @@ const seoStatusInput = document.getElementById('seoStatus');
 
   if (METHOD==="GETDATA") {
    
-    try {  
-      const response = await fetch(seourl, {
+    const responsePromise = fetch(seourl, {
       method: 'POST',
       body: JSON.stringify({ action: 'getProjectSettings', username: LoggedUsername }), // Include the action
     });
+  
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => {
+        hideLoader();
+        reject(new Error(createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error)));
+      }, 30000);
+    });
+  
+    try {
+      const response = await Promise.race([responsePromise, timeoutPromise]);
+
+      
 
     if (response.ok) {
       const data = await response.json();
@@ -1055,7 +1189,8 @@ const seoStatusInput = document.getElementById('seoStatus');
  
       hideLoader();
       createToast('success', 'fa-solid fa-circle-check', 'Success', 'Settings has been loaded!');
-      customSettingDialog.style.display="block";
+      sheetIDInput.style.display="flex";
+      customSettingDialog.style.display="flex";
       customSettingDialog.showModal();
     
         }  else {
@@ -1072,14 +1207,13 @@ const seoStatusInput = document.getElementById('seoStatus');
       }
 
   if (METHOD==="UPDATEDATA") {
-  try {
-    
+
     const jsonData = {
       action: 'updatesettingData',
       username: LoggedUsername,
       dataItems: [
         {
-         "SheetID": settingSheetId,
+         "SheetID": sheetIDInput.value,
         "ListofContentFilter": listofContentFilterInput.value,
         "URLsDownloadResultLimits": parseInt(urlsDownloadResultLimitsInput.value),
         "ArticleCount": parseInt(urlsDownloadResultLimitsInput.value),
@@ -1105,12 +1239,23 @@ const seoStatusInput = document.getElementById('seoStatus');
 
   console.table(jsonData)
 
-    // Send the updated settings to the server
-    const response = await fetch(seourl, {
+
+    const responsePromise = fetch(seourl, {
       method: 'POST',
       body: JSON.stringify(jsonData), // Include the action
     });
+  
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => {
+        hideLoader();
+        reject(new Error(createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error)));
+      }, 30000);
+    });
+  
+    try {
+      const response = await Promise.race([responsePromise, timeoutPromise]);
 
+      
     if (response.ok) {
 
       const Resdata = await response.json();
@@ -1171,8 +1316,11 @@ userDialogSubTitle.innerText="Add User's Info"
   btnudateUserInfo.style.display = 'none';
 
 
+//  clear the Inputs before loading the dialog 
+clearDialog(dialoguserDialog);
 
   dialoguserDialog.style.display="flex";
+
   dialoguserDialog.showModal();
 
   hideLoader();
@@ -1182,8 +1330,17 @@ userDialogSubTitle.innerText="Add User's Info"
 
 // Add Users Info
 async function AddUserInfo() {
-  showLoader();
+
+  // Validate required fields and check if they are all filled
+  const isValid = validateRequiredFields(dialoguserDialog);
+
+  if (isValid) {
+    showLoader();
 await getandAddUsers("ADDUSERDATA"); 
+  } else {
+   createToast('info', 'fa-solid fa-info-circle', 'Info', 'No projects are currently running.');
+  }
+
 
 }
 
@@ -1195,9 +1352,9 @@ async function updateSelectedUserData() {
   btnaddUserInfo.style.display="none";
   btnudateUserInfo.style.display = 'flex';
 
+
   userDialogTitle.innerText="Update User's to Google Sheet"
 userDialogSubTitle.innerText="Update the Required User's Info"
-
 
 
   showLoader();
@@ -1215,8 +1372,13 @@ await getandAddUsers("UPDATEUSERDATA", selectedRowId);
 
 
 async function deleteSelectedUserData() {
-  showLoader();
-await getandAddUsers("DELETEUSERDATA", selectedRowId); 
+ 
+  const confirmDialogUse = await openConfrimDialog('confrimDialog', 'Delete Selected User ID: ?' + selectedRowId, 'Do you want to DELETE Selected User?');
+
+  if (confirmDialogUse) { 
+    showLoader();
+    await getandAddUsers("DELETEUSERDATA", selectedRowId); 
+  }
 
 }
 
@@ -1227,11 +1389,21 @@ async function getandAddUsers(METHOD, selectedUserId) {
 
     if (METHOD==="GETUSERDATA") {
  
-  try {  
-    const response = await fetch(seourl, {
+  const responsePromise = fetch(seourl, {
     method: 'POST',
     body: JSON.stringify({ action: 'getUsers', dataId: selectedUserId, username: LoggedUsername }), // Include the action
   });
+
+  const timeoutPromise = new Promise((_, reject) => {
+    setTimeout(() => {
+      hideLoader();
+      reject(new Error(createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error)));
+    }, 30000);
+  });
+
+  try {
+    const response = await Promise.race([responsePromise, timeoutPromise]);
+
 
   if (response.ok) {
     const data = await response.json();
@@ -1268,7 +1440,7 @@ async function getandAddUsers(METHOD, selectedUserId) {
     }
 
     if (METHOD==="ADDUSERDATA") {
-      try {
+
 
         const jsonData = {
           action: 'addUsersData',
@@ -1287,12 +1459,24 @@ async function getandAddUsers(METHOD, selectedUserId) {
       
       console.table(jsonData)
       
-        // Send the updated settings to the server
-        const response = await fetch(seourl, {
+      
+        const responsePromise = fetch(seourl, {
           method: 'POST',
           body: JSON.stringify(jsonData), // Include the action
         });
+
       
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => {
+            reject(new Error(createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error)));
+          }, 30000);
+        });
+      
+        try {
+          const response = await Promise.race([responsePromise, timeoutPromise]);
+
+          
+
         if (response.ok) {
       
           const Resdata = await response.json();
@@ -1321,7 +1505,6 @@ async function getandAddUsers(METHOD, selectedUserId) {
 
     if (METHOD==="UPDATEUSERDATA") {
 
-      try {
         
         const jsonData = {
           action: 'updateUsersData',
@@ -1341,11 +1524,21 @@ async function getandAddUsers(METHOD, selectedUserId) {
 
       console.table(jsonData)
 
-        // Send the updated settings to the server
-        const response = await fetch(seourl, {
+
+        const responsePromise = fetch(seourl, {
           method: 'POST',
           body: JSON.stringify(jsonData), // Include the action
         });
+      
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => {
+            reject(new Error(createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error)));
+          }, 30000);
+        });
+      
+        try {
+          const response = await Promise.race([responsePromise, timeoutPromise]);
+
 
         if (response.ok) {
 
@@ -1362,20 +1555,20 @@ async function getandAddUsers(METHOD, selectedUserId) {
           dialoguserDialog.style.display="none";
           hideLoader();
         }
-      }
 
-        catch (error) {
+      }  catch (error) {
 
           createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while Updating User Data' +error);
           hideLoader();
           dialoguserDialog.style.display="none";
           dialoguserDialog.close()
         } 
+
+
     }
 
       //Delete Data
     if (METHOD==="DELETEUSERDATA") {
-        try {
           
           const jsonData = {
             action: 'deleteUsersData',
@@ -1390,10 +1583,20 @@ async function getandAddUsers(METHOD, selectedUserId) {
         console.table(jsonData)
   
           // Send the updated settings to the server
-          const response = await fetch(seourl, {
+          const responsePromise = fetch(seourl, {
             method: 'POST',
             body: JSON.stringify(jsonData), // Include the action
           });
+        
+          const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => {
+              reject(new Error(createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error)));
+            }, 30000);
+          });
+        
+          try {
+            const response = await Promise.race([responsePromise, timeoutPromise])
+
   
           if (response.ok) {
   
