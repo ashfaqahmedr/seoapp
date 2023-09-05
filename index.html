@@ -263,8 +263,10 @@
 
           <button id="AddProject" class="New-Button" data-tooltip="Add New Project" onclick="createnewJobID()"> <i class="fas fa-plus-circle"></i><span class="text-hide"> Add Project</span></button>
           <button id="AddNewUser" class="New-Button" data-tooltip="Add New User" onclick="showAddUserDialog()"> <i class="fas fa-user-plus"></i> <span class="text-hide">Add User</span></button>
-               
-             <button id="updateProjectSettings" class="New-Button" data-tooltip="Change Project Settings" onclick="openSettingDialog()"> <i class="fas fa-cog"></i> <span class="text-hide">Settings</span></button>
+            
+          <button id="confirmdialog" class="New-Button" data-tooltip="Show Confrim Dialog" onclick="openDialog()"> <i class="fas fa-cog"></i> <span class="text-hide">View Confirm</span></button>
+
+          <button id="updateProjectSettings" class="New-Button" data-tooltip="Change Project Settings" onclick="openSettingDialog()"> <i class="fas fa-cog"></i> <span class="text-hide">Settings</span></button>
               <!-- <button id="Run-Buton" class="New-Button" onclick=" toggleNotificationPanel()"> <i class="fas fa-play"></i>  Running </button> -->
       </div >
 
@@ -340,82 +342,128 @@
   <!-- End of Custom Context Menu -->
 
   <!-- Custom Dialog Box for Updating the All Projects data-->
-  <dialog id="ProjectsDialog">
+  <dialog id="ProjectsDialog" class="projectDialog">
 
-    <div id="dialogTitle" class="dialogTitle"></div>
+      <div id="dialogTitle" class="dialogTitle"></div>
 
-    <div id="articlecreator" class="subheading"></div>
+      <div id="articlecreator" class="subheading"></div>
 
-    <div id="articleCreatorSection" class="dialog-section section1">
+      <div id="articleCreatorSection" class="dialog-section">
 
-      <!-- FORM START -->
-      <!-- <form id="createProjectForm" class="createProjectForm"> -->
+        <div class="full-width-input">
+        <!-- FORM START -->
+        <!-- <form id="createProjectForm" class="createProjectForm"> -->
+          
+          <div id="DivProjectCreatoID">
+          <label for="ProjectID">Article Creator ID:</label>
+          <input type="text" id="ProjectID" name="ProjectID" readonly>
+        </div>
+        </div>
+      <div class="full-width-input">
+        <label for="articleProjectName">Article Project Name:</label>
         
-      <label for="ProjectID">Article Creator ID:</label>
-      
-      <input type="text" id="ProjectID" name="ProjectID" readonly>
+        <input type="text" id="articleProjectName" name="ProjectName" required>
 
-      <label for="articleProjectName">Article Project Name:</label>
-      
-      <input type="text" id="articleProjectName" name="ProjectName" required>
+      </div>
 
-        <label for="articleKeywordsFile">Article Keywords: </label>
-        <input type="text" id="articleKeywordsFile"  name="ProjectKeywords" required>
+      <div class="full-width-input">
+
+          <label for="articleKeywordsFile">Article Keywords: </label>
+          <input type="text" id="articleKeywordsFile"  name="ProjectKeywords" required>
+      </div>
+      <div class="full-width-input">
+        <label for="articleCategories">Article Categories: </label>
+        
+        <input type="text" id="articleCategories" name="ProjectCategories" required>
+      </div>  
     
-      <label for="articleCategories">Article Categories: </label>
-      
-      <input type="text" id="articleCategories" name="ProjectCategories" required>
 
-      <label for="ProjectStatus">Article Creartor Status:</label>
-      
-      <input type="text" id="ProjectStatus" name="ProjectStatus" readonly>
 
+      <div class="subsection">
+          <div id="DivProjectCreatorStatus">
+          <label for="ProjectStatus">Article Creartor Status:</label>
+          
+          <input type="text" id="ProjectStatus" name="ProjectStatus" readonly>
+          </div>
+        </div>
     </div>
 
     <div class="subheading" id="postuploader"></div>
 
-    <div id="postUploaderSection" class="dialog-section section2">
+    <div id="postUploaderSection" class="dialog-section">
       
-      <label for="PostUploaderId">Post Uploader ID:</label>
-      
-      <input type="text" id="PostUploaderId" name="PostUploaderId" readonly>
+      <div class="subsection">
+        <div id="DivProjectPosterrID">
+        <label for="PostUploaderId">Post Uploader ID:</label>
+        
+        <input type="text" id="PostUploaderId" name="PostUploaderId" readonly>
 
+        </div>
+      </div>
+      <div class="subsection">
       <label for="postJobName">Post Job Name:</label>
       <input type="text" id="postJobName" name="PostUploaderName" required>
 
-      <label for="PostUploaderStatus">Post Uploader Status:</label>
-      <input type="text" id="PostUploaderStatus" name="PostUploaderStatus" readonly>
+    </div>
+    <div class="subsection">
+        <div id="DivProjectPosterStatus">
+        <label for="PostUploaderStatus">Post Uploader Status:</label>
+        <input type="text" id="PostUploaderStatus" name="PostUploaderStatus" readonly>
+        </div>
 
+      </div>
+      <div class="subsection">
       <label for="postDate">Post Date:</label>
       <input type="date" id="postDate" name="PostStartDate" required>
+    </div>
+    </div>
 
     </div>
 
     <div class="subheading" id="blogIdNo">Blog Setting</div>
 
-    <div id="blogSettingSection" class="dialog-section section3">
+    <div id="blogSettingSection" class="dialog-section">
 
+      <div class="subsection">
 
-      <label for="BlogIdId">Blog ID:</label>
-      
-      <input type="text" id="BlogId" name="BlogId" readonly>
+        <div id="DivProjectBlogID">
+        <label for="BlogIdId">Blog ID:</label>
+        
+        <input type="text" id="BlogId" name="BlogId" readonly>
+        </div>
 
+      </div>
 
+      <div class="subsection">
       <label for="blogUserName">Blog User Name:</label>
       <input type="text" id="blogUserName" name="username" required>
-    
+      </div>
+      <div class="subsection">
+
       <label for="blogPassword">Blog Password:</label>
       <input type="text" id="blogPassword" name="password" required> 
 
+    </div>
+    <div class="subsection">
+
       <label for="blogUrl">Blog URL:</label>
       <input type="text" id="blogUrl" name="url" required>
+ </div>
+      <div class="subsection">
 
       <label for="blogGroup">Blog Group:</label>
       <input type="text" id="blogGroup" name="group" required>
+ </div>
+      <div class="subsection">
 
-      <label for="SEOStatus">SEO Status:</label>
-      <input type="text" id="SEOStatus" name="SEOStatus" readonly>
-    
+        <div id="DivProjectSEOStatus">
+        <label for="SEOStatus">SEO Status:</label>
+        <input type="text" id="SEOStatus" name="SEOStatus" readonly>
+        </div>
+
+      </div>
+
+
     </div>
 
     <span class="btn">
@@ -439,25 +487,26 @@
 
   <!-- Custom Dialog Box for Showing and updating the default Project Settings-->
 
-  <dialog id="customSettingDialog" class="dialog">
+  <dialog id="customSettingDialog" class="settingDialog">
 
     <div id="dialogTitle" class="dialogTitle">Universal Porject Custom Settings</div>
 
     <div class="subheading">Article Creator Settings</div>
 
     <div class="dialog-section"> 
-    <div class="full-width-input">
-      <label for="sheetID">Google Sheet ID:</label>
-      <input type="text" id="CustomDialogsheetID" readonly>
-    </div>
-
- </div>
-
-    <div class="dialog-section"> 
 
       <div class="full-width-input">
+  
+        <label for="sheetID">Google Sheet ID:</label>
+        <input type="text" id="CustomDialogsheetID" readonly>
+    
+    </div>
+
+      <div class="full-width-input">
+
         <label for="listofContentFilter">List of Content Filter:</label>
         <input type="text" id="listofContentFilter" required>
+
       </div>
       
       <div class="subsection">
@@ -494,17 +543,6 @@
         </div>
         <label for="useImages">Use Images</label>
       </div>
-
-
-      <div class="subsection">
-          <label for="imageInserType">Wordpress Image Upload Options</label>
-          <select id="imageInserType" name="imageInserType" required>
-            <option value="hotlink"> &#128279; Image Links</option>
-            <option value="base64"> &#128295; base64 URLs</option>
-            <option value="local" selected>  &#128190;Save Locally</option>
-          </select>
-      </div>
-      
 
       <div class="subsection">
         <div class="toggle-button">
@@ -545,8 +583,18 @@
         </div>
         <label for="useBingCCImages">Use Bing CC Images</label>
       </div>
+
+      <div class="subsection">
+        <label for="imageInserType">Wordpress Image Upload Options</label>
+        <select id="imageInserType" name="imageInserType" required>
+          <option value="hotlink"> &#128279; Image Links</option>
+          <option value="base64"> &#128295; base64 URLs</option>
+          <option value="local" selected>  &#128190;Save Locally</option>
+        </select>
+    </div>
     </div>
 
+    
     <div class="subheading"> Post Uploader Settings </div>
 
     <div class="dialog-section">
@@ -596,38 +644,39 @@
 
   <!-- ######### USER DIALOG #########  -->
 
-  <dialog id="userDialog" class="dialog">
+  <dialog id="userDialog" class="userDialog">
 
     <div id="userDialogTitle" class="dialogTitle"></div>
     
     <div class="subheading" id="userDialogSubTitle">Add User's Info</div>
 
-    <div class="dialog-section max-width-input"> 
+    <div id="userDialogsheetIDTitle" class="full-width-input">
+      <label for="usersheetID">Google Sheet ID:</label>
+      <input type="text" id="usersheetID" readonly class="full-width-input">
+     </div>
 
-      <div  id="userDialogsheetIDTitle">
-        <label for="usersheetID">Google Sheet ID:</label>
-        <input type="text" id="usersheetID" readonly class="full-width-input">
-
-       </div>
-
+    <div class="dialog-section"> 
+      
+    <div class="full-width-input">
         <label for="userFullInput">User Full Name</label>
         <input type="text" id="userFullInput" required autocomplete="off">
-  
+ 
+      </div>
+      <div class="full-width-input">
 
         <label for="usernameInput">User Name</label>
         <input type="text" id="usernameInput" required autocomplete="off">
+     </div>
+      <div class="full-width-input">
 
-
+      
         <label for="passwordInput">User Password</label>
         <input type="text" id="passwordInput" required autocomplete="off">
-   
+      </div>
+      <div class="subsection">
 
         <label for="timeCount">Default User Logout Time</label>
         <input type="number" id="timeCount" required autocomplete="off">
-
-
-
-        <div class="dialog-section max-width-input"> 
         <label for="userType">User Type</label>
         <select id="userType" name="userType" required>
           <option value="SuperAdmin">&#128081; SuperAdmin</option>
@@ -635,14 +684,18 @@
           <option value="User"> &#128105; User</option>
 
         </select>
+      
+      </div>
+      <div class="subsection">
 
-  
         <div id="userDialogSeoStatus">
             <label for="SEOdInput">SEO Status</label>
             <input type="text" id="seoStatusinput" readonly>
           </div>
+      
+    </div>
 
-        </div>
+  </div>
 
   
   <span class="btn">
@@ -665,7 +718,7 @@
 
 
   <!-- Confirmation Dialog -->
-  <dialog id="confrimDialog" class="dialog">
+  <dialog id="confrimDialog" class="confirmdialog">
     <div class="dialogTitle" id="dialogHeader"></div>
     <div class="confirmText">
       <i class="fas fa-check-circle"></i>

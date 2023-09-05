@@ -25,7 +25,6 @@ const userDialogTitle = document.getElementById('userDialogTitle');
 const userDialogSubTitle = document.getElementById('userDialogSubTitle');
 
 
-
 const UserDialogsheetID = document.getElementById('userDialogsheetIDTitle');
 const UserDialogSeoStatus = document.getElementById('userDialogSeoStatus');
 

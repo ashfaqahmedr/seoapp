@@ -514,7 +514,7 @@ async function fetchDataAndHandle(selectedRowId, method) {
       blogGroupInput.value = data[0].group;
       SEOStatusInput.value = data[0].SEOStatus;
 
-      dialogProjectsDialog.style.display="block";
+      dialogProjectsDialog.style.display="grid";
 
 
 
@@ -809,7 +809,6 @@ function setSectionVisibility(showArticleCreator, showPostUploader, showBlogSett
   cnsblogSettingTitle.style.display = showBlogSetting ? "flex" : "none";
   cnsblogSettingSection.style.display = showBlogSetting ? "flex" : "none";
 
- 
 }
 
 //Update the Data to SEO App
@@ -820,7 +819,18 @@ try {
 
 showLoader();
 
-btncreateProjectData.style.display="none";
+// btncreateProjectData.style.display="none";
+
+  //  Hide all inputs that not required for add projects.
+  document.getElementById('DivProjectCreatoID').style.display = 'flex';
+  document.getElementById('DivProjectCreatorStatus').style.display = 'flex';
+  document.getElementById('DivProjectPosterrID').style.display = 'flex';
+  document.getElementById('DivProjectPosterStatus').style.display = 'flex';
+  document.getElementById('DivProjectBlogID').style.display = 'flex';
+  document.getElementById('DivProjectSEOStatus').style.display = 'flex';
+ 
+
+ btncreateProjectData.style.display="flex"; 
 updateButton.style.display = 'flex';
  
 
@@ -935,14 +945,24 @@ const btncreateProjectData = document.getElementById("createProjectData");
    cnsarticleCreatorTitle.textContent="Add Article Creator Data here" 
    cnspostUploaderTitle.textContent="Add Post Uploader Data here"
    cnsblogSettingTitle.textContent="Add JSON Data here"
-   dialogProjectsDialog.style.display="block";
+
+
+  //  Hide all inputs that not required for add projects.
+ document.getElementById('DivProjectCreatoID').style.display = 'none';
+ document.getElementById('DivProjectCreatorStatus').style.display = 'none';
+ document.getElementById('DivProjectPosterrID').style.display = 'none';
+ document.getElementById('DivProjectPosterStatus').style.display = 'none';
+ document.getElementById('DivProjectBlogID').style.display = 'none';
+ document.getElementById('DivProjectSEOStatus').style.display = 'none';
+
+
+   dialogProjectsDialog.style.display="grid";
    dialogProjectsDialog.showModal();
   
    hideLoader();
   
   }
   
-
 
   // Function to complete all commands
   async function createProjects() {
@@ -952,6 +972,7 @@ const btncreateProjectData = document.getElementById("createProjectData");
      
 }
   
+
 
 function openSettingDialog() {
     // Show the dialogProjectsDialog
@@ -971,6 +992,9 @@ function openSettingDialog() {
 // Function to populate the dialog with retrieved settings data
 async function getandUpdateProjectSetting(METHOD) {
   
+
+  let settingSheetId = null;
+
   //custom settings 
 const sheetIDInput = document.getElementById('CustomDialogsheetID');
 const listofContentFilterInput = document.getElementById('listofContentFilter');
@@ -1005,8 +1029,10 @@ const seoStatusInput = document.getElementById('seoStatus');
     if (response.ok) {
       const data = await response.json();
 
+      settingSheetId = data[0].sheetID;
+
       // Populate the input elements with the retrieved values
-      sheetIDInput.value = data[0].sheetID;
+      sheetIDInput.value = settingSheetId;
       listofContentFilterInput.value = data[0].ListofContentFilter;
       urlsDownloadResultLimitsInput.value = data[0].URLsDownloadResultLimits;
       articleCountInput.value = data[0].ArticleCount;
@@ -1053,7 +1079,7 @@ const seoStatusInput = document.getElementById('seoStatus');
       username: LoggedUsername,
       dataItems: [
         {
-         "SheetID": sheetIDInput.value,
+         "SheetID": settingSheetId,
         "ListofContentFilter": listofContentFilterInput.value,
         "URLsDownloadResultLimits": parseInt(urlsDownloadResultLimitsInput.value),
         "ArticleCount": parseInt(urlsDownloadResultLimitsInput.value),

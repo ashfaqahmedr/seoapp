@@ -1,10 +1,6 @@
 /* Custom Dialog CSS for All Dialogs */
-.dialog {
-  display: block;
-  min-width: auto;
-  max-width: auto;
-  min-height: auto;
-  max-height: auto;
+dialog {
+  display: flex;
   flex-direction: column;
   background-color: rgba(168, 175, 148, 0.651);
   border-radius: 10px;
@@ -13,20 +9,40 @@
   position: relative;
 }
 
-/* For Custom Setting Dialogs Select Menu Emoji for options */
-select {
-  font-size: 16px;
-  margin-right: 8px;
-  list-style: none;
-  border-radius: 10px;
-  background-color: var(--medium-gray);
-}
-
-/* Custom Dialog CSS for All Dialogs */
+/* Dialog back color */
 dialog::backdrop {
   backdrop-filter: blur(1px);
   background-color: rgba(250, 248, 252, 0.349);
 }
+
+
+
+/* Add User Dialog Width and Height */
+
+.userDialog {
+  min-width: 30%;
+  max-width: 50%;
+  min-height: 50%;
+  max-height: 70%;
+}
+
+
+/* Project Setting Dialog Width & Height */
+.settingDialog {
+  min-width: 50%;
+  max-width: 80%;
+  min-height: 80%;
+  max-height: 90%;
+}
+
+/* Confirm Dialog Width & Height */
+.confirmdialog {
+  min-width: 50%;
+  max-width: 80%;
+  min-height: 10%;
+  max-height: 20%;
+}
+
 
 /* Title of the dialog */
 .dialogTitle {
@@ -39,6 +55,7 @@ dialog::backdrop {
   border-bottom: 2px solid #ac5353;
 }
 
+/* Sub Title of the dialog */
 .subheading {
   font-size: 18px;
   font-weight: bold;
@@ -63,150 +80,9 @@ dialog::backdrop {
   padding: 2px;
   border-radius: 0 0 10px 10px;
   box-shadow: 0px 1px 3px rgba(141, 3, 3, 0.411);
-}
+} 
 
-/* Custom Dialog CSS for All Dialogs */
-.dialog-section input {
-  padding: 8px;
-  border: 0px 0px 0px 2px;
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  border-bottom: 2px solid #9e00ff;
-  background-color: rgba(195, 214, 236, 0.459);
-  box-sizing: border-box;
-  border-radius: 5px;
-  outline: none;
-  margin-bottom: 5px;
-  transition: border-color 0.3s;
-}
-
-
-/* Flex layout for subsections */
-.subsection {
-  display: flex;
-  align-items: center;
-  margin-bottom: 5px;
-}
-
-/* Label styling for flex layout */
-.subsection label {
-  font-weight: bold;
-  color: #1a1919;
-  margin-left: 5px;
-  margin-bottom: 5px;
-  padding-bottom: 3px;
-  white-space: nowrap;
-  overflow: hidden;
-  /* text-overflow: ellipsis; */
-}
-
-/* Input styling for flex layout */
-.subsection input {
-  padding: 8px;
-  border: 0px 0px 0px 2px;
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  border-bottom: 2px solid #9e00ff;
-  background-color: rgba(195, 214, 236, 0.459);
-  box-sizing: border-box;
-  border-radius: 5px;
-  outline: none;
-  margin-bottom: 5px;
-  width: 100%; /* Take up available space */
-  transition: border-color 0.3s;
-}
-
-/* Additional styles for subsections if needed */
-.min-width-input {
-  flex: 0 0 10%; /* Fixed width for labels */
-}
-
-.mid-width-input {
-  flex: 0 0 50%; /* Fixed width for labels */
-}
-
-.max-width-input {
-  flex: 1; /* Take up available space for labels */
-}
-
-  
-  
-  /* Custom Dialog CSS for All Dialogs
-
-  dialog {
-    display: flex;
-    min-width: auto;
-    max-width: 80%;
-    min-height: auto;
-    max-height:80%;;
-    background-color: rgba(168, 175, 148, 0.651);
-    border-radius: 10px;
-
-    border: 2px solid  #2885f0de;
-    box-shadow: 0px 0px 15px rgba(177, 30, 235, 0.932);
-    justify-content: center;
-    align-items: center;
-  
-  }
-
-  /* Custom Dialog CSS for All Dialogs
-
-  dialog::backdrop {
-    backdrop-filter: blur(1px);
-    background-color: rgba(250, 248, 252, 0.349);
-  }
-
-    /* Custom Dialog CSS for All Dialogs
-
-  #dialogTitle, .dialogTitle {
-    display:grid;
-    padding: 10px 10px 10px 10px;
-    font-size: 18px;
-    font-weight: bold;
-    color: var(--color-white);
-    background-color: var(--color-default);
-    border-radius: 10px 10px 0 0;
-    border-bottom: 2px solid  #ac5353;
-  
-  }
-  
-
-      /* Custom Dialog CSS for All Dialogs
-
-  .subheading {
-    font-size: 18px;
-    font-weight: bold;
-    margin-top: 10px;
-    color: var(--color-white);
-    /* border: 2px solid #ccc; 
-    border-radius: 10px 10px 0 0;
-    background-color: var(--color-second);
-    padding: 5px;
-    /* box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2); 
-  }
-
-  
-      /* Custom Dialog CSS for All Dialogs 
-
-  .dialog-section {
-
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    /* flex-direction: row; 
-     justify-content: space-between; 
-    align-items: center;
-    gap: 1px;
-    background-color:  #1f9ec48c;
-    padding: 2px;
-    border-radius:  0 0 10px 10px;
-    box-shadow: 0px 1px 3px rgba(141, 3, 3, 0.411);
-  }
-  
-  
-/* Custom Dialog CSS for All Dialogs
+  /* Label styling for flex layout */
 .dialog-section label {
   font-weight: bold;
   color: #1a1919;
@@ -214,11 +90,9 @@ dialog::backdrop {
   margin-bottom: 5px;
   padding-bottom: 3px;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-/* Custom Dialog CSS for All Dialogs 
+/* Input styling for flex layout */
 .dialog-section input {
   padding: 8px;
   border: 0px 0px 0px 2px;
@@ -231,133 +105,110 @@ dialog::backdrop {
   border-radius: 5px;
   outline: none;
   margin-bottom: 5px;
-  width: 100%; /* Adjusted width to take up available space 
-  transition: border-color 0.3s;
-}
+} 
 
-
-      /* Custom Dialog CSS for All Dialog
-
-  .section1 label {
-    flex: 0 0 14.5%;
-  }
-  
-  .section1 input {
-    flex: 0 0 85%;
-    flex-grow: 2;
-  }
-  
-  .section2 label {
-    flex: 0 0 11%;
-  }
-  
-  .section2 input {
-    flex: 0 0 21.8%;
-  }
-
-  .section2 input:last-child {
-    flex-grow: 2;
-
-  }
-  
-  .section3 label {
-    flex: 0 0 11%;
-  }
-  
-  .section3 input {
-    flex: 0 0 38%;
-    flex-grow: 2;
-  }
-  
-  .dialog-section input:focus {
-    border-bottom: 2px solid #4d027c;
-    background-color: rgba(175, 144, 158, 0.753);
     
-  }
+.dialog-section input:focus {
+  border-bottom: 2px solid #4d027c;
+  background-color: rgba(175, 144, 158, 0.753);
+  
+}
   
 
-/*   
-      /* Additional styles for subsections if needed
+.dialog-section input[type="text"] {
+  width: 87%;
+}
+
+.dialog-section input[type="number"] {
+  width: 50px;
+} 
+
+
+/* Flex layout for subsections  */
 .subsection {
   display: flex;
   align-items: center;
   margin-bottom: 5px;
 }
+    
 
-  .subsection label {
-    flex: 0 0 auto;
-    font-weight: bold;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-right: 5px;
+/* Full Width Input Types */
+
+.full-width-input{
+  display: flex;
+  width: 100%;
+  flex: auto;
+
+}
+
+.full-width-input label{
+   width: 15%;
   }
+
+
+.full-width-input input{
+  width: 100%;
+  }
+
+
+  .section1 {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    margin-bottom: 20px;
+    align-items: flex-start;
+    justify-content: space-between;
+  } 
   
 
+  .section1 label{
+    /* width: fit-content; */
+    height: max-content;
+    }
   
-  .full-width-input{
- display: flex;
+    
+  .section1 input{
+    /* flex-basis: 80%; */
     width: 100%;
-   
-  }
-   
-  .dialog-section input[type="text"] {
-    width: 87%;
-  }
+    height: max-content;
+    }
+
+
+
+  .section2 {
+
+    display: grid;
+    grid-template-columns: 1fr 5fr 1 fr 5fr;
+
+    margin-bottom: 20px;
+  } 
   
-  .dialog-section input[type="number"] {
-    width: 50px;
-  }
+   
+  .section2 label{
+    flex-basis: 15%;
+    height: max-content;
+    }
+  
+    
+  .section2 input{
+    flex-grow: 5;
+    height: max-content;
+    }
 
-  /* Flex layout for subsections 
-.subsection {
-  display: flex;
-  align-items: center;
-  margin-bottom: 5px;
-}
+     
+     .section3 label{
+      width: 15%;
+     }
+   
+     
+   .section3 input{
+     width: 100%;
+     }
 
-/* Label styling for flex layout
-.subsection label {
-  font-weight: bold;
-  color: #1a1919;
-  margin-left: 5px;
-  margin-bottom: 5px;
-  padding-bottom: 3px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+     
 
-/* Input styling for flex layout
-.subsection input {
-  padding: 8px;
-  border: 0px 0px 0px 2px;
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  border-bottom: 2px solid #9e00ff;
-  background-color: rgba(195, 214, 236, 0.459);
-  box-sizing: border-box;
-  border-radius: 5px;
-  outline: none;
-  margin-bottom: 5px;
-  width: 100%; /* Take up available space 
-  transition: border-color 0.3s;
-}
 
-/* Additional styles for subsections if needed 
-.min-width-input {
-  flex: 0 0 10%; /* Fixed width for labels 
-}
-
-.mid-width-input {
-  flex: 0 0 50%; /* Fixed width for labels 
-}
-
-.max-width-input {
-  flex: 1; /* Take up available space for labels 
-}
-  /* Custom Dialog CSS for All Dialogs */
+  /* Custom Dialog Toggle Buttons */
 
   .toggle-button {
     position: relative;
@@ -406,17 +257,17 @@ dialog::backdrop {
   }
 
   
-  /* For Custom Setting Dialogs Select Menu
- Emoji for options 
-
- select {
+/* For Custom Setting Dialogs Select Menu Emoji for options */
+select {
   font-size: 16px;
   margin-right: 8px;
   list-style: none;
   border-radius: 10px;
-  background-color: var(--medium-gray); 
+  background-color: var(--medium-gray);
 }
-*/
+
+
+/* Buttons of Dialog of CSS */
   
   .btn {
     margin-top: 10px;
@@ -478,3 +329,56 @@ dialog::backdrop {
     background-color: #9e00ff;
     color: #fff;
   }
+
+
+  /* Main Project Dialog Width & Height */
+
+.projectDialog {
+  min-width: 70%;
+  max-width: 90%;
+  min-height: 80%;
+  max-height: 90%;
+  display: grid;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+    flex-wrap: wrap;
+}
+
+
+/* Display section-input-1 as 1 label and 1 input in one row using CSS Grid */
+.section-input-1 {
+
+  display: grid;
+    align-items:start;
+    justify-content: space-between;
+    grid-template-columns: auto 94%; 
+  
+    grid-gap: 5px; /* Adjust the gap between label and input as needed */
+  }
+  
+   /* Display section-input-2 as 2 labels and 2 inputs in one row using CSS Grid */
+  .section-input-2 {
+    
+    display: grid;
+  
+    justify-content: space-between;
+    grid-template-columns:15% 35% 15% 15%;
+    grid-gap: 5px; /* Adjust the gap between labels and inputs as needed */
+  }
+  
+  /* Display section-input-4 as 4 labels and 4 inputs in one row using CSS Grid */
+  .section-input-4 {
+  margin-bottom: 5px;
+
+  flex-wrap: wrap;
+  display: grid;
+  justify-content: space-between;
+
+    grid-template-columns: 15% 20% 15% 20%;
+    grid-gap: 5px; /* Adjust the gap between labels and inputs as needed */
+  }
+  
+  
+
+    

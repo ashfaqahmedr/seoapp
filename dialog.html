@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Dialog</title>
+  <link rel="stylesheet" href="testdialog.css"> <!-- Replace with the actual path to your CSS file -->
+  <style>
+    /* Add some styles for the show/hide button */
+    .show-button, .close-button {
+      margin: 10px;
+      padding: 10px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    /* Style the close button */
+    .close-button {
+      background-color: #ff3333;
+    }
+  </style>
+</head>
+<body>
+  <button class="show-button" onclick="showDialog()">Show Dialog</button>
+  <dialog id="dialog">
+    <h1>Dialog Title</h1>
+    <h2>Dialog Subtitle</h2>
+
+  <!-- <h2>Section 1</h2> -->
+<div class="section-input-1">
+
+  <label for="field2">Label 2:</label>
+  <input type="text" id="field2" name="field2">
+
+  <label for="field3">Label 3:</label>
+  <input type="text" id="field3" name="field3">
+
+  <label for="field2">Label 2:</label>
+  <input type="text" id="field2" name="field2">
+
+  <label for="field3">Label 3:</label>
+  <input type="text" id="field3" name="field3">
+
+</div>
+
+
+    <!-- <h2>Section 2</h2> -->
+    <div class="section-input-2">
+     
+      <label for="field2">Label 2:</label>
+      <input type="text" id="field2" name="field2">
+  
+      <label for="field3">Label 3:</label>
+      <input type="text" id="field3" name="field3">
+ 
+      <label for="field2">Label 2:</label>
+      <input type="text" id="field2" name="field2">
+    
+      <label for="field3">Label 3:</label>
+      <input type="text" id="field3" name="field3">
+  
+</div>
+
+
+    <!-- <h2>Section 4</h2> -->
+
+    <div class="section-input-4">
+    
+          <label for="field1">Label 1:</label>
+          <input type="text" id="field1" name="field1">
+    
+          <label for="field2">Label 2:</label>
+          <input type="text" id="field2" name="field2">
+    
+          <label for="field3">Label 3:</label>
+          <input type="text" id="field3" name="field3">
+      
+     
+          <label for="field2">Label 2:</label>
+          <input type="text" id="field2" name="field2">
+    
+          <label for="field3">Label 3:</label>
+          <input type="text" id="field3" name="field3">
+     
+          <label for="field3">Label 3:</label>
+          <input type="text" id="field3" name="field3">
+      
+    </div>
+   
+    <button class="close-button" onclick="closeDialog()">Close Dialog</button>
+  </dialog>
+
+  <script>
+    function showDialog() {
+      var dialog = document.getElementById("dialog");
+      dialog.style.display = "block";
+    }
+
+    function closeDialog() {
+      var dialog = document.getElementById("dialog");
+      dialog.style.display = "none";
+    }
+  </script>
+</body>
+</html>

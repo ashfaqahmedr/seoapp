@@ -404,6 +404,7 @@ if (confirmDialogUse) {
 
 // Function to open the dialog
 function openDialog() {
+  dialogconfrimDialog.style.display = 'flex'
   openConfrimDialog('confrimDialog','Confirm Re-Run the Project?','Do you want to Re-Run the Completed Project again?')
      
 }
