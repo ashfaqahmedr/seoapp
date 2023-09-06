@@ -1,12 +1,5 @@
 
 
-
-const seourl ='https://script.google.com/macros/s/AKfycbxgyT3rHw0zc7xeF_HWP3fxiy9VjaBcwzE18b6eA7HzFejEvCQEJewrJSzDFkeaUa4m/exec'
-const apiurl = `${seourl}/?`
-
-const appurl ='http://localhost:3000'
-
-
 window.onload = async () =>{
   // showAdminPanel()
 
@@ -156,8 +149,14 @@ function createTableFromData(data) {
 
         if (Array.isArray(value)) {
           td.textContent = value.join(', ');
-        } else if (isISODate(value)) { // Check if value is in ISO date format
-          const formattedDate = formatDate(value); // Format ISO date to user-friendly format
+
+        }  if (header === 'timestamp' && isISODate(value)) {
+          // Format 'timestamp' header as a timestamp
+          const formattedDate = formatDate(value, true);
+          td.textContent = formattedDate;
+        } else if (isISODate(value)) {
+          // Format other date headers as mm-dd-yyyy
+          const formattedDate = formatDate(value, false);
           td.textContent = formattedDate;
         } else {
           td.textContent = value !== undefined ? value : '';
@@ -295,12 +294,18 @@ function isISODate(value) {
   return /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z/.test(value);
 }
 
-
-// Function to format ISO date to user-friendly format
-function formatDate(isoDate) {
-  const date = new Date(isoDate);
-  const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-  return date.toLocaleString('en-US', options);
+// Function to format date to the specified format
+function formatDate(dateString, isTimestamp) {
+  const date = new Date(dateString);
+  if (isTimestamp) {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+    return date.toLocaleString('en-US', options);
+  } else {
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${month}-${day}-${year}`;
+  }
 }
 
 // Function to sort the table
@@ -473,7 +478,7 @@ async function fetchDataAndHandle(selectedRowId, method) {
 
     if (method.toUpperCase() === 'GETDATA') {
 
-    const responsePromise = fetch(seourl, {
+    const responsePromise = fetch(googleurl, {
       method: 'POST',
       body: JSON.stringify({ action: 'getProjects', dataId: selectedRowId, username: LoggedUsername }), // Include the action
     });
@@ -569,7 +574,7 @@ async function fetchDataAndHandle(selectedRowId, method) {
       console.table(jsonData)
     
 
-      const responsePromise = fetch(seourl, {
+      const responsePromise = fetch(googleurl, {
         method: 'POST',
         body: JSON.stringify( jsonData ), // Include the action
       });
@@ -676,7 +681,7 @@ const jsonData = {
 
 console.table(jsonData)
 
-const responsePromise = fetch(seourl, {
+const responsePromise = fetch(googleurl, {
   method: 'POST',
   body: JSON.stringify( jsonData ), // Include the action
 });
@@ -879,9 +884,7 @@ updateButton.style.display = 'flex';
  
 await fetchDataAndHandle(selectedRowId, 'UPDATEDATA'); // Make GET request
 
-
     hideLoader();
-    // fetchAPI();
    
   
   } catch(error) {
@@ -910,7 +913,7 @@ await fetchDataAndHandle(selectedRowId, 'UPDATEDATA'); // Make GET request
       console.table(jsonData)
     
 
-      const responsePromise = fetch(seourl, {
+      const responsePromise = fetch(googleurl, {
         method: 'POST',
         body: JSON.stringify( jsonData ), // Include the action
       });
@@ -1143,7 +1146,7 @@ const seoStatusInput = document.getElementById('seoStatus');
 
   if (METHOD==="GETDATA") {
    
-    const responsePromise = fetch(seourl, {
+    const responsePromise = fetch(googleurl, {
       method: 'POST',
       body: JSON.stringify({ action: 'getProjectSettings', username: LoggedUsername }), // Include the action
     });
@@ -1240,7 +1243,7 @@ const seoStatusInput = document.getElementById('seoStatus');
   console.table(jsonData)
 
 
-    const responsePromise = fetch(seourl, {
+    const responsePromise = fetch(googleurl, {
       method: 'POST',
       body: JSON.stringify(jsonData), // Include the action
     });
@@ -1389,7 +1392,7 @@ async function getandAddUsers(METHOD, selectedUserId) {
 
     if (METHOD==="GETUSERDATA") {
  
-  const responsePromise = fetch(seourl, {
+  const responsePromise = fetch(googleurl, {
     method: 'POST',
     body: JSON.stringify({ action: 'getUsers', dataId: selectedUserId, username: LoggedUsername }), // Include the action
   });
@@ -1460,7 +1463,7 @@ async function getandAddUsers(METHOD, selectedUserId) {
       console.table(jsonData)
       
       
-        const responsePromise = fetch(seourl, {
+        const responsePromise = fetch(googleurl, {
           method: 'POST',
           body: JSON.stringify(jsonData), // Include the action
         });
@@ -1525,7 +1528,7 @@ async function getandAddUsers(METHOD, selectedUserId) {
       console.table(jsonData)
 
 
-        const responsePromise = fetch(seourl, {
+        const responsePromise = fetch(googleurl, {
           method: 'POST',
           body: JSON.stringify(jsonData), // Include the action
         });
@@ -1583,7 +1586,7 @@ async function getandAddUsers(METHOD, selectedUserId) {
         console.table(jsonData)
   
           // Send the updated settings to the server
-          const responsePromise = fetch(seourl, {
+          const responsePromise = fetch(googleurl, {
             method: 'POST',
             body: JSON.stringify(jsonData), // Include the action
           });
@@ -1932,3 +1935,201 @@ pdf_btn.onclick = () => {
 };
 
 
+
+function updateDashboardCounts(counts) {
+  const statusSpans = {
+    allprojects: document.getElementById('allproject-count'),
+    creator: document.getElementById('creator-count'),
+    poster: document.getElementById('poster-count'),
+    jsoncount: document.getElementById('json-count'),
+    draft: document.getElementById('draft-count'),
+    waiting: document.getElementById('waiting-count'),
+    failed: document.getElementById('failed-count'),
+    aborted: document.getElementById('aborted-count'),
+    complete: document.getElementById('complete-count'),
+    running: document.getElementById('running-count'),
+    aborting: document.getElementById('aborting-count'),
+  };
+
+  for (const status in counts) {
+    if (statusSpans.hasOwnProperty(status)) {
+      statusSpans[status].textContent = counts[status];
+    }
+  }
+}
+
+
+//custom Right Click Menu
+function enableCustomContextMenu(tableSelector, menuSelector) {
+  const contextMenu = document.querySelector(menuSelector);
+  contextMenu.style.display="flex";
+  const table = document.querySelector(tableSelector);
+
+  table.addEventListener("contextmenu", e => {
+    const target = e.target;
+
+    if (target.tagName === "TD") {
+      e.preventDefault();
+
+      const row = target.parentNode;
+      const firstCell = row.querySelector("td:first-child"); // Get the first cell of the row
+      selectedRowId = firstCell.textContent.trim();
+
+      selectedRowIndex = row.rowIndex;
+
+      console.log("First TD Text:", selectedRowId);
+      console.log("Row Index Number:", selectedRowIndex );
+
+      const mousePosX = e.pageX;
+      const mousePosY = e.pageY;
+      const menuWidth = contextMenu.offsetWidth;
+      const menuHeight = contextMenu.offsetHeight;
+
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+
+      const maxMenuPosX = windowWidth - menuWidth;
+      const maxMenuPosY = windowHeight - menuHeight;
+
+      const menuPosX = Math.min(mousePosX, maxMenuPosX);
+      const menuPosY = Math.min(mousePosY, maxMenuPosY);
+
+      contextMenu.style.left = `${menuPosX}px`;
+      contextMenu.style.top = `${menuPosY}px`;
+      customMenu.style.display = 'block';
+      contextMenu.style.visibility = "visible";
+     
+    } else {
+      customMenu.style.display = 'none';
+      contextMenu.style.visibility = "hidden";
+    }
+  });
+
+  document.addEventListener("click", () => {
+    customMenu.style.display = 'none';
+    contextMenu.style.visibility = "hidden";
+  });
+}
+
+
+function updateMenuItems(apiCall) {
+  const editItem = document.getElementById('customEditData');
+  const deleteItem = document.getElementById('customDeleteData');
+  const addItem = document.getElementById('customAddData');
+ 
+  
+  
+  // Update menu item text and onclick event based on the API call
+  switch (apiCall) {
+    case 'usersData':
+
+
+
+      editItem.querySelector('span').textContent = 'Edit User Data';
+      deleteItem.querySelector('span').textContent = 'Delete User Data';
+      addItem.querySelector('span').textContent = 'Add User Data';
+
+     editItem.querySelector('i').className = 'fas fa-user-edit';
+     addItem.querySelector('i').className = 'fas fa-user-plus';
+     deleteItem.querySelector('i').className = 'fas fa-user-times';
+
+      editItem.onclick = updateSelectedUserData;
+      deleteItem.onclick = deleteSelectedUserData;
+      addItem.onclick = showAddUserDialog;
+      // Update other items as needed
+      break;
+
+    case 'ProjectsData':
+      editItem.querySelector('span').textContent = 'Edit Project Data';
+      deleteItem.querySelector('span').textContent = 'Delete Project Data';
+      addItem.querySelector('span').textContent = 'Add Project Data';
+
+      editItem.querySelector('i').className = 'far fa-edit';
+      addItem.querySelector('i').className = 'fas fa-plus';
+      deleteItem.querySelector('i').className = 'fas fa-trash-alt';
+
+
+      editItem.onclick = fetchAndPopulateDialog;
+      deleteItem.onclick = deleteUsingAPI;
+      addItem.onclick = createnewJobID;
+      // Update other items as needed
+      break;
+
+    // Add cases for other API calls
+
+    default:
+      // Default case if apiCall doesn't match any known API calls
+      break;
+  }
+}
+
+
+//  Function to remove trailing "..." from a status
+const removeTrailingDots = (status) => {
+  return status.replace(/\.\.\.$/, '');
+};
+
+async function testConfrin() { 
+
+const confirmDialogUse = await openConfrimDialog('confrimDialog', 'Confirm Re-Run the Project?', 'Do you want to Re-Run the Completed Project again?');
+
+if (confirmDialogUse) { 
+
+}
+}
+
+// Function to open the dialog
+function openDialog() {
+  dialogconfrimDialog.style.display = 'flex'
+  openConfrimDialog('confrimDialog','Confirm Re-Run the Project?','Do you want to Re-Run the Completed Project again?')
+     
+}
+
+function openConfrimDialog(dialogId, titleHeader, confirmMessage) {
+  return new Promise((resolve, reject) => {
+    const confrimdialog = document.getElementById(dialogId);
+    const dialogTitleelement = document.getElementById('dialogHeader');
+    const confirmMessageelement = document.getElementById('confirmMessage');  
+    // const confirmIcon = document.getElementById('confirmIcon').className=`fas fa${confirmIconClass}`;
+
+    dialogTitleelement.textContent = titleHeader;
+    confirmMessageelement.textContent = confirmMessage;
+    // confirmIcon.className = `fas ${confirmIconClass}`;
+    
+    // Event listener for the confirm button
+    document.getElementById('confirmButton').addEventListener('click', function() {
+      resolve(true); // Resolve the promise with true when confirm button is clicked
+      closeDialog(dialogId);
+      confrimdialog.style.display = 'none'
+    });
+
+    // Event listener for the cancel button
+    document.getElementById('cancelButton').addEventListener('click', function() {
+      resolve(false); // Resolve the promise with false when cancel button is clicked
+      closeDialog(dialogId);
+      confrimdialog.style.display = 'none'
+    });
+    confrimdialog.style.display = 'flex'
+    confrimdialog.showModal();
+  });
+}
+
+const customSelect = document.getElementById('table-filter');
+const selectedOption = customSelect.querySelector('.selected-option');
+const optionsContainer = customSelect.querySelector('.options');
+const options = customSelect.querySelectorAll('.option');
+
+customSelect.addEventListener('mouseenter', () => {
+  optionsContainer.style.display = 'block';
+});
+
+customSelect.addEventListener('mouseleave', () => {
+  optionsContainer.style.display = 'none';
+});
+
+options.forEach(option => {
+  option.addEventListener('click', () => {
+    selectedOption.textContent = option.textContent;
+    optionsContainer.style.display = 'none';
+  });
+});

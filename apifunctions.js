@@ -10,6 +10,13 @@ let sectiontoshow = null;
 let apiCalltoMake = null;
 let titleID = null;
 let confirmDialogUse = false;
+let MakeGoogleAPICAll=true;
+
+const googleurl ='https://script.google.com/macros/s/AKfycbxgyT3rHw0zc7xeF_HWP3fxiy9VjaBcwzE18b6eA7HzFejEvCQEJewrJSzDFkeaUa4m/exec'
+const seourl ='http://localhost:8008'
+const apiurl = `${seourl}/project`
+
+const appurl ='http://localhost:3000'
 
 
 let notifications = document.querySelector('.notifications');
@@ -33,21 +40,20 @@ function createToast(type, icon, title, text){
 }
 
 
-//Main DashBoard Function to Create Dashboard.
 async function fetchAPI() {
-  sectiontoshow='AllDatatoshow'
+  sectiontoshow = 'AllDatatoshow';
   apiCalltoMake = 'ProjectsData';
-  DataHeaders.innerText="Showing All Project(s) Data"
+  DataHeaders.innerText = "Showing All Project(s) Data";
 
-    // Show Animation
-    showLoader();
-  
+  // Show Animation
+  showLoader();
 
-    const responsePromise = fetch(seourl, {
+
+  if (MakeGoogleAPICAll) {
+   const responsePromise = fetch(googleurl, {
       method: 'POST',
-        body: JSON.stringify({ action: 'getAllProjects', username: LoggedUsername }), // Include the action
+      body: JSON.stringify({ action: 'getAllProjects', username: LoggedUsername }), // Include the action      
     });
-
 
     const timeoutPromise = new Promise((_, reject) => {
       setTimeout(() => {
@@ -56,16 +62,12 @@ async function fetchAPI() {
       }, 30000);
     });
 
-
     try {
-       const response = await Promise.race([responsePromise, timeoutPromise]);
-
-        const responseData = await response.json();
-            // Task 6: Generate the table based on the final formattedData object
-            createTableFromData(responseData);
-            console.table(responseData);
-
-  
+      const response = await Promise.race([responsePromise, timeoutPromise]);
+      const responseData = await response.json();
+      // Task 6: Generate the table based on the final formattedData object
+      createTableFromData(responseData);
+      console.table(responseData);
     } catch (error) {
       console.error('Error fetching projects data:', error);
       let type = 'error';
@@ -75,7 +77,26 @@ async function fetchAPI() {
       createToast(type, icon, title, text);
       hideLoader();
     }
+  } else {
+    try {
+      const getAllData = await fetchAllLocalProjects();
+      // Generate the table based on the final formattedData object
+      createTableFromData(getAllData);
+      console.table(getAllData);
+    } catch (error) {
+      console.error('Error fetching local projects data:', error);
+      let type = 'error';
+      let icon = 'fa-solid fa-circle-exclamation';
+      let title = 'Error';
+      let text = 'An error occurred while fetching local projects.' + error;
+      createToast(type, icon, title, text);
+    } finally {
+      // Hide the loader when all tasks are done
+      hideLoader();
+    }
   }
+}
+
 
   //Function to show Aricle Creator Projects
   async function fetchArticleCreator() {
@@ -84,8 +105,10 @@ async function fetchAPI() {
     DataHeaders.innerText="Showing Article Creator Project(s) Data"
      // Show Animation
      showLoader();
-  
-     const responsePromise = fetch(seourl, {
+
+     if (MakeGoogleAPICAll) {
+
+     const responsePromise = fetch(googleurl, {
       method: 'POST',
       body: JSON.stringify({ action: 'getCreatorProjects', username: LoggedUsername }), // Include the action
     });
@@ -116,6 +139,25 @@ async function fetchAPI() {
        hideLoader();
      }
   
+    }  else {
+      try {
+        const getAllData = await LocalCreatorProjects();
+        // Generate the table based on the final formattedData object
+        createTableFromData(getAllData);
+        console.table(getAllData);
+      } catch (error) {
+        console.error('Error fetching local projects data:', error);
+        let type = 'error';
+        let icon = 'fa-solid fa-circle-exclamation';
+        let title = 'Error';
+        let text = 'An error occurred while fetching local projects.' + error;
+        createToast(type, icon, title, text);
+      } finally {
+        // Hide the loader when all tasks are done
+        hideLoader();
+      }
+    }
+
   }
 
   //Function to show Aricle Creator Projects
@@ -127,7 +169,7 @@ async function fetchAPI() {
      // Show Animation
      showLoader();
 
-     const responsePromise = fetch(seourl, {
+     const responsePromise = fetch(googleurl, {
       method: 'POST',
       body: JSON.stringify({ action: 'getUsers', username: LoggedUsername }), // Include the action
   });
@@ -159,6 +201,7 @@ async function fetchAPI() {
        hideLoader();
      }
   
+     
   }
 
 // Function to show PostUploader Projects
@@ -170,7 +213,8 @@ async function fetchPostUploader() {
      // Show Animation
      showLoader();
 
-    const responsePromise = fetch(seourl, {
+     if (MakeGoogleAPICAll) {  
+    const responsePromise = fetch(googleurl, {
       method: 'POST',
       body: JSON.stringify({ action: 'getPostProjects', username: LoggedUsername }), // Include the action
     });
@@ -202,6 +246,25 @@ async function fetchPostUploader() {
        hideLoader();
      }
 
+    }  else {
+      try {
+        const getAllData = await LocalPostUploaderProjects();
+        // Generate the table based on the final formattedData object
+        createTableFromData(getAllData);
+        console.table(getAllData);
+      } catch (error) {
+        console.error('Error fetching local projects data:', error);
+        let type = 'error';
+        let icon = 'fa-solid fa-circle-exclamation';
+        let title = 'Error';
+        let text = 'An error occurred while fetching local projects.' + error;
+        createToast(type, icon, title, text);
+      } finally {
+        // Hide the loader when all tasks are done
+        hideLoader();
+      }
+    }
+
 }
 
 //Function to show Json File
@@ -215,8 +278,9 @@ async function ReadJsonFile() {
   // Show Animation
   showLoader();
 
+  if (MakeGoogleAPICAll) {
 
-    const responsePromise = fetch(seourl, {
+    const responsePromise = fetch(googleurl, {
       method: 'POST',
       body: JSON.stringify({ action: 'getJSON', username: LoggedUsername }), // Include the action
     });
@@ -247,6 +311,26 @@ async function ReadJsonFile() {
      createToast(type, icon, title, text);
      hideLoader();
    }
+
+  } else {
+    try {
+      const getAllData = await LocalReadJsonFile();
+      // Generate the table based on the final formattedData object
+      createTableFromData(getAllData);
+      console.table(getAllData);
+    } catch (error) {
+      console.error('Error fetching local projects data:', error);
+      let type = 'error';
+      let icon = 'fa-solid fa-circle-exclamation';
+      let title = 'Error';
+      let text = 'An error occurred while fetching local projects.' + error;
+      createToast(type, icon, title, text);
+    } finally {
+      // Hide the loader when all tasks are done
+      hideLoader();
+    }
+  }
+   
 }
 
 // Function to show Article Creator Projects
@@ -257,8 +341,8 @@ async function fetchArticleCreatorbyStatus(articleStatus) {
   // Show Animation
   showLoader();
 
-
-  const responsePromise = fetch(seourl, {
+  if (MakeGoogleAPICAll) {
+  const responsePromise = fetch(googleurl, {
     method: 'POST',
     body: JSON.stringify({ action: 'getStatus', status: articleStatus, username: LoggedUsername }), // Include the action
   });
@@ -299,12 +383,34 @@ async function fetchArticleCreatorbyStatus(articleStatus) {
       let text = 'An error occurred while fetching projects.';
       createToast(type, icon, title, text);
     }
+  }  
+
+  else {
+    try {
+      const getAllData = await LocalProjectsbyStatus(articleStatus);
+      // Generate the table based on the final formattedData object
+      createTableFromData(getAllData);
+      console.table(getAllData);
+    } catch (error) {
+      console.error('Error fetching local projects data:', error);
+      let type = 'error';
+      let icon = 'fa-solid fa-circle-exclamation';
+      let title = 'Error';
+      let text = 'An error occurred while fetching local projects.' + error;
+      createToast(type, icon, title, text);
+    } finally {
+      // Hide the loader when all tasks are done
+      hideLoader();
+    }
+  }
 }  
 
-async function updateStatusCounts() {
- 
 
-    const responsePromise = fetch(seourl, {
+//Get Project Counts
+async function updateStatusCounts() {
+
+  if (MakeGoogleAPICAll) {
+    const responsePromise = fetch(googleurl, {
       method: 'POST',
       body: JSON.stringify({ action: 'getProjectCounts', username: LoggedUsername }), // Include the action
     });
@@ -319,8 +425,6 @@ async function updateStatusCounts() {
     try {
       const response = await Promise.race([responsePromise, timeoutPromise]);
 
-      
-
     const data = await response.json();
     console.table(data)
     updateDashboardCounts(data); // Assuming `statusCounts` is available in the scope where this function is called.
@@ -333,201 +437,25 @@ async function updateStatusCounts() {
     console.error('Error fetching ID count:', error);
 
   }
-}
-
-function updateDashboardCounts(counts) {
-  const statusSpans = {
-    allprojects: document.getElementById('allproject-count'),
-    creator: document.getElementById('creator-count'),
-    poster: document.getElementById('poster-count'),
-    jsoncount: document.getElementById('json-count'),
-    draft: document.getElementById('draft-count'),
-    waiting: document.getElementById('waiting-count'),
-    failed: document.getElementById('failed-count'),
-    aborted: document.getElementById('aborted-count'),
-    complete: document.getElementById('complete-count'),
-    running: document.getElementById('running-count'),
-    aborting: document.getElementById('aborting-count'),
-  };
-
-  for (const status in counts) {
-    if (statusSpans.hasOwnProperty(status)) {
-      statusSpans[status].textContent = counts[status];
-    }
+}  else {
+  try {
+    const getAllData = await LocalGetProjectCounts();
+    // Generate the table based on the final formattedData object
+    updateDashboardCounts(getAllData);
+    console.table(getAllData);
+  } catch (error) {
+    console.error('Error fetching local projects data:', error);
+    let type = 'error';
+    let icon = 'fa-solid fa-circle-exclamation';
+    let title = 'Error';
+    let text = 'An error occurred while fetching local projects.' + error;
+    createToast(type, icon, title, text);
+  } finally {
+    // Hide the loader when all tasks are done
+    hideLoader();
   }
 }
 
-//custom Right Click Menu
-function enableCustomContextMenu(tableSelector, menuSelector) {
-  const contextMenu = document.querySelector(menuSelector);
-  contextMenu.style.display="flex";
-  const table = document.querySelector(tableSelector);
-
-  table.addEventListener("contextmenu", e => {
-    const target = e.target;
-
-    if (target.tagName === "TD") {
-      e.preventDefault();
-
-      const row = target.parentNode;
-      const firstCell = row.querySelector("td:first-child"); // Get the first cell of the row
-      selectedRowId = firstCell.textContent.trim();
-
-      selectedRowIndex = row.rowIndex;
-
-      console.log("First TD Text:", selectedRowId);
-      console.log("Row Index Number:", selectedRowIndex );
-
-      const mousePosX = e.pageX;
-      const mousePosY = e.pageY;
-      const menuWidth = contextMenu.offsetWidth;
-      const menuHeight = contextMenu.offsetHeight;
-
-      const windowWidth = window.innerWidth;
-      const windowHeight = window.innerHeight;
-
-      const maxMenuPosX = windowWidth - menuWidth;
-      const maxMenuPosY = windowHeight - menuHeight;
-
-      const menuPosX = Math.min(mousePosX, maxMenuPosX);
-      const menuPosY = Math.min(mousePosY, maxMenuPosY);
-
-      contextMenu.style.left = `${menuPosX}px`;
-      contextMenu.style.top = `${menuPosY}px`;
-      customMenu.style.display = 'block';
-      contextMenu.style.visibility = "visible";
-     
-    } else {
-      customMenu.style.display = 'none';
-      contextMenu.style.visibility = "hidden";
-    }
-  });
-
-  document.addEventListener("click", () => {
-    customMenu.style.display = 'none';
-    contextMenu.style.visibility = "hidden";
-  });
 }
 
 
-function updateMenuItems(apiCall) {
-  const editItem = document.getElementById('customEditData');
-  const deleteItem = document.getElementById('customDeleteData');
-  const addItem = document.getElementById('customAddData');
- 
-  
-  
-  // Update menu item text and onclick event based on the API call
-  switch (apiCall) {
-    case 'usersData':
-
-
-
-      editItem.querySelector('span').textContent = 'Edit User Data';
-      deleteItem.querySelector('span').textContent = 'Delete User Data';
-      addItem.querySelector('span').textContent = 'Add User Data';
-
-     editItem.querySelector('i').className = 'fas fa-user-edit';
-     addItem.querySelector('i').className = 'fas fa-user-plus';
-     deleteItem.querySelector('i').className = 'fas fa-user-times';
-
-      editItem.onclick = updateSelectedUserData;
-      deleteItem.onclick = deleteSelectedUserData;
-      addItem.onclick = showAddUserDialog;
-      // Update other items as needed
-      break;
-
-    case 'ProjectsData':
-      editItem.querySelector('span').textContent = 'Edit Project Data';
-      deleteItem.querySelector('span').textContent = 'Delete Project Data';
-      addItem.querySelector('span').textContent = 'Add Project Data';
-
-      editItem.querySelector('i').className = 'far fa-edit';
-      addItem.querySelector('i').className = 'fas fa-plus';
-      deleteItem.querySelector('i').className = 'fas fa-trash-alt';
-
-
-      editItem.onclick = fetchAndPopulateDialog;
-      deleteItem.onclick = deleteUsingAPI;
-      addItem.onclick = createnewJobID;
-      // Update other items as needed
-      break;
-
-    // Add cases for other API calls
-
-    default:
-      // Default case if apiCall doesn't match any known API calls
-      break;
-  }
-}
-
-
-//  Function to remove trailing "..." from a status
-const removeTrailingDots = (status) => {
-  return status.replace(/\.\.\.$/, '');
-};
-
-async function testConfrin() { 
-
-const confirmDialogUse = await openConfrimDialog('confrimDialog', 'Confirm Re-Run the Project?', 'Do you want to Re-Run the Completed Project again?');
-
-if (confirmDialogUse) { 
-
-}
-}
-
-// Function to open the dialog
-function openDialog() {
-  dialogconfrimDialog.style.display = 'flex'
-  openConfrimDialog('confrimDialog','Confirm Re-Run the Project?','Do you want to Re-Run the Completed Project again?')
-     
-}
-
-function openConfrimDialog(dialogId, titleHeader, confirmMessage) {
-  return new Promise((resolve, reject) => {
-    const confrimdialog = document.getElementById(dialogId);
-    const dialogTitleelement = document.getElementById('dialogHeader');
-    const confirmMessageelement = document.getElementById('confirmMessage');  
-    // const confirmIcon = document.getElementById('confirmIcon').className=`fas fa${confirmIconClass}`;
-
-    dialogTitleelement.textContent = titleHeader;
-    confirmMessageelement.textContent = confirmMessage;
-    // confirmIcon.className = `fas ${confirmIconClass}`;
-    
-    // Event listener for the confirm button
-    document.getElementById('confirmButton').addEventListener('click', function() {
-      resolve(true); // Resolve the promise with true when confirm button is clicked
-      closeDialog(dialogId);
-      confrimdialog.style.display = 'none'
-    });
-
-    // Event listener for the cancel button
-    document.getElementById('cancelButton').addEventListener('click', function() {
-      resolve(false); // Resolve the promise with false when cancel button is clicked
-      closeDialog(dialogId);
-      confrimdialog.style.display = 'none'
-    });
-    confrimdialog.style.display = 'flex'
-    confrimdialog.showModal();
-  });
-}
-
-const customSelect = document.getElementById('table-filter');
-const selectedOption = customSelect.querySelector('.selected-option');
-const optionsContainer = customSelect.querySelector('.options');
-const options = customSelect.querySelectorAll('.option');
-
-customSelect.addEventListener('mouseenter', () => {
-  optionsContainer.style.display = 'block';
-});
-
-customSelect.addEventListener('mouseleave', () => {
-  optionsContainer.style.display = 'none';
-});
-
-options.forEach(option => {
-  option.addEventListener('click', () => {
-    selectedOption.textContent = option.textContent;
-    optionsContainer.style.display = 'none';
-  });
-});

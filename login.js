@@ -2,6 +2,8 @@ let LoggedUsername;
 
 const loginPanel = document.getElementById('loginPanel');   
 
+const loginHeader = document.getElementById('loginHeader');
+
 const usernameInput = document.getElementById('username');
 const passwordInput = document.getElementById('password');
 const submitButton = document.getElementById('submit-button');
@@ -31,6 +33,9 @@ const UserDialogSeoStatus = document.getElementById('userDialogSeoStatus');
 
 const siderbar_Table = document.getElementById('container');
 
+
+
+
 const txttopTitle = document.getElementById('topTitle');
 
 const dialogpopupContainer = document.getElementById('popupContainer');
@@ -41,9 +46,6 @@ const dialogconfrimDialog = document.getElementById('confrimDialog');
 const dialogProjectsDialog = document.getElementById('ProjectsDialog');
 const dialoguserDialog = document.getElementById('userDialog');
 const customSettingDialog = document.getElementById('customSettingDialog');
-
-
-
 
 const customMenu = document.getElementById('wrapper');
 
@@ -68,7 +70,7 @@ customMenu.style.display = 'none';
 
 window.addEventListener('load', function () {
  
-
+  
   // Function to check if both fields are filled
   function checkInputs() {
       if (usernameInput.value.trim() !== '' && passwordInput.value.trim() !== '') {
@@ -94,6 +96,7 @@ document.getElementById('username').focus();
 });
 
 
+
 function formatName(name) {
   return name
     .replace(/([a-z])([A-Z])/g, '$1 $2') // Add space before uppercase letters preceded by lowercase letters
@@ -102,20 +105,22 @@ function formatName(name) {
     .trim();
 }
 
+
 async function loginUser() {
   showLoader();
   
     const username = usernameInput.value;
     const password = passwordInput.value;
   
-    const responsePromise = fetch(seourl, {
+    const responsePromise = fetch(googleurl, {
       method: 'POST',
       body: JSON.stringify({ action: 'login', username, password }), // Include the action
     });
   
     const timeoutPromise = new Promise((_, reject) => {
       setTimeout(() => {
-        reject(new Error('Timeout exceeded (30 seconds)'));
+        hideLoader();
+        reject(new Error(createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error)));
       }, 30000);
     });
 
@@ -210,21 +215,8 @@ async function loginUser() {
 }
 
   function logout() {
-            // // Add the 'hidden' class to the elements
-            // sidebar.style.display = 'none';
-            // profile.style.display = 'none';
-            // mainSectionTable.style.display = 'none';
-            // loginPanel.style.display = 'flex';
-            // // mainSectionTable.classList.remove('table');
-            // spanfullName.innerHTML = '';
-            // spanuserType.innerHTML = '';
-            // spanuserName.innerHTML = '';
-            // headerElement.classList.remove('connected');
-            // headerElement.classList.add('disconected');
-            // txttopTitle.innerHTML="SEO Content Machine Web App"
 
             location.reload()
-
 
     
   }
