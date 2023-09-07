@@ -406,10 +406,19 @@ z-index: 1001;
   color: #f3eded;
 }
 
+
+.status-run {
+  background-color:#3e94f0;
+  color: #f3eded;
+}
+
+
 .status-running {
   background-color: #007bff;
   color: #f3eded;
 }
+
+
 
 .status-aborting {
   background-color: #17a2b8;
@@ -420,6 +429,26 @@ z-index: 1001;
   background-color: #ccc90a;
   color: #f3eded;
 }
+
+.status-edit {
+  background-color: #5dc2d1;
+  color: #f3eded;
+}
+
+
+.status-add {
+  background-color: #1f642f;
+  color: #f3eded;
+}
+
+
+.status-delete {
+  background-color: #f06f7c;
+  color: #f3eded;
+}
+
+
+
 
 
 /* Add the animation to the row with the status-updated class */

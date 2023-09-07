@@ -407,7 +407,6 @@ async function fetchArticleCreatorbyStatus(articleStatus) {
   }
 }  
 
-
 //Get Project Counts
 async function updateStatusCounts() {
 

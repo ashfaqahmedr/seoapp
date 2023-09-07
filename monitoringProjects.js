@@ -4,14 +4,6 @@ let projectWatchlist = [];
 let notificationList = [];
 
 
-// Function to run project by ID and show loader while running
-async function runProjectById() {
-  showLoader();
-  await startMonitoringProject(selectedRowId);
-  hideLoader();
-}
-
-
 // Function to run a project by its ID
 const runProject = async (projectId) => {
   const response = await fetch(`${seourl}/project/run/${projectId}`);
@@ -142,7 +134,7 @@ async function startMonitoringProject (projectToRun)  {
   
     // Check if the selected project is already in the watchlist
     // const existingProject = projectWatchlist.find(project => project.id === selectedProjectId);
-  
+  let isProjectStartedRun;
     let articleCreatorName =null
     let articleCreatorType =null
     let articleCreatorStatus =null
@@ -164,7 +156,9 @@ async function startMonitoringProject (projectToRun)  {
           'Info',
           `Project ID: ${selectedProjectId}\nProject Name: ${articleCreatorName}\nType: ${articleCreatorType}\nis already being monitored.\nCurrent Status is: ${articleCreatorStatus}`
         );
-        return;
+
+        isProjectStartedRun=true;
+        return isProjectStartedRun;
       }
   
       if (articleCreatorStatus !== 'complete') {
@@ -199,8 +193,15 @@ async function startMonitoringProject (projectToRun)  {
           createNotification(notificationList);
   
           monitorProjects([{ id: selectedProjectId }]);
+
+          isProjectStartedRun=true;
+          return isProjectStartedRun;
   
+          } else {
+            isProjectStartedRun=false;
+            return isProjectStartedRun;
           }
+
       } 
   
       if (articleCreatorStatus === 'complete') {
@@ -226,7 +227,8 @@ async function startMonitoringProject (projectToRun)  {
               'Info',
               `Project ID: ${chainJobId}\nProject Name: ${postUploaderName}\nType: ${postUploaderType}\nis already being monitored.\nCurrent Status is: ${postUploaderStatus}`
             );
-            return;
+            isProjectStartedRun=true;
+            return isProjectStartedRun;
           }
   
           
@@ -263,8 +265,14 @@ async function startMonitoringProject (projectToRun)  {
                   createNotification(notificationList);
                 
                   monitorProjects([{ id: chainJobId }]);
-                 
+
+                  isProjectStartedRun=true;
+                  return isProjectStartedRun;
+              } else {
+                isProjectStartedRun=false;
+                return isProjectStartedRun;
               }
+
             }
   
             if (postUploaderStatus === 'complete') {
@@ -307,11 +315,15 @@ async function startMonitoringProject (projectToRun)  {
                     );
                     createNotification(notificationList);
                     monitorProjects([{ id: chainJobId }]);  
+
+                    isProjectStartedRun=true;
+                    return isProjectStartedRun;
                    
                   }
               }
               else {
-                return;
+                isProjectStartedRun=false;
+                return isProjectStartedRun;
               }
   
             } 

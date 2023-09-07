@@ -1,4 +1,6 @@
 let LoggedUsername;
+let LoggedFullName;
+
 
 const loginPanel = document.getElementById('loginPanel');   
 
@@ -136,7 +138,8 @@ async function loginUser() {
   
       // Set the cookie with a 30-second expiration // expires=${now.toUTCString()}; path=/
     
-    LoggedUsername=username
+    LoggedUsername=username;
+    LoggedFullName=fullName;
     var cookieName = 'userToken';
     var maxAge = 60;
     console.log('Original Token: ' + token);

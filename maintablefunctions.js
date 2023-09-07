@@ -564,9 +564,6 @@ if (method.toUpperCase() === 'GETDATA') {
 
     } else if (method.toUpperCase() === 'UPDATEDATA') {
 
-
- 
-
          // Local JSON to PASS to LOCAL Server
 
     if (!MakeGoogleAPICall) {
@@ -654,7 +651,9 @@ if (method.toUpperCase() === 'GETDATA') {
             password: blogPasswordInput.value,
             url: blogUrlInput.value,
             group: blogGroupInput.value,
-            SEOStatus: LocalSEOStatus // Use corresponding input element
+            SEOStatus: LocalSEOStatus, // Use corresponding input element
+            EditedBy : LoggedUsername
+
           },
         ],
       };
@@ -836,6 +835,7 @@ if (method.toUpperCase() === 'GETDATA') {
                 url: blogUrlInput.value,
                 group: blogGroupInput.value,
                 SEOStatus: LocalSEOStatus, // Use corresponding input element
+                CreatedBy: LoggedFullName
               },
             ],
           };
@@ -1087,11 +1087,12 @@ await fetchDataAndHandle(selectedRowId, 'UPDATEDATA'); // Make GET request
       showLoader();
 
       const jsonData = {
-        action: 'deleteProjectsData',
+        action: 'deleteProjectFromWebApp',
         username: LoggedUsername,
         dataItems: [
           {
-            SheetID: selectedRowId
+            SheetID : selectedRowId,
+            FullName : LoggedFullName
           }
         ]
       };
@@ -1126,7 +1127,7 @@ await fetchDataAndHandle(selectedRowId, 'UPDATEDATA'); // Make GET request
       const table = document.getElementById('main');
 
       if (selectedRowIndex >= 0) {
-        table.deleteRow(selectedRowIndex);
+        // table.deleteRow(selectedRowIndex);
       }
       createToast('success', 'fa-solid fa-circle-check', 'Success', "Success: " + success + " ID: "+ id + ' Message: '+ message);
 
@@ -1143,7 +1144,6 @@ await fetchDataAndHandle(selectedRowId, 'UPDATEDATA'); // Make GET request
    }
   }
   
-
   //Function to call Delete functions with related IDs
   async function deleteUsingAPI(){
    
@@ -1156,7 +1156,6 @@ await fetchDataAndHandle(selectedRowId, 'UPDATEDATA'); // Make GET request
     }
   
   }
-  
   
 const DialogTitle =  document.getElementById('dialogTitle')
     
@@ -1181,6 +1180,105 @@ const btnupdateProjectData = document.getElementById("updateProjectData");
 const btncreateProjectData = document.getElementById("createProjectData");
 
   
+// Function to run project by ID and show loader while running
+async function runProjectById() {
+  showLoader();
+
+ await runPorojectSEO(selectedRowId);
+  
+  hideLoader();
+}
+
+
+//Run Selected Project
+async function runPorojectSEO(selectedRowId) {
+   
+    
+  if (!MakeGoogleAPICAll) {
+
+  try {
+
+    const confrimProjectStartedtoRun =  await startMonitoringProject(selectedRowId);
+
+    if(confrimProjectStartedtoRun) {
+
+      MakeGoogleAPICAll=true; 
+      
+
+    }
+
+  } catch (error) {
+
+    createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while starting a Project to RUN  Selected  <br> Project ID: ' + selectedRowId );
+    hideLoader();
+  
+   }
+
+  }
+  if (MakeGoogleAPICAll) {
+
+    showLoader();
+
+    const jsonData = {
+      action: 'runProjectFromWebApp',
+      username: LoggedUsername,
+      dataItems: [
+        {
+          SheetID : selectedRowId,
+          FullName : LoggedFullName
+        }
+      ]
+    };
+
+    console.table(jsonData)
+  
+
+    const responsePromise = fetch(googleurl, {
+      method: 'POST',
+      body: JSON.stringify( jsonData ), // Include the action
+    });
+  
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => {
+        hideLoader();
+        reject(new Error(createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error)));
+      }, 30000);
+    });
+  
+    try {
+      const response = await Promise.race([responsePromise, timeoutPromise]);
+
+    const Resdata = await response.json();
+
+    console.table(Resdata);
+
+      const success = Resdata[0].success;
+      const id = selectedRowId;
+      const message = Resdata[0].message;
+
+    // Assuming you have the row index stored in selectedRowIndex
+    const table = document.getElementById('main');
+
+    if (selectedRowIndex >= 0) {
+      table.deleteRow(selectedRowIndex);
+    }
+    createToast('success', 'fa-solid fa-circle-check', 'Success', "Success: " + success + " ID: "+ id + ' Message: '+ message);
+
+    MakeGoogleAPICAll=false;
+
+    hideLoader();
+
+  } catch (error) {
+    MakeGoogleAPICAll=false;
+    createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while deleting the Selected Project');
+    hideLoader();
+  
+   }
+ }
+}
+
+
+
 // Add New project or Duplicate Project
 function createnewJobID() {
 
@@ -1217,6 +1315,7 @@ dialogProjectsDialog.showModal();
   
   }
   
+
   // Function to complete all commands
   async function createProjects() {
       // alert('New Article Creator ID: ' + newArticleCreatorID + ' New Post Uploader ID: ' + newPostUploaderID + ' New Blog ID: ' + newBlogID);
@@ -1227,7 +1326,9 @@ dialogProjectsDialog.showModal();
 
   if (isValid) {
     showLoader();
+
     await fetchDataAndHandle(null, 'ADDDATA'); // Make GET request
+
   } else {
    createToast('info', 'fa-solid fa-info-circle', 'Info', 'No projects are currently running.');
   }
@@ -1289,6 +1390,8 @@ function openSettingDialog() {
     getandUpdateProjectSetting("GETDATA");
  
     }
+
+
 
   async function UpdateCustomSettig() {
     showLoader();
@@ -1545,7 +1648,7 @@ if (MakeGoogleAPICAll) {
         "PostIntervaldaysFROM": parseInt(postIntervaldaysFROMInput.value),
         "PostIntervaldaysTO": parseInt(postIntervaldaysTOInput.value),
         "postarticleTitle": postarticleTitleInput.value,
-        "SEOStatus": "pending"
+        "SEOStatus": "edit"
       }
     ]
   };
@@ -2330,19 +2433,18 @@ function updateMenuItems(apiCall) {
   const editItem = document.getElementById('customEditData');
   const deleteItem = document.getElementById('customDeleteData');
   const addItem = document.getElementById('customAddData');
- 
-  
+  var runItem = document.getElementById('customRuneData');
   
   // Update menu item text and onclick event based on the API call
   switch (apiCall) {
     case 'usersData':
 
-
-
       editItem.querySelector('span').textContent = 'Edit User Data';
       deleteItem.querySelector('span').textContent = 'Delete User Data';
       addItem.querySelector('span').textContent = 'Add User Data';
 
+      runItem.style.display = 'none'; // Show the item
+    
      editItem.querySelector('i').className = 'fas fa-user-edit';
      addItem.querySelector('i').className = 'fas fa-user-plus';
      deleteItem.querySelector('i').className = 'fas fa-user-times';
@@ -2354,17 +2456,22 @@ function updateMenuItems(apiCall) {
       break;
 
     case 'ProjectsData':
+
+    runItem.style.display = 'flex'; // Show the item
+     
       editItem.querySelector('span').textContent = 'Edit Project Data';
       deleteItem.querySelector('span').textContent = 'Delete Project Data';
       addItem.querySelector('span').textContent = 'Add Project Data';
+      runItem.querySelector('span').textContent = 'Run Selected Project';
 
       editItem.querySelector('i').className = 'far fa-edit';
       addItem.querySelector('i').className = 'fas fa-plus';
       deleteItem.querySelector('i').className = 'fas fa-trash-alt';
 
-
+     
       editItem.onclick = fetchAndPopulateDialog;
       deleteItem.onclick = deleteUsingAPI;
+      runItem.onclick = runProjectById;
       addItem.onclick = createnewJobID;
       // Update other items as needed
       break;
