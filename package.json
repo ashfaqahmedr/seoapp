@@ -1,0 +1,21 @@
+{
+  "name": "project-save-data",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "fs": "^0.0.1-security",
+    "googleapis": "^122.0.0"
+  },
+  "devDependencies": {
+    "electron": "^25.1.1"
+  },
+  "description": ""
+}

@@ -14,7 +14,7 @@ let MakeGoogleAPICAll=true;
 
 const googleurl ='https://script.google.com/macros/s/AKfycbxgyT3rHw0zc7xeF_HWP3fxiy9VjaBcwzE18b6eA7HzFejEvCQEJewrJSzDFkeaUa4m/exec'
 const seourl ='http://localhost:8008'
-const apiurl = `${seourl}/project`
+const seoProjectsUrl = `${seourl}/project`
 
 const appurl ='http://localhost:3000'
 
@@ -213,11 +213,14 @@ async function fetchPostUploader() {
      // Show Animation
      showLoader();
 
+
      if (MakeGoogleAPICAll) {  
     const responsePromise = fetch(googleurl, {
       method: 'POST',
       body: JSON.stringify({ action: 'getPostProjects', username: LoggedUsername }), // Include the action
     });
+
+
   
     const timeoutPromise = new Promise((_, reject) => {
       setTimeout(() => {
@@ -301,7 +304,6 @@ async function ReadJsonFile() {
            createTableFromData(responseData);
            console.table(responseData);
 
- 
    } catch (error) {
      console.error('Error fetching projects data:', error);
      let type = 'error';

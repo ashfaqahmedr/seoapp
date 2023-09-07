@@ -453,9 +453,11 @@ function removeTransition(event) {
 }
 
 
+//Function to add  /Update projects 
 async function fetchDataAndHandle(selectedRowId, method) {
   
-  
+  let LocalSEOStatus;
+
   const ProjectIDInput = document.getElementById('ProjectID');
   const articleProjectNameInput = document.getElementById('articleProjectName');
   const articleKeywordsFileInput = document.getElementById('articleKeywordsFile');
@@ -474,10 +476,14 @@ async function fetchDataAndHandle(selectedRowId, method) {
   const blogGroupInput = document.getElementById('blogGroup');
   const SEOStatusInput = document.getElementById('SEOStatus');
 
- 
+if (method.toUpperCase() === 'GETDATA') {
 
-    if (method.toUpperCase() === 'GETDATA') {
 
+  let getProjectSuccess= false;
+  
+
+   // Make an API Call to Google Server.
+      if (MakeGoogleAPICall) {
     const responsePromise = fetch(googleurl, {
       method: 'POST',
       body: JSON.stringify({ action: 'getProjects', dataId: selectedRowId, username: LoggedUsername }), // Include the action
@@ -493,24 +499,39 @@ async function fetchDataAndHandle(selectedRowId, method) {
     try {
       const response = await Promise.race([responsePromise, timeoutPromise])
 
-    const data = await response.json();
-
+    data = await response.json();
+    getProjectSuccess = true;
     console.table(data);
 
-      cnsarticleCreatorTitle.textContent = `Article Creator Details of ID: ${selectedRowId}`;
+      } catch (error) {
+          createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error.message);
+          getProjectSuccess=false;
+          hideLoader();
+      }
+ 
+    }  else {
+        // Make an API Call to LOCAL Server.
+       data = await GetSelectedProject(selectedRowId);
+       getProjectSuccess = true;
+       console.table(data);
+    }
 
-          ProjectIDInput.value = data[0].ProjectID;
-          articleProjectNameInput.value = data[0].ProjectName;
-          ProjectStatusinput.value = data[0].ProjectStatus;
-          articleKeywordsFileInput.value = data[0].ProjectKeyowrds;
-          articleCategoriesInput.value = data[0].ProjectCatagories;
+      if(getProjectSuccess) {
+        
+        cnsarticleCreatorTitle.textContent = `Article Creator Details of ID: ${selectedRowId}`;
 
-          cnspostUploaderTitle.textContent = `Post Uploader Details of ID: ${data[0].PostUploaderId}`;
+        ProjectIDInput.value = data[0].ProjectID;
+        articleProjectNameInput.value = data[0].ProjectName;
+        ProjectStatusinput.value = data[0].ProjectStatus;
+        articleKeywordsFileInput.value = data[0].ProjectKeyowrds;
+        articleCategoriesInput.value = data[0].ProjectCatagories;
 
-          // // Fill in the Post Uploader section
-          PostUploaderIdInput.value = data[0].PostUploaderId;
-          postJobNameInput.value = data[0].PostUploaderName;
-          PostUploaderStatusInput.value = data[0].PostUploaderStatus;
+        cnspostUploaderTitle.textContent = `Post Uploader Details of ID: ${data[0].PostUploaderId}`;
+
+        // // Fill in the Post Uploader section
+        PostUploaderIdInput.value = data[0].PostUploaderId;
+        postJobNameInput.value = data[0].PostUploaderName;
+        PostUploaderStatusInput.value = data[0].PostUploaderStatus;
 
     // Extract the date part and format it as "YY-MM-DD"
     const postStartDate = new Date(data[0].PostStartDate);
@@ -525,28 +546,95 @@ async function fetchDataAndHandle(selectedRowId, method) {
     postDateInput.value = formattedPostStartDate;
 
 
-          cnsblogSettingTitle.textContent = `Blog Setting details of ID: ${data[0].BlogId} SEO Status ${data[0].SEOStatus}`;
+        cnsblogSettingTitle.textContent = `Blog Setting details of ID: ${data[0].BlogId} SEO Status ${data[0].SEOStatus}`;
 
-          // // Fill in the Blog Setting section
-          BlogIdInput.value = data[0].BlogId;
-          blogUserNameInput.value = data[0].username;
-          blogPasswordInput.value = data[0].password;
-          blogUrlInput.value = data[0].url;
-          blogGroupInput.value = data[0].group;
-          SEOStatusInput.value = data[0].SEOStatus;
+        // // Fill in the Blog Setting section
+        BlogIdInput.value = data[0].BlogId;
+        blogUserNameInput.value = data[0].username;
+        blogPasswordInput.value = data[0].password;
+        blogUrlInput.value = data[0].url;
+        blogGroupInput.value = data[0].group;
+        SEOStatusInput.value = data[0].SEOStatus;
 
-          dialogProjectsDialog.style.display="flex";
+        dialogProjectsDialog.style.display="flex";
 
-          dialogProjectsDialog.showModal();
-
-        } catch (error) {
-          createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error.message);
-          hideLoader();
-        }
+        dialogProjectsDialog.showModal();
+      }
+        
 
     } else if (method.toUpperCase() === 'UPDATEDATA') {
+
+
+ 
+
+         // Local JSON to PASS to LOCAL Server
+
+    if (!MakeGoogleAPICall) {
+
+    const LocalJSONData= {
+        ProjectName: articleProjectNameInput.value,
+        ProjectKeyowrds: articleKeywordsFileInput.value,
+        ProjectCatagories: articleCategoriesInput.value,
+        PostUploaderName: postJobNameInput.value,
+        PostStartDate: postDateInput.value,
+        BlogId: BlogIdInput.value,
+        username: blogUserNameInput.value,
+        password: blogPasswordInput.value,
+        url: blogUrlInput.value,
+        group: blogGroupInput.value,
+      }
      
-         const jsonData = {
+      //Make Local Update API Request
+      const isDataUpdated = await updateDatatoSEO(selectedRowId, jobid, blogsetID, LocalJSONData)
+    
+
+
+  if (isDataUpdated) {
+
+  LocalSEOStatus = 'complete'
+  MakeGoogleAPICall=true;
+
+        // Assuming you have the row index stored in selectedRowIndex
+        const table = document.getElementById('main');
+        const row = table.rows[selectedRowIndex];
+      
+
+  if (row) {
+
+
+
+    row.cells[1].textContent = articleProjectNameInput.value;
+
+  // Update ProjectStatus span element
+  const projectStatusSpan = row.cells[2].querySelector('span.status-pill');
+  const cleanedProjectStatus = removeTrailingDots(ProjectStatusinput.value);
+  projectStatusSpan.textContent = ProjectStatusinput.value;
+  projectStatusSpan.className = 'status-pill'; // Remove all classes and set to 'status-pill'
+  projectStatusSpan.classList.add(`status-${cleanedProjectStatus.toLowerCase()}`);
+
+    row.cells[3].textContent = postJobNameInput.value;
+
+  // Update PostUploaderStatus span element
+  const postUploaderStatusSpan = row.cells[4].querySelector('span.status-pill');
+  const cleanedPostUploaderStatus = removeTrailingDots(PostUploaderStatusInput.value);
+  postUploaderStatusSpan.textContent = PostUploaderStatusInput.value;
+  postUploaderStatusSpan.className = 'status-pill'; // Remove all classes and set to 'status-pill'
+  postUploaderStatusSpan.classList.add(`status-${cleanedPostUploaderStatus.toLowerCase()}`);
+
+    row.cells[5].textContent = postDateInput.value;
+
+
+
+      }
+        hideLoader();
+
+      }
+
+    // Google JSON Data to  API Request to Make
+
+    if (MakeGoogleAPICall) {
+      LocalSEOStatus = 'edited'
+      let GoogleAPIjsonData = {
         action: 'updateProjectsData',
         username: LoggedUsername,
         dataItems: [
@@ -566,209 +654,280 @@ async function fetchDataAndHandle(selectedRowId, method) {
             password: blogPasswordInput.value,
             url: blogUrlInput.value,
             group: blogGroupInput.value,
-            SEOStatus: SEOStatus.value, // Use corresponding input element
+            SEOStatus: LocalSEOStatus // Use corresponding input element
           },
         ],
       };
 
-      console.table(jsonData)
+    console.table(GoogleAPIjsonData)
+  
+    const responsePromise = fetch(googleurl, {
+      method: 'POST',
+      body: JSON.stringify( GoogleAPIjsonData ), // Include the action
+    });
+  
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => {
+        hideLoader();
+        reject(new Error(createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error)));
+      }, 30000);
+    });
+  
+    try {
+      const response = await Promise.race([responsePromise, timeoutPromise])
+
+    const Resdata = await response.json();
+
+    console.table(Resdata);
+
+      const success = Resdata[0].success;
+      const id = Resdata[0].SheetID;
+      const message = Resdata[0].message;
+
+      createToast('success', 'fa-solid fa-circle-check', 'Success', "Success: " + success + " ID: "+ id + ' Message: '+ message);
+      dialogProjectsDialog.style.display="none";
+
+
+      dialogProjectsDialog.close();
+
+      MakeGoogleAPICall=false;
+
+      if (success) {
+        hideLoader();
+
+    // Assuming you have the row index stored in selectedRowIndex
+    const table = document.getElementById('main');
+    const row = table.rows[selectedRowIndex];
+
+      if (row) {
+
+        row.cells[2].textContent = articleProjectNameInput.value;
     
-
-      const responsePromise = fetch(googleurl, {
-        method: 'POST',
-        body: JSON.stringify( jsonData ), // Include the action
-      });
+      // Update ProjectStatus span element
+      const projectStatusSpan = row.cells[3].querySelector('span.status-pill');
+      const cleanedProjectStatus = removeTrailingDots(ProjectStatusinput.value);
+      projectStatusSpan.textContent = ProjectStatusinput.value;
+      projectStatusSpan.className = 'status-pill'; // Remove all classes and set to 'status-pill'
+      projectStatusSpan.classList.add(`status-${cleanedProjectStatus.toLowerCase()}`);
+        row.cells[4].textContent = postJobNameInput.value;
     
-      const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => {
-          hideLoader();
-          reject(new Error(createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error)));
-        }, 30000);
-      });
+      // Update PostUploaderStatus span element
+      const postUploaderStatusSpan = row.cells[5].querySelector('span.status-pill');
+      const cleanedPostUploaderStatus = removeTrailingDots(PostUploaderStatusInput.value);
+      postUploaderStatusSpan.textContent = PostUploaderStatusInput.value;
+      postUploaderStatusSpan.className = 'status-pill'; // Remove all classes and set to 'status-pill'
+      postUploaderStatusSpan.classList.add(`status-${cleanedPostUploaderStatus.toLowerCase()}`);
     
-      try {
-        const response = await Promise.race([responsePromise, timeoutPromise])
-
-      const Resdata = await response.json();
-
-      console.table(Resdata);
-
-        const success = Resdata[0].success;
-        const id = Resdata[0].SheetID;
-        const message = Resdata[0].message;
-
-        createToast('success', 'fa-solid fa-circle-check', 'Success', "Success: " + success + " ID: "+ id + ' Message: '+ message);
-        dialogProjectsDialog.style.display="none";
-        dialogProjectsDialog.close()
-  if (success) {
-          // Assuming you have the row index stored in selectedRowIndex
-  const table = document.getElementById('main');
-  const row = table.rows[selectedRowIndex];
-
-  if (row) {
-    // Update each cell based on its corresponding input field value
-    // row.cells[2].textContent = ProjectIDInput.value;
-    row.cells[2].textContent = articleProjectNameInput.value;
-
-
-  // Update ProjectStatus span element
-  const projectStatusSpan = row.cells[3].querySelector('span.status-pill');
-  const cleanedProjectStatus = removeTrailingDots(ProjectStatusinput.value);
-  projectStatusSpan.textContent = ProjectStatusinput.value;
-  projectStatusSpan.className = 'status-pill'; // Remove all classes and set to 'status-pill'
-  projectStatusSpan.classList.add(`status-${cleanedProjectStatus.toLowerCase()}`);
-
-    // row.cells[4].textContent = articleKeywordsFileInput.value;
-    // row.cells[5].textContent = articleCategoriesInput.value;
-    // row.cells[6].textContent = PostUploaderIdInput.value;
-    row.cells[4].textContent = postJobNameInput.value;
-
-  // Update PostUploaderStatus span element
-  const postUploaderStatusSpan = row.cells[5].querySelector('span.status-pill');
-  const cleanedPostUploaderStatus = removeTrailingDots(PostUploaderStatusInput.value);
-  postUploaderStatusSpan.textContent = PostUploaderStatusInput.value;
-  postUploaderStatusSpan.className = 'status-pill'; // Remove all classes and set to 'status-pill'
-  postUploaderStatusSpan.classList.add(`status-${cleanedPostUploaderStatus.toLowerCase()}`);
-
-    row.cells[6].textContent = postDateInput.value;
-    // row.cells[10].textContent = BlogIdInput.value;
-    // row.cells[11].textContent = blogUserNameInput.value;
-    // row.cells[12].textContent = blogPasswordInput.value;
-    // row.cells[13].textContent = blogUrlInput.value;
-    // row.cells[14].textContent = blogGroupInput.value;
+        row.cells[6].textContent = postDateInput.value;
     
-  // Update SEOStatus span element
-    const seoStatusSpan = row.cells[7].querySelector('span.status-pill');
-    const cleanedSEOStatus = removeTrailingDots(SEOStatusInput.value);
-    seoStatusSpan.textContent = SEOStatusInput.value;
-    seoStatusSpan.className = 'status-pill'; // Remove all classes and set to 'status-pill'
-    seoStatusSpan.classList.add(`status-${cleanedSEOStatus.toLowerCase()}`);
+        const seoStatusSpan = row.cells[7].querySelector('span.status-pill');
+        const cleanedSEOStatus = removeTrailingDots(SEOStatusInput.value);
+        seoStatusSpan.textContent = SEOStatusInput.value;
+        seoStatusSpan.className = 'status-pill'; // Remove all classes and set to 'status-pill'
+        seoStatusSpan.classList.add(`status-${cleanedSEOStatus.toLowerCase()}`);
+      }
     }
-    hideLoader();
-  }
- } catch (error) {
-    createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error.message);
-    hideLoader();
-  }
-}
+        
+    }  catch (error) {
+      MakeGoogleAPICall=false; 
+      createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error.message);
+      hideLoader();
+    }
+
+    } 
+
+
+    }
+    } 
+
 
  else if (method.toUpperCase() === 'ADDDATA') {
-   
- 
-const jsonData = {
-        action: 'addProjectData',
-        username: "ASHFAQ",
-        dataItems: [
-          {
-            ProjectID: "",
+  
+  showLoader();
+      // Local JSON to PASS to LOCAL Server
+
+      let resCreatedProject={};
+      
+
+      if (!MakeGoogleAPICall) {
+
+        const LocalJSONData= {
             ProjectName: articleProjectNameInput.value,
-            ProjectStatus: "draft", // Use corresponding input element
             ProjectKeyowrds: articleKeywordsFileInput.value,
             ProjectCatagories: articleCategoriesInput.value,
-            PostUploaderId: "",
             PostUploaderName: postJobNameInput.value,
-            PostUploaderStatus: "draft" , // Use corresponding input element
             PostStartDate: postDateInput.value,
-            BlogId: "",
+            BlogId: BlogIdInput.value,
             username: blogUserNameInput.value,
             password: blogPasswordInput.value,
             url: blogUrlInput.value,
             group: blogGroupInput.value,
-            SEOStatus: "pending", // Use corresponding input element
-          },
-        ],
-      };
-
-console.table(jsonData)
-
-const responsePromise = fetch(googleurl, {
-  method: 'POST',
-  body: JSON.stringify( jsonData ), // Include the action
-});
-
-const timeoutPromise = new Promise((_, reject) => {
-  setTimeout(() => {
-    hideLoader();
-    reject(new Error(createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error)));
-  }, 30000);
-});
-
-try {
-  const response = await Promise.race([responsePromise, timeoutPromise])
-
-const Resdata = await response.json();
-
-console.table(Resdata);
-
- const success = Resdata[0].success;
- const id = Resdata[0].SheetID;
- const message = Resdata[0].message;
-
- createToast('success', 'fa-solid fa-circle-check', 'Success', "Success: " + success + " ID: "+ id + ' Message: '+ message);
-
- if (success) {
-  hideLoader();
+          }
+         
+          //Make Local Update API Request
+          resCreatedProject = await createProjectsONSEO(LocalJSONData)
+        
+          isProjectCreatedLOcal = resCreatedProject[0].success;
 
 
-    // Add a new row at index 2 (third row)
-    const table = document.getElementById('main');
-    const newRow = table.insertRow(1);
+        if (isProjectCreatedLOcal) {
 
-    // Insert cells and set their content
-    for (let i = 0; i < 8; i++) {
-      const cell = newRow.insertCell(i);
-      cell.textContent = '';
-    }
-
-    // Set specific cell values based on input fields and create status spans
-    newRow.cells[0].textContent = id;
-
-        const currentDate = new Date();
-    const formatedDateMMDDYY = currentDate.toISOString().split('T')[0]; // Get the current date in "yyyy-mm-dd" format
-    console.log(formatedDateMMDDYY)
+          MakeGoogleAPICall=true;
+          LocalSEOStatus = 'complete'
+            // Add a new row at index 2 (third row)
+            const table = document.getElementById('main');
+            const newRow = table.insertRow(1);
     
-    newRow.cells[1].textContent =formatedDateMMDDYY;
-    // newRow.cells[1].textContent = ProjectIDInput.value;
-    newRow.cells[2].textContent = articleProjectNameInput.value;
+            // Insert cells and set their content
+            for (let i = 0; i < 6; i++) {
+              const cell = newRow.insertCell(i);
+              cell.textContent = '';
+            }
+    
+            // Set specific cell values based on input fields and create status spans
+            newRow.cells[0].textContent = resCreatedProject[0].ProjectID;
+            newRow.cells[1].textContent = articleProjectNameInput.value;
+    
+            const statusSpan1 = document.createElement('span');
+            statusSpan1.className = 'status-pill status-draft';
+            statusSpan1.textContent = 'draft';
+            newRow.cells[2].appendChild(statusSpan1);
 
-    const statusSpan1 = document.createElement('span');
-    statusSpan1.className = 'status-pill status-draft';
-    statusSpan1.textContent = 'draft';
-    newRow.cells[3].appendChild(statusSpan1);
+            newRow.cells[3].textContent = postJobNameInput.value;
+            const statusSpan2 = document.createElement('span');
+            statusSpan2.className = 'status-pill status-draft';
+            statusSpan2.textContent = 'draft';
+            newRow.cells[4].appendChild(statusSpan2);
+    
+            newRow.cells[5].textContent = postDateInput.value;
+    
+            console.log('Article Creator Data has been saved!');
+            dialogProjectsDialog.style.display="none";
+            dialogProjectsDialog.close();
+    
+          
+            hideLoader();
 
-    // newRow.cells[4].textContent = articleKeywordsFileInput.value;
-    // newRow.cells[5].textContent = articleCategoriesInput.value;
-    // newRow.cells[6].textContent = PostUploaderIdInput.value;
-    newRow.cells[4].textContent = postJobNameInput.value;
+        } else {
 
-    const statusSpan2 = document.createElement('span');
-    statusSpan2.className = 'status-pill status-draft';
-    statusSpan2.textContent = 'draft';
-    newRow.cells[5].appendChild(statusSpan2);
+        }
 
-    newRow.cells[6].textContent = postDateInput.value;
-    // newRow.cells[10].textContent = BlogIdInput.value;
-    // newRow.cells[11].textContent = blogUserNameInput.value;
-    // newRow.cells[12].textContent = blogPasswordInput.value;
-    // newRow.cells[13].textContent = blogUrlInput.value;
-    // newRow.cells[14].textContent = blogGroupInput.value;
+      }
 
-    const statusSpan3 = document.createElement('span');
-    statusSpan3.className = 'status-pill status-pending';
-    statusSpan3.textContent = 'pending';
-    newRow.cells[7].appendChild(statusSpan3);
+    if (MakeGoogleAPICall) {
+      LocalSEOStatus = 'pending'
+    const jsonData = {
+            action: 'addProjectData',
+            username: "ASHFAQ",
+            dataItems: [
+              {
+                ProjectID: resCreatedProject[0].ProjectID || "",
+                ProjectName: articleProjectNameInput.value,
+                ProjectStatus: "draft", // Use corresponding input element
+                ProjectKeyowrds: articleKeywordsFileInput.value,
+                ProjectCatagories: articleCategoriesInput.value,
+                PostUploaderId: resCreatedProject[0].PostUploaderId || "",
+                PostUploaderName: postJobNameInput.value,
+                PostUploaderStatus: "draft" , // Use corresponding input element
+                PostStartDate: postDateInput.value,
+                BlogId: resCreatedProject[0].BlogId || "",
+                username: blogUserNameInput.value,
+                password: blogPasswordInput.value,
+                url: blogUrlInput.value,
+                group: blogGroupInput.value,
+                SEOStatus: LocalSEOStatus, // Use corresponding input element
+              },
+            ],
+          };
 
-    console.log('Article Creator Data has been saved!');
-    dialogProjectsDialog.style.display="none";
-    dialogProjectsDialog.close();
-    hideLoader();
-  }
-} catch (error) {
-  createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error.message);
-  hideLoader();
-   }
-  }
+    console.table(jsonData)
+
+    const responsePromise = fetch(googleurl, {
+      method: 'POST',
+      body: JSON.stringify( jsonData ), // Include the action
+    });
+
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => {
+        hideLoader();
+        reject(new Error(createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error)));
+      }, 30000);
+    });
+
+    try {
+      const response = await Promise.race([responsePromise, timeoutPromise])
+
+    const Resdata = await response.json();
+
+    console.table(Resdata);
+
+    const success = Resdata[0].success;
+    const id = Resdata[0].SheetID;
+    const message = Resdata[0].message;
+
+    createToast('success', 'fa-solid fa-circle-check', 'Success', "Success: " + success + " ID: "+ id + ' Message: '+ message);
+
+    if (success) {
+
+      MakeGoogleAPICall=false; 
+
+      hideLoader();
+
+        // Add a new row at index 2 (third row)
+        const table = document.getElementById('main');
+        const newRow = table.insertRow(1);
+
+        // Insert cells and set their content
+        for (let i = 0; i < 8; i++) {
+          const cell = newRow.insertCell(i);
+          cell.textContent = '';
+        }
+
+        // Set specific cell values based on input fields and create status spans
+        newRow.cells[0].textContent = id;
+
+            const currentDate = new Date();
+        const formatedDateMMDDYY = currentDate.toISOString().split('T')[0]; // Get the current date in "yyyy-mm-dd" format
+        console.log(formatedDateMMDDYY)
+        
+        newRow.cells[1].textContent =formatedDateMMDDYY;
+        newRow.cells[2].textContent = articleProjectNameInput.value;
+
+        const statusSpan1 = document.createElement('span');
+        statusSpan1.className = 'status-pill status-draft';
+        statusSpan1.textContent = 'draft';
+        newRow.cells[3].appendChild(statusSpan1);
+        newRow.cells[4].textContent = postJobNameInput.value;
+
+        const statusSpan2 = document.createElement('span');
+        statusSpan2.className = 'status-pill status-draft';
+        statusSpan2.textContent = 'draft';
+        newRow.cells[5].appendChild(statusSpan2);
+
+        newRow.cells[6].textContent = postDateInput.value;
+
+        const statusSpan3 = document.createElement('span');
+        statusSpan3.className = 'status-pill status-pending';
+        statusSpan3.textContent = 'pending';
+        newRow.cells[7].appendChild(statusSpan3);
+
+        console.log('Article Creator Data has been saved!');
+        dialogProjectsDialog.style.display="none";
+        dialogProjectsDialog.close();
+
+      
+        hideLoader();
+      }
+    } catch (error) {
+      MakeGoogleAPICall=false; 
+      createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error.message);
+      hideLoader();
+      }
+      }
 }
+
+}
+
 
 async function fetchAndPopulateDialog() {
 
@@ -899,7 +1058,34 @@ await fetchDataAndHandle(selectedRowId, 'UPDATEDATA'); // Make GET request
   //Delete Selected Project
   async function deleteProjectData(selectedRowId) {
    
+    
+    if (!MakeGoogleAPICAll) {
+
+    try {
+
+      const confrimationDelete = await deleteProjectDatafromSEO(selectedRowId)
+
+      if(confrimationDelete) {
+
+        createToast('success', 'fa-solid fa-circle-check', 'Success', 'Selected Project and its related Data has been Deleted! <br> Project ID :' + selectedRowId);
+
+        MakeGoogleAPICAll=true; 
+
+      }
+
+    } catch (error) {
+
+      createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while deleting the Selected  <br> Project ID: ' + selectedRowId );
+      hideLoader();
+      
+      // alert('Error deleting data:', error.message);
+     }
+
+    }
+    if (MakeGoogleAPICAll) {
+
       showLoader();
+
       const jsonData = {
         action: 'deleteProjectsData',
         username: LoggedUsername,
@@ -944,33 +1130,32 @@ await fetchDataAndHandle(selectedRowId, 'UPDATEDATA'); // Make GET request
       }
       createToast('success', 'fa-solid fa-circle-check', 'Success', "Success: " + success + " ID: "+ id + ' Message: '+ message);
 
+      MakeGoogleAPICAll=false;
 
       hideLoader();
   
     } catch (error) {
-
+      MakeGoogleAPICAll=false;
       createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while deleting the Selected Project');
       hideLoader();
-      
-      // alert('Error deleting data:', error.message);
-    }
+    
+     }
+   }
   }
-  
   
 
   //Function to call Delete functions with related IDs
   async function deleteUsingAPI(){
    
- 
     const confirmDialogUse = await openConfrimDialog('confrimDialog', 'Delete Selected Project ID: ?' + selectedRowId, 'Do you want to DELETE Selected Project?');
   
     if (confirmDialogUse) { 
-      showLoader();
-      deleteProjectData(selectedRowId);    
+
+    await deleteProjectData(selectedRowId);    
+
     }
   
   }
-  
   
   
 const DialogTitle =  document.getElementById('dialogTitle')
@@ -1097,9 +1282,6 @@ function validateRequiredFields(dialog) {
 
 
 
-
-
-
 function openSettingDialog() {
     // Show the dialogProjectsDialog
     showLoader();
@@ -1146,6 +1328,63 @@ const seoStatusInput = document.getElementById('seoStatus');
 
   if (METHOD==="GETDATA") {
    
+
+    if (!MakeGoogleAPICAll) {
+
+      try {
+       // Retrieve the file content from the API
+    const response = await fetch(`${appurl}/custom-settings`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (response.ok) {
+
+    
+      const data = await response.json();
+
+      sheetIDInput.style.display='none';
+      seoStatusInput.style.display='none';
+
+      // Populate the input elements with the retrieved values
+      listofContentFilterInput.value = data[0].ListofContentFilter;
+      urlsDownloadResultLimitsInput.value = data[0].URLsDownloadResultLimits;
+      articleCountInput.value = data[0].ArticleCount;
+      insertNoofImagesFROMInput.value = data[0].InsertNoofImagesFROM;
+      insertNoofImagesTOInput.value = data[0].InsertNoofImagesTO;
+      articleUseCategoryInsertInput.checked = data[0].articleUseCategoryInsert;
+      useImagesInput.checked = data[0].UseImages;
+      imageInserTypeInput.value = data[0].InsertType;
+      InsertAtStartOfBodyInput.checked = data[0].InsertAtStartOfBody;
+      useBingImagesInput.checked = data[0].UseBingImages;
+      useYoutubeThumbnailsInput.checked = data[0].UseYoutubeThumbnails;
+      useCreativeCommonsImagesInput.checked = data[0].UseCreativeCommonsImages;
+      useBingCCImagesInput.checked = data[0].UseBingCCImages;
+      postUseTodayInput.checked = data[0].postUseToday;
+      postsperDayInput.value = data[0].PostsperDay;
+      postIntervaldaysFROMInput.value = data[0].PostIntervaldaysFROM;
+      postIntervaldaysTOInput.value = data[0].PostIntervaldaysTO;
+      postarticleTitleInput.value = data[0].postarticleTitle;
+ 
+      hideLoader();
+      createToast('success', 'fa-solid fa-circle-check', 'Success', 'Settings has been loaded!');
+      customSettingDialog.style.display="flex";
+      customSettingDialog.showModal();
+
+    }
+
+      } catch (error) {
+        console.error('Error retrieving settings:', error);
+        createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Error retrieving settings from Local Server: ' + error);
+        hideLoader();
+      }
+
+    }
+
+
+if (MakeGoogleAPICAll) {
     const responsePromise = fetch(googleurl, {
       method: 'POST',
       body: JSON.stringify({ action: 'getProjectSettings', username: LoggedUsername }), // Include the action
@@ -1161,7 +1400,6 @@ const seoStatusInput = document.getElementById('seoStatus');
     try {
       const response = await Promise.race([responsePromise, timeoutPromise]);
 
-      
 
     if (response.ok) {
       const data = await response.json();
@@ -1192,7 +1430,10 @@ const seoStatusInput = document.getElementById('seoStatus');
  
       hideLoader();
       createToast('success', 'fa-solid fa-circle-check', 'Success', 'Settings has been loaded!');
+
+      seoStatusInput.style.display='flex';
       sheetIDInput.style.display="flex";
+
       customSettingDialog.style.display="flex";
       customSettingDialog.showModal();
     
@@ -1208,8 +1449,77 @@ const seoStatusInput = document.getElementById('seoStatus');
           hideLoader();
         }
       }
-
+    }
   if (METHOD==="UPDATEDATA") {
+
+
+    if (!MakeGoogleAPICAll) {
+
+      try {
+
+      const settingJSONData = {
+       "ListofContentFilter": listofContentFilterInput.value,
+       "URLsDownloadResultLimits": parseInt(urlsDownloadResultLimitsInput.value),
+       "ArticleCount": parseInt(urlsDownloadResultLimitsInput.value),
+       "InsertNoofImagesFROM":  parseInt(insertNoofImagesFROMInput.value),
+       "InsertNoofImagesTO": parseInt(insertNoofImagesTOInput.value),
+       "articleUseCategoryInsert":articleUseCategoryInsertInput.checked,
+       "UseImages": useImagesInput.checked,
+       "InsertType": imageInserTypeInput.value,
+       "InsertAtStartOfBody": InsertAtStartOfBodyInput.checked,
+       "UseBingImages": useImagesInput.checked,
+       "UseYoutubeThumbnails": useYoutubeThumbnailsInput.checked,
+       "UseCreativeCommonsImages": useCreativeCommonsImagesInput.checked,
+       "UseBingCCImages": useBingCCImagesInput.checked,
+       "postUseToday": postUseTodayInput.checked,
+       "PostsperDay": parseInt(postsperDayInput.value),
+       "PostIntervaldaysFROM": parseInt(postIntervaldaysFROMInput.value),
+       "PostIntervaldaysTO": parseInt(postIntervaldaysTOInput.value),
+       "postarticleTitle": postarticleTitleInput.value,
+     }
+
+
+      // Send the updated settings to the server
+    const response = await fetch(`${appurl}/custom-settings`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(settingJSONData)
+    });
+
+
+      if (response.ok) {
+    
+
+        MakeGoogleAPICall=true;
+
+        createToast('success', 'fa-solid fa-circle-check', 'Success', 'Settings has been Saved!');
+        filedialog.close()
+  
+        hideLoader();
+        
+      } else {
+        MakeGoogleAPICall=false;
+        createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Error retrieving settings: ' + response.statusText);
+        filedialog.close()
+        hideLoader();
+      }
+    } catch (error) {
+  
+      MakeGoogleAPICall=false;
+      filedialog.close()
+  
+      createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Error retrieving settings: ' + response.statusText);
+  
+      filedialog.close()
+      hideLoader();
+             
+    }
+
+}
+
+    if (MakeGoogleAPICAll) {
 
     const jsonData = {
       action: 'updatesettingData',
@@ -1261,6 +1571,8 @@ const seoStatusInput = document.getElementById('seoStatus');
       
     if (response.ok) {
 
+
+      MakeGoogleAPICall=false;
       const Resdata = await response.json();
 
       console.table(Resdata);
@@ -1277,14 +1589,16 @@ const seoStatusInput = document.getElementById('seoStatus');
   }
  
      catch (error) {
-
+      MakeGoogleAPICall=false;
       createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while Updating the Project Setting' +error);
       hideLoader();
       customSettingDialog.style.display="none";
       customSettingDialog.close()
-    } 
+      } 
+    }
   }
 }
+
 
 
 //Add Users Sheet Dialog

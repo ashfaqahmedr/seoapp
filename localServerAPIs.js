@@ -1,8 +1,10 @@
-const seourl ='http://localhost:8008'
-const apiurl = `${seourl}/project`
+// Functions for get GOogle Sheet New Data and updated DATA
+
+
+
 //Check the Server
 async function testServer() {
-    // showLoader();
+    showLoader();
     try {
       const response = await fetch(`${seourl}/test`, {
         method: 'GET'
@@ -14,15 +16,15 @@ async function testServer() {
 
       if (data.success)  {
    
-        // createToast('success', 'fa-solid fa-circle-check', 'Success', 'Logged In successfully.');
-        // txttopTitle.textContent="SEO Content Machine Desktop App (Connected)"
+        createToast('success', 'fa-solid fa-circle-check', 'Success', 'Logged In successfully.');
+        txttopTitle.textContent="SEO Content Machine Desktop App (Connected)"
        
       }
     } catch (error) {
         console.error(error)
-        // createToast('error', 'fa-solid fa-circle-exclamation', 'error', 'Username or Password is invalid. error: '+error);
-        // loginHeader.textContent="SEO Content Machine Desktop App (DIsconnected)"
-        // hideLoader();
+        createToast('error', 'fa-solid fa-circle-exclamation', 'error', 'Username or Password is invalid. error: '+error);
+        loginHeader.textContent="SEO Content Machine Desktop App (DIsconnected)"
+        hideLoader();
      
     }
   }
@@ -44,7 +46,7 @@ async function fetchAllLocalProjects() {
 
       // Task 2: Fetch additional data for each project and update the object
       const projectPromises = Object.keys(formattedData).map(async (id) => {
-        const response = await fetch(`${apiurl}/data/${id}`);
+        const response = await fetch(`${seoProjectsUrl}/data/${id}`);
         const projectData = await response.json();
 
         const {
@@ -74,13 +76,22 @@ async function fetchAllLocalProjects() {
       const chainJobPromises = Object.values(formattedData).map(async (project) => {
         if (project.postProjectId) {
           const response = await fetch(
-            `${apiurl}/data/${project.postProjectId}`
+            `${seoProjectsUrl}/data/${project.postProjectId}`
           );
           const chainJobData = await response.json();
+
           const { jobName, blogIds, postStartDate } = chainJobData.result;
+          
+
+          if (postStartDate) {
+            const formattedDate = new Date(postStartDate);
+            formattedDate.setDate(formattedDate.getDate() + 1);
+            dateString = formattedDate.toISOString().split("T")[0];
+          }
+
           formattedData[project.projectId] = {
             ...formattedData[project.projectId],
-            postDate: postStartDate,
+            postDate: dateString,
             PostJobName: jobName,
             blogId: Array.isArray(blogIds) ? blogIds.join(', ') : blogIds,
           };
@@ -94,7 +105,7 @@ async function fetchAllLocalProjects() {
       const statusPromises = Object.values(formattedData).map(async (project) => {
         if (project.postProjectId) {
           const response = await fetch(
-            `${apiurl}/status/${project.postProjectId}`
+            `${seoProjectsUrl}/status/${project.postProjectId}`
           );
           const statusData = await response.json();
           project.postUploaderStatus = statusData.result[0].status;
@@ -137,6 +148,7 @@ async function fetchAllLocalProjects() {
 
       // Task 6: Generate the table based on the final formattedData object
     //   createTableFromData(formattedData);
+
 
 
     const reorderedData = Object.values(formattedData).map((project) => ({
@@ -189,7 +201,7 @@ async function fetchAllLocalProjects() {
   
         // Task 2: Fetch additional data for each project and update the object
         const projectPromises = Object.keys(formattedData).map(async (id) => {
-          const response = await fetch(`${apiurl}/data/${id}`);
+          const response = await fetch(`${seoProjectsUrl}/data/${id}`);
           const projectData = await response.json();
   
           // const categoryInsertdata = projectData.categoryInsert.CategoryInsertFile;
@@ -256,7 +268,7 @@ async function LocalPostUploaderProjects() {
    
          // Task 2: Fetch additional data for each project and update the object
          const projectpostPromises = Object.keys(formattedData).map(async (id) => {
-           const response = await fetch(`${apiurl}/data/${id}`);
+           const response = await fetch(`${seoProjectsUrl}/data/${id}`);
            const projectData = await response.json();
            console.table(projectData);
   
@@ -465,539 +477,219 @@ async function LocalProjectsbyStatus(articleStatus) {
     });
   }
   
+  //Data All  collected Data from Local Server. 
 
-
-  // Function to fetch and update data for different sections
-async function fnarticleCreator(selectedRowId, method = 'GET') {
-  
-    // Declare input fields
-  
-  const articleProjectNameInput = document.getElementById('articleProjectName');
-  const articleKeywordsFileInput = document.getElementById('articleKeywordsFile');
-  const articleCategoriesInput = document.getElementById('articleCategories');
-  const fetchdataurl =`${apiurl}/data/${selectedRowId}`
-      
-  try {
-
-    if (method.toUpperCase() === 'GET') {
-      // Make GET request
-      const response = await fetch(fetchdataurl);
-      const data = await response.json();
-      const result = data.result;
-
-     
-      cnsarticleCreatorTitle.textContent = `Article Creator Details of ID: ${selectedRowId}`;
-
-
-      // Update input fields with received values
-      articleProjectNameInput.value = result.jobName;     
-      
-      articleKeywordsFileInput.value = Array.isArray(result.articleKeywordsFile)
-        ? result.articleKeywordsFile.join(', ')
-        : '';
-
-      articleCategoriesInput.value = Array.isArray(result.categoryInsert.CategoryInsertFile)
-        ? result.categoryInsert.CategoryInsertFile.join(', ')
-        : '';
-      
-
-      jobid = result.chainJobId
-    //   document.getElementById('inputchainJobId').value = jobid;
-
-
-      cnspostUploaderTitle.textContent = `Post Uploader Details of ID: ${jobid}`;
-
-      // Continue with the rest of your code for GET request
-      // ...
-    } else if (method.toUpperCase() === 'POST') {
-      // Get values from input fields
-      
-      const articleProjectName = articleProjectNameInput.value;
-      const articleKeywordsFile = articleKeywordsFileInput.value.split(',').map(keyword => keyword.trim());
-      const articleCategories = articleCategoriesInput.value.split(',').map(category => category.trim());
-      const CategoryInsertFile = articleCategoriesInput.value.split(',').map(keyword => keyword.trim());
-            
-      // Prepare request body
-      const jsonData = JSON.stringify({
-        jobName: articleProjectName,
-        CategoryInsertFile,
-        articleCategories,
-        articleKeywordsFile,
-        
-      });
-
-      // Make POST request
-       await fetch(fetchdataurl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonData
-      });
-
-        // Get the table element
-        const table = document.getElementById('main');
-
-        // Update the table cells with the variables if the row and cell exist
-        const row = table.rows[selectedRowIndex];
-        if (row) {
-          const cell2 = row.cells[2];
-          if (cell2) {
-            cell2.textContent = articleProjectName;
-          }
-
-          const cell3 = row.cells[3];
-          if (cell3) {
-            cell3.textContent = CategoryInsertFile.join(', ');
-          }
-
-          const cell4 = row.cells[4];
-          if (cell4) {
-            cell4.textContent = articleKeywordsFile.join(', ');
-          }
-        }
-              console.log('Article Creator Data has been saved!');
-
-            } 
-
-          }  catch (error) {
-            console.error('Error fetching or posting data:', error);
-          }
-        }
-
-// Function to fetch data for the Post Uploader section
-async function fnPostUploader(chainJobId, method = 'GET') {
-
-    const postJobNameInput = document.getElementById('postJobName');
-    const postDateInput = document.getElementById('postDate');
-    const postsPerDayInput = document.getElementById('postsPerDay');
-    const postIntervalFromInput = document.getElementById('postIntervalFrom');
-    const postIntervalToInput = document.getElementById('postIntervalTo');
-    const articleTitleInput = document.getElementById('articleTitle');
- 
-   
-  const fetchdataurl =`${apiurl}/data/${chainJobId}`
-
-  //Get SEO Path to Pass to Folderpath 
-  fetch(`${appurl}/SEOFolderPath`)
-  .then(response => response.json())
-  .then(data => {
-
-    const soefolder =data.folderPath
-    folderpath =`${soefolder}\\${selectedRowId}\\articles`;
-    // const folderPath = data.folderPath;
-  document.getElementById('articleFolder').value= folderpath;
-   console.log("File path for the Artilce Creator is " + folderpath);
-  })
-  .catch(error => {
-    console.error('Error retrieving folder path:', error);
-    // Handle the error
-  });
-
-  try {
-   
-    if (method.toUpperCase() === 'GET') {
-      const response = await fetch(fetchdataurl);
-      const data = await response.json();
-      const result = data.result;
-
-      // Fill in the Post Uploader section
-      postJobNameInput.value = result.jobName;
-
-      const apiDate = result.postStartDate; // Example API date string
-
-      if (apiDate) {
-
-        const formattedDate = new Date(apiDate);
-        formattedDate.setDate(formattedDate.getDate() + 1);
-        const dateString = formattedDate.toISOString().split("T")[0];
-        postDateInput.value = dateString;
-      }
-
-
-      postsPerDayInput.value = result.postsPerDay;
-      postIntervalFromInput.value = result.postIntervalFrom;
-      postIntervalToInput.value = result.postIntervalTo;
-      articleTitleInput.value = result.articleTitle;
-     
-      blogsetID = Array.isArray(result.blogIds) ? result.blogIds.join(', ') : result.blogIds;
-
-    // const blogIdInput = document.getElementById('blogIdinput');
-
-      cnsblogSettingTitle.textContent = `Blog Setting details of ID: ${blogsetID}`;
-      // blogIdInput.value = blogsetID;
-      // Fill in more input fields for other properties as needed
-    } else if (method.toUpperCase() === 'POST') {
-
-      const postDateInput = document.getElementById('postDate');
-      const currentDate = new Date(postDateInput.value);
-      const formattedDate = currentDate.toLocaleDateString('en-US', {
-        month: 'long',
-        day: 'numeric',
-        year: 'numeric'
-      });
-
-      const jsonData = JSON.stringify({
-        jobName: postJobNameInput.value,
-        postStartDate: formattedDate,
-        postsPerDay: postsPerDayInput.value,
-        postIntervalFrom: postIntervalFromInput.value,
-        postIntervalTo: postIntervalToInput.value,
-        articleTitle: articleTitleInput.value,
-        articleFolder: folderpath,
-        // blogIds: blogIdInput.value.split(',').map(keyword => keyword.trim())
-
-        // Include other  properties as needed
-      });
-
-       await fetch(fetchdataurl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonData
-      });
-
-       // Get the table element
-const table = document.getElementById('main');
-
-// Update the table cells with the variables if the row and cell exist
-const row = table.rows[selectedRowIndex];
-if (row) {
-  const cell2 = row.cells[6];
-  if (cell2) {
-    cell2.textContent = formattedDate;
-  }
-
-  const cell3 = row.cells[7];
-  if (cell3) {
-    cell3.textContent = postJobNameInput.value;
-  }
-
-}
-
-     console.log('Post Uploader data has been Saved!')
-    }
-  } catch (error) {
-    console.error('Error fetching or posting Post Uploader data:', error);
-  }
-}
-
-const usernameInput = document.getElementById('blogUserName');
-const passwordInput = document.getElementById('blogPassword');
-const urlInput = document.getElementById('blogUrl');
-const groupInput = document.getElementById('blogGroup');
-
-
-// Function to fetch data for the Blog Setting section
-async function fetchBlogJSONgData(id, method = 'GET') {
-  
-  try {
-    const response = await fetch(`${appurl}/data/${id}`, {
-        method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-
-    const data = await response.json();
-
-    // Fill in the Blog Setting section
-    usernameInput.value = data.username;
-    passwordInput.value = data.password;
-    urlInput.value = data.url;
-    groupInput.value = data.group;
-    console.log('Blog data has been loaded')
-    // Fill in more input fields for other properties as needed
-  } catch (error) {
-    console.error('Error fetching Blog Setting data:', error);
-  }
-}
-
-async function JSONApi(ID = '', method = 'GET', dataToParse) {
-
-console.log('ID from JSONApi Fucntion' +ID)
-try {
-    let url = `${appurl}/data`;
-    let options = {
-      method,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    if (ID) {
-      url += `/${ID}`;
-    }
-
-    if (method === 'GET' && ID) {
-      const response = await fetch(url, options);
-      const responseData = await response.json();
-
-      // Fill in the input elements with retrieved data
-      usernameInput.value = responseData.username;
-      passwordInput.value = responseData.password;
-      urlInput.value = responseData.url;
-      groupInput.value = responseData.group;
-  
-      return responseData;
-    } else if (method === 'POST' || method === 'PUT') {
-
-      // Get the table element
-      const table = document.getElementById('main');
-      // Update the table cells with the variables if the row and cell exist
-      const row = table.rows[selectedRowIndex];
-
-      addStatusUpdatedClass(row)
-
-      if (row) {
-
-        const cell2 = row.cells[10];
-        if (cell2) {
-          cell2.textContent = usernameInput.value;
-        }
-   
-        const cell3 = row.cells[11];
-        if (cell3) {
-          cell3.textContent = passwordInput.value;
-        }
-   
-        
-        const cell4 = row.cells[12];
-        if (cell4) {
-          cell4.textContent =  urlInput.value;
-        }
-   
-        const cell5 = row.cells[13];
-        if (cell5) {
-          cell5.textContent =groupInput.value;
-        }
-      }
-
-      options.body = JSON.stringify(dataToParse);
-
-      console.log(JSON.stringify(dataToParse))
-
-      await fetch(url, options);
-
-      return;
-
-    } else if (method === 'DELETE') {
-
-      const response = await fetch(url, options);
-      if (response.ok) {
-        // Delete successful (status code within 200 to 299 range)
-
-        document.getElementById('main').deleteRow(selectedRowIndex);
-
-      } 
-    } else {
-      throw new Error(`Invalid method: ${method}`);
-      alert(Error)
-    }
-  } catch (error) {
-    console.error('Error in JSONApi:', error);
-    throw error;
-  }
-}
-
-async function fetchAndPopulateDialog() {
-
-  let hasArticleCreatorData = false;
-  let hasPostUploaderData = false;
-  let hasBlogSettingData = false;
-
-  try {
-   showLoader();
-
-  if (sectiontoshow === 'AllDatatoshow') {
-  
-      //  Fetch data for Article Creator section
-    await fnarticleCreator(selectedRowId, 'GET'); // Make GET request
-    // Fetch data for Post Uploader section
-    await fnPostUploader(jobid, 'GET')
-    // Fetch data for Blog Setting section
- 
-    await JSONApi(blogsetID, 'GET');
-
-      hasArticleCreatorData = true;
-      hasPostUploaderData = true;
-      hasBlogSettingData = true;
-
-      DialogTitle.textContent = `Edit Project Data for ID: [ ${selectedRowId} ]`;
-
-    
-    }
-
- else if (sectiontoshow === 'articleCreator') {
-
-    //  Fetch data for Article Creator section
-    await fnarticleCreator(selectedRowId, 'GET'); // Make GET request
-    
-    DialogTitle.textContent = `Article Creator Data for ID: [ ${selectedRowId} ]`;
-
-
-    hasArticleCreatorData = true;
-
-  } else if (sectiontoshow === 'postuploader') {
-   
-     //  Fetch data for Article Creator section
-     await fnPostUploader(selectedRowId, 'GET'); // Make GET request
-    
-     DialogTitle.textContent = `Post Uploader Data for ID: [ ${selectedRowId} ]`;
-
-          hasPostUploaderData = true;
-          // Handle the successful response data
-     
-  } else if (sectiontoshow === 'jsondata') {
-     await JSONApi(selectedRowId, 'GET');
-
-     DialogTitle.textContent = `Json File Data for ID: [ ${selectedRowId} ]`;
-
-          hasBlogSettingData = true;
-          // Handle the successful response data
-          
-    }
-
-    const updateButton = document.getElementById('updatedata');
-
-    if (sectiontoshow === 'AllDatatoshow') {
-      // Show the "Update Data" button
-      updateButton.style.display = 'flex';
-    } else {
-      // Hide the "Update Data" button
-      updateButton.style.display = 'none';
-    }
-    
-  setSectionVisibility(hasArticleCreatorData, hasPostUploaderData, hasBlogSettingData);
-  Projectdialog.showModal();
-  hideLoader();
-  createToast('success', 'fa-solid fa-circle-check', 'Success', 'Data from SEO and custom API has been Retrieved!');
-
-    } catch(error) {
-      hideLoader();
-      createToast('error', 'fa-solid fa-circle-exclamation', 'error', 'There is error while retrieving data from SEO and custom API! Error: ' + error);
-    }
-}
-
-//Update the Data to SEO App
-
-async function updateDataToApi() {
-
-try {
-
-showLoader();
-
-await fnarticleCreator(selectedRowId, 'POST'); // Make GET request
-await fnPostUploader(jobid, 'POST');
-  
-const username = document.getElementById('blogUserName').value;
-const password = document.getElementById('blogPassword').value;
-const url = document.getElementById('blogUrl').value;
-const group = document.getElementById('blogGroup').value;
-
- const jsonData = { username, password, url, group };
- console.log(jsonData)
-
- await JSONApi(blogsetID, 'PUT', jsonData); 
- 
-  Projectdialog.close();
-
-    hideLoader();
-    // fetchAPI();
-   
-    createToast('success', 'fa-solid fa-circle-check', 'Success', 'Data has been Updated to SEO for Selected Project!');
-
-  } catch(error) {
-    
-    createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is an error while savind data to files.');
-    hideLoader();
-  }
-} 
-
-  //Delete Selected Project
-  async function deleteProjectData(selectedRowId) {
+  async function GetSelectedProject(selectedRowId) {
     try {
+      const data = {};
+  
+      // Fetch data from the first API endpoint
+      const response1 = await fetch(`${seoProjectsUrl}/data/${selectedRowId}`);
+      const data1 = await response1.json();
+      const result1 = data1.result;
+  
+      data.ProjectID = result1.jobName;
+      data.ProjectName = result1.jobName;
+      data.ProjectCreatorStatus = result1.jobName;
+      data.ProjectKeyowrds = Array.isArray(result1.articleKeywordsFile)
+        ? result1.articleKeywordsFile.join(', ')
+        : '';
+      data.ProjectCatagories = Array.isArray(result1.categoryInsert.CategoryInsertFile)
+        ? result1.categoryInsert.CategoryInsertFile.join(', ')
+        : '';
+      data.chainJobId = result1.chainJobId;
 
-      console.log(apiurl)
+      jobid =result1.chainJobId;
   
-      //Step 1 get ChainJob ID
-      const response = await fetch(`${apiurl}/data/${selectedRowId}`);
-      const data = await response.json();
-      const result = data.result;
-  
-      const Postjobids = result.chainJobId;
-  
-      console.log(Postjobids)
-  
-      //Step 2 Get BlogID
-      const response2 = await fetch(`${apiurl}/data/${Postjobids}`);
+      // Fetch data from the second API endpoint
+      const response2 = await fetch(`${seoProjectsUrl}/data/${chainJobId}`);
       const data2 = await response2.json();
       const result2 = data2.result;
   
-      const blogsetID = Array.isArray(result2.blogIds) ? result2.blogIds.join(', ') : result2.blogIds;
-    
-      console.log(blogsetID)
+      data.PostUploaderId = result2.jobName;
+      data.PostUploaderName = result2.jobName;
+      data.PostUploaderStatus = result2.jobName;
+      data.PostStartDate = new Date(result2.postStartDate);
+      data.blogIds = Array.isArray(result2.blogIds) ? result2.blogIds.join(', ') : '';
+
+      // Assign BlogIDs 
+      blogsetID= data.blogIds;
   
-      // Step 3: Delete selected RowId of Creator
-      deleteSeoProjects(selectedRowId)
+      // Fetch data from the third API endpoint
+      const response3 = await fetch(`${appurl}/data/${blogIds}`, {
+        method: 'GET',
+      });
+      const data3 = await response3.json();
   
-      // Step 4: Delete chainJobId
-      deleteSeoProjects(Postjobids)
+      data.username = data3.username;
+      data.password = data3.password;
+      data.url = data3.url;
+      data.group = data3.group;
   
-      // Step 5: Delete blogIds
-      JSONApi(blogsetID, 'DELETE');
-  
-      // alert('Data deleted successfully');
-  
+    // Log the resulting data as a JSON table
+    console.table(data);
+
+    return { success: true, data };
     } catch (error) {
-      // alert('Error deleting data:', error.message);
+      console.error('Error fetching or posting data:', error);
+    
+      // Return an error indicator with a message
+      return { success: false, message: 'There is some error while collecting the data.' };
+  
     }
   }
+
+
+  async function updateDatatoSEO(selectedRowId, chainJobId, id,  JSONData) {
+
+    let isupdatedDatatoSEO =false;
+
+    const creatorProjectUrl =`${seoProjectsUrl}/data/${selectedRowId}`
+
+      // Article Creator Project Update Part
+    try {
+         // Prepare request body
+     const creatorJSON = JSON.stringify({
+      jobName: JSONData[0].ProjectName,
+      CategoryInsertFile : JSONData[0].ProjectCatagories,
+      articleCategories : JSONData[0].ProjectCatagories,
+      articleKeywordsFile: JSONData[0].ProjectKeyowrds,
+    });
+
+     // Make POST request
+   const resCreator=  await fetch(creatorProjectUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: creatorJSON
+    });
+
+
+    if (resCreator.ok)  {
+      isupdatedDatatoSEO=true;
+      createToast('success', 'fa-solid fa-circle-check', 'Success', 'Creator Project Part updated succesfully.');
+    
+    }
+
+  } catch (error) {
+    isupdatedDatatoSEO=false;
+    console.error('Error in Creator Project Update data:', error);
   
-  //Delete Selected ID Creator and Poster Project from SEO.
-  function deleteSeoProjects(deleteid) {
-    fetch(`${apiurl}/delete/${deleteid}`)
-    // alert(`Deleted ID: ` +deleteid)
   }
+
+// Get Folder Path of the Article Creator from Local Host
+
+
+try {
+
+  const postUploaderURL =`${appurl}/SEOFolderPath`
+
+const response1 = await fetch(postUploaderURL);
+  const data1 = await response1.json();
+  const result1 = data1.result;
+
+  const soefolder =result1.folderPath
+  folderpath =`${soefolder}\\${selectedRowId}\\articles`;
+ 
+ console.log("File path for the Artilce Creator is " + folderpath);
+ isupdatedDatatoSEO=true;
+} catch(error){
+  console.error('Error retrieving folder path from LOCAL API:', error);
+  // Handle the error
+};
+
+  // Post Uploader Project Update Part
+
+  try {
+
+const postUploaderURL =`${seoProjectsUrl}/data/${chainJobId}`
+
+const PosterjsonData = JSON.stringify({
+        jobName: JSONData[0].PostUploaderName,
+        postStartDate: JSONData[0].PostStartDate,
+        articleFolder: folderpath,
   
-  //Function to call Delete functions with related IDs
-  function deleteUsingAPI(){
-   try {
-    showLoader();
-    deleteProjectData(selectedRowId);
-    createToast('success', 'fa-solid fa-circle-check', 'Success', 'Selected Project has been Deleted!');
-      //Update the Table by Data
-      // fetchAPI();
-      
-    hideLoader();
-  } catch(error) {
-    createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while deleting the Selected Project');
-    hideLoader();
-  }
+        });
+
+    // Make POST request
+  const resPoster=  await fetch(postUploaderURL, {
+     method: 'POST',
+     headers: {
+       'Content-Type': 'application/json',
+     },
+     body: PosterjsonData
+   });
+
+
+   if (resPoster.ok) {
+    isupdatedDatatoSEO=true;
+    createToast('success', 'fa-solid fa-circle-check', 'Success', 'Post Uploader Part updated succesfully.');
    
   }
   
-  function createnewJobID() {
 
-  try {
-  showLoader();
-  // Call the function to complete all commands
-  createProjects();
+ } catch (error) {
+  isupdatedDatatoSEO=false;
+  createToast('error', 'fa-solid fa-circle-exclamation', 'error', 'There is error while Updating data to JSON Api: ' + error);
+
+   console.error('Error in Creator Project Update data:', error);
+
+ 
+ }
 
 
-} catch(error) {
-  createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some error on the server');
+//  Update JSON Data using LOCAL HOST
 
-}
+try {
+
+  const blogIDURL = `${appurl}/data/${id}`
   
+  const bloJSONData = {
+    username : JSONData[0].username,
+     password : JSONData[0].password, 
+      url : JSONData[0].url,
+      group : JSONData[0].group
+   };
+
+   const ResJSON=  await fetch(blogIDURL, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: bloJSONData
+  });
+  
+  if (ResJSON.ok) {
+    isupdatedDatatoSEO=true;
+    createToast('success', 'fa-solid fa-circle-check', 'Success', 'Creator Project Part updated succesfully.');
+   
   }
   
-  // Function to complete all commands
-  async function createProjects() {
+  
+   } catch (error) {
+
+    isupdatedDatatoSEO=false;
+    createToast('error', 'fa-solid fa-circle-exclamation', 'error', 'There is error while Updating data to JSON Api: ' + error);
+
+     console.error('Error while updating JSON API  data:', error);
+   
+   }
+
+   return isupdatedDatatoSEO;
+
+  }
+
+ 
+   // Function to complete all commands
+   async function createProjectsONSEO(JSONData) {
     let settingdata;
+    let isProjectCreated = false;
+
+    // Step 0 Get Custom Setting Dialog from LOCAL Host
+    
     try {
-      // Retrieve the file content from the API
+      
       const response = await fetch(`${appurl}/custom-settings`, {
         method: 'GET',
         headers: {
@@ -1013,21 +705,27 @@ const group = document.getElementById('blogGroup').value;
         console.error('Error retrieving settings:', response.statusText);
       }
   
-      // Step 1: Create Article Creator
+      // Step 1: Create Article Creator and Get ID.
       const response1 = await fetch(`${seourl}/create/articlecreator`);
+
       const data1 = await response1.json();
       console.log(data1);
       const newArticleCreatorID = data1.result.id;
 
+      isProjectCreated = true;
+
       console.log('New Article Creator ID:', newArticleCreatorID);
   
-      // Step 2: Create Post Uploader
+      // Step 2: Create Post Uploader and Get Post ID.
       const response2 = await fetch(`${seourl}/create/postuploader`);
       const data2 = await response2.json();
       const newPostUploaderID = data2.result.id;
       console.log('New Post Uploader ID:', newPostUploaderID);
   
-      // Step 3: Create new Blog
+
+      isProjectCreated = true;
+
+      // Step 3: Create new Blog and BLogID from LOCAL Host
       const response3 = await fetch(`${appurl}/data`, {
         method: 'POST',
         headers: {
@@ -1039,29 +737,41 @@ const group = document.getElementById('blogGroup').value;
       const newBlogID = data3.id;
       console.log('New Blog ID:', newBlogID);
   
+      isProjectCreated = true;
+
       // Step 4: Update the newArticleCreatorID using POST Method
       await fetch(`${apiurl}/data/${newArticleCreatorID}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
+
         body: JSON.stringify({
           chainJobId: newPostUploaderID,
           articleUseCategoryInsert:true,
-          ListofContentFilter: settingdata.ArticleCreatorSettings.ListofContentFilter,
-          URLsDownloadResultLimits: settingdata.ArticleCreatorSettings.URLsDownloadResultLimits,
-          ArticleCount: settingdata.ArticleCreatorSettings.ArticleCount,
-          InsertNoofImagesFROM: settingdata.ArticleCreatorSettings.InsertNoofImagesFROM,
-          InsertNoofImagesTO:settingdata.ArticleCreatorSettings.InsertNoofImagesTO,
-          UseImages: settingdata.ArticleCreatorSettings.UseImages,
-          UseBingImages: settingdata.ArticleCreatorSettings.UseBingImages,
-          UseYoutubeThumbnails: settingdata.ArticleCreatorSettings.UseYoutubeThumbnails,
-          UseCreativeCommonsImages: settingdata.ArticleCreatorSettings.UseCreativeCommonsImages,
-          UseBingCCImages: settingdata.ArticleCreatorSettings.UseBingCCImages,
+          jobName: JSONData[0].ProjectName,
+          CategoryInsertFile : JSONData[0].ProjectCatagories,
+          articleCategories : JSONData[0].ProjectCatagories,
+          articleKeywordsFile: JSONData[0].ProjectKeyowrds,
+          ListofContentFilter: [settingdata.ListofContentFilter],
+          URLsDownloadResultLimits: settingdata.URLsDownloadResultLimits,
+          ArticleCount: settingdata[0].ArticleCount,
+          InsertNoofImagesFROM: settingdata[0].InsertNoofImagesFROM,
+          InsertNoofImagesTO:settingdata[0].InsertNoofImagesTO,
+          UseImages: settingdata[0].UseImages,
+          UseImages: settingdata[0].UseImages,
+          InsertAtStartOfBody: settingdata[0].InsertAtStartOfBody,
+          UseBingImages: settingdata[0].UseBingImages,
+          UseYoutubeThumbnails: settingdata[0].UseYoutubeThumbnails,
+          UseCreativeCommonsImages: settingdata[0].UseCreativeCommonsImages,
+          UseBingCCImages: settingdata[0].UseBingCCImages,
+
         })
       });
   
-      const currentDate = new Date();
+      isProjectCreated = true;
+
+      const currentDate = new Date(JSONData[0].PostStartDate);
       const formattedDate = currentDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
   
       // Step 5: Get SEO Path to Pass to Folderpath
@@ -1069,7 +779,9 @@ const group = document.getElementById('blogGroup').value;
       const data4 = await response4.json();
       const soefolder = data4.folderPath;
       const folderpath = `${soefolder}\\${newArticleCreatorID}\\articles`;
-  
+      
+      isProjectCreated = true;
+
       // Step 6: Update the newBlogID using POST Method
       await fetch(`${apiurl}/data/${newPostUploaderID}`, {
         method: 'POST',
@@ -1078,109 +790,211 @@ const group = document.getElementById('blogGroup').value;
         },
         body: JSON.stringify({
           blogIds: [newBlogID],
-          postUseToday: settingdata.PostUploaderSettings.postUseToday,
+          jobName: JSONData[0].PostUploaderName,
           postStartDate: formattedDate,
+          postUseToday  :settingdata[0].postUseToday,
+          PostsperDay : parseInt(settingdata[0].PostsperDay),
+          postIntervalFrom : parseInt(settingdata[0].PostIntervaldaysFROM),
+          postIntervalTo : parseInt(settingdata[0].PostIntervaldaysTO),
+          articleTitle: settingdata[0].postarticleTitle,
           articleFolder: folderpath,
-          articleTitle: settingdata.PostUploaderSettings.postarticleTitle,
-          postsPerDay: parseInt(settingdata.PostUploaderSettings.PostsperDay),
-          postIntervalFrom: parseInt(settingdata.PostUploaderSettings.PostIntervaldaysFROM),
-          postIntervalTo: settingdata.PostUploaderSettings.PostIntervaldaysTO,
         })
       });
+
+      isProjectCreated = true;
+
+      // Step 6: Update the newBlogID using POST Method
+
+      const blogIDURL = `${appurl}/data/${newBlogID}`
+  
+     const bloJSONData = {
+    username : JSONData[0].username,
+     password : JSONData[0].password, 
+      url : JSONData[0].url,
+      group : JSONData[0].group
+   };
+
+   const ResJSON=  await fetch(blogIDURL, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: bloJSONData
+  });
+  
+  if (ResJSON.ok) {
+    isProjectCreated=true;  
+  }
 
       // alert('New Article Creator ID: ' + newArticleCreatorID + ' New Post Uploader ID: ' + newPostUploaderID + ' New Blog ID: ' + newBlogID);
       hideLoader();
 
       createToast('success', 'fa-solid fa-circle-check', 'Success', 'New Article Creator Project with ID:' + newArticleCreatorID + 'has been created,  New Post Uploader with ID: ' + newPostUploaderID + ' has been created, New Blog with ID: ' + newBlogID + ' has been created!');
 
+     //Update the Variables to newly created Project IDs
 
-//Update the Variables to newly created Project IDs
-      selectedRowId =newArticleCreatorID;
-      jobid = newPostUploaderID;
-      blogsetID = newBlogID;
-
-      document.getElementById('main').insertRow(selectedRowIndex);
-      const table = document.getElementById('main');
-      // Create a new row element
-      const newRow = table.insertRow(2); // Index 2, meaning it will be inserted as the third row (0-indexed)
-
-      for (let i = 0; i < 11; i++) {
-        const cell = newRow.insertCell(i);
-        cell.textContent = '';
-      }
-
-      const newRowIdx = newRow.rowIndex;
-
-      selectedRowIndex=newRowIdx;
-
-      // Create cells and set their content
-      const cell1 = newRow.insertCell(0); // Index 0, first cell in the new row
-      cell1.textContent = selectedRowId;
-      const span1 = document.createElement('span');
-
-      span1.className = 'status-pill status-draft';
-      span1.textContent = 'draft';
-      newRow.cells[1].appendChild(span1);
-
-      const cell2 = newRow.insertCell(5);
-      cell2.textContent = jobid;
-
-      const span2 = document.createElement('span');
-      span2.className = 'status-pill status-draft';
-      span2.textContent = 'draft';
-      newRow.cells[8].appendChild(span2);
-
-      const cell3 = newRow.insertCell(9); // Index 2, third cell in the new row
-      cell3.textContent = blogsetID;
-
-      // document.getElementById('main').rows[rowIndex]?.cells[2]?.textContent = articleProjectName;
-
-      // Fetch data for Article Creator section
-      await fnarticleCreator(selectedRowId, 'GET'); // Make GET request
-
-      // Fetch data for Post Uploader section
-      await fnPostUploader(jobid, 'GET')
-
-      // Fetch data for Blog Setting section
-      await JSONApi(blogsetID, 'GET');
-
-      // Show the Projectdialog
-      Projectdialog.showModal();
-      // closeButton.focus();
-
-      //Update the Table by Data
-      //  fetchAPI();
+      return {success: isProjectCreated, ProjectID:newArticleCreatorID, PostUploaderId: newPostUploaderID, BlogId:  newBlogID}     
       } 
         catch (error) {
+          isProjectCreated = false;
         console.error('Error retrieving settings:', error);
         createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is error while fetching data from SEO Server: ' + error);
+        return isProjectCreated
+}
+}
 
-}
-}
+
+//Delete Selected Project
+async function deleteProjectDatafromSEO(selectedRowId) {
+
+  let isProjectsDeleted=false;
+  try {
+
+    console.log(apiurl)
+
+    //Step 1 get ChainJob ID
+    const response = await fetch(`${apiurl}/data/${selectedRowId}`);
+    const data = await response.json();
+    const result = data.result;
+
+    const Postjobids = result.chainJobId;
+
+    console.log(Postjobids)
+
+    //Step 2 Get BlogID
+    const response2 = await fetch(`${apiurl}/data/${Postjobids}`);
+    const data2 = await response2.json();
+    const result2 = data2.result;
+
+    const blogsetID = Array.isArray(result2.blogIds) ? result2.blogIds.join(', ') : result2.blogIds;
   
+    console.log(blogsetID)
+
+    // Step 3: Delete selected RowId of Creator
+    isProjectsDeleted =  await deleteSeoProjects(selectedRowId)
+
+    // Step 4: Delete chainJobId
+    isProjectsDeleted = await  deleteSeoProjects(Postjobids)
 
 
-// Function to populate the dialog with retrieved settings data
-async function populateSettingsDialog() {
+    // Step 5: Delete blogIds
+    isProjectsDeleted = await deleteJSOApi(blogsetID);
+
+    if (isProjectsDeleted) {
+      return isProjectsDeleted=true;
+    } else {
+
+      return isProjectsDeleted=false;
+    }
+
+
+  } catch (error) {
+  
+    console.error('Error retrieving settings:', error);
+    createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while deleting from SEO Server error: '+ error + " Project ID: " + deleteid);
+    hideLoader();
+    return isProjectsDeleted=false;
+  }
+}
+
+//Delete Selected ID Creator and Poster Project from SEO.
+async function deleteSeoProjects(deleteid) {
+  let deletedSEOProjects=false;
+
+ try {
+
+const response =  fetch(`${apiurl}/delete/${deleteid}`)
+
+if (response.ok) {
+  data = await response.json();
+  console.table(data);
+  deletedSEOProjects=true;
+ return deletedSEOProjects;
+
+} else {
+
+  console.error('Error retrieving settings:', error);
+  createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while deleting from SEO Server error: '+ error + " Project ID: " + deleteid);
+  hideLoader();
+  
+  deletedSEOProjects=false;
+  return deletedSEOProjects;
+ 
+}
+
+ } 
+ catch(error) {
+  createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while deleting the Projects from SEO ID : ' + deleteid) + "Error : " +error ;
+  hideLoader();
+ 
+  deletedSEOProjects=false;
+  return deletedSEOProjects;
    
-      // Retrieve the file content from the API
-      const response = await fetch(`${appurl}/custom-settings`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+  }
+ 
+}
 
+//Delete Data from JSON File
+async function deleteJSOApi(ID) {
+
+ let  JSONDelete =false;
+
+  try {
     
+    const response = await fetch(`${appurl}/data/${ID}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (response.ok) {
+      settingdata = await response.json();
+      console.table(settingdata);
+      JSONDelete =true;
+     return JSONDelete;
+    } else {
+
+      console.error('Error retrieving settings:', response.statusText);
+      createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while deleting JSON Data: '+ response.statusText);
+      hideLoader();
+      JSONDelete =false;
+      return JSONDelete;
+     
+    }
+
+  }  catch(error) {
+    createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while deleting JSON Data Error: '+ error );
+    hideLoader();
+    JSONDelete =false;
+    return JSONDelete;
+     
+    }
+
+}
+
+//Function to call Delete functions with related IDs
+function deleteUsingAPI(){
+ try {
+  showLoader();
+  deleteProjectData(selectedRowId);
+
+  document.getElementById('main').deleteRow(selectedRowIndex);
+
+  createToast('success', 'fa-solid fa-circle-check', 'Success', 'Selected Project has been Deleted!');
+    //Update the Table by Data
+    // fetchAPI();
+    
+  hideLoader();
+} catch(error) {
+  createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while deleting the Selected Project');
+  hideLoader();
+}
+ 
 }
 
 
 
- // Send the updated settings to the server
- const response = await fetch(`${appurl}/custom-settings`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(updatedSettings)
-  });
+
+
+  

@@ -1,0 +1,98 @@
+dialog {
+    display: grid;
+    flex-direction: column;
+    /* justify-content: center;
+    align-items: center; */
+    /* width: auto;
+    height: auto; */
+    overflow: hidden;
+    max-width: 90%;
+    max-height: 90%;
+    /* min-width: none;
+    min-width: none; */
+    
+    padding: 10px;
+    background-color: #f0f0f0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  h2 {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+
+/* Display section-input-1 as 1 label and 1 input in one row using CSS Grid */
+.section-input-1 {
+margin-bottom: 30px;
+border: 3px solid #ce0ffd;
+display: grid;
+  align-items:start;
+  justify-content: space-between;
+  grid-template-columns: auto 1fr; 
+  overflow: hidden;
+  grid-gap: 5px; /* Adjust the gap between label and input as needed */
+}
+
+ /* Display section-input-2 as 2 labels and 2 inputs in one row using CSS Grid */
+.section-input-2 {
+    margin-bottom: 30px;
+    border: 3px solid #07ce32;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  /* margin: 5px; */
+  /* padding: 10px; */
+  grid-template-columns: auto 1fr auto 1fr;
+  grid-gap: 10px; /* Adjust the gap between labels and inputs as needed */
+}
+
+/* Display section-input-4 as 4 labels and 4 inputs in one row using CSS Grid */
+.section-input-4 {
+margin-bottom: 5px;
+border: 3px solid #007bff;
+display: grid;
+  justify-content: center;
+  align-items: center;
+  grid-template-columns: auto 1fr auto 1fr auto 1fr auto 1fr;
+  grid-gap: 10px; /* Adjust the gap between labels and inputs as needed */
+}
+
+ label {
+    /* margin: 5px; */
+    width: fit-content;
+    height: fit-content;
+    word-wrap: break-word;
+    margin-left: 5px;
+    text-align: left;
+    font-weight: bold;
+    color: #555;
+    border: 3px solid #f71515;
+
+  }
+  
+input {
+    /* margin: 5px; */
+    width: 100%;
+    padding: 5px;
+    border: 3px solid #0e0d0d;
+    border-radius: 4px;
+    outline: none;
+    box-sizing: border-box;
+  }
+
+
+
+  input:focus {
+    border-color: #007bff;
+  }

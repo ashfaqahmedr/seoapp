@@ -7,701 +7,585 @@
 <title>SEO Content Machine App</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
-  <link rel="stylesheet" href="login.css">
-  <link rel="stylesheet" href="dialogs.css">
-
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <link rel="stylesheet" href="sidebarcss.css">
   <link rel="stylesheet" href="tablecss.css">
-  
+
+
 </head>
 <body>
  
-  
-   <!-- //Loader Animation -->
-   <div id="loadingOverlay">
-    <div class="loader-container" id="loader-container">
-      <div class="loader"></div>
-    </div>
-</div>
-
- <!-- //Toast Notification -->
- <div class="notifications"> 
-</div>
-
-  <div id="header">
-    <span id="topTitle">SEO Content Machine Web App (Connected to Google Sheet) </span>
-    <div id="profile" class="profile">
-      <i class="fas fa-user-circle"></i>
-    
-      <div class="logoutcls">
-        <span class="fullname" id="fullName">
-        </span>
-      <button class="btnLogout New-Button" onclick="logout()" data-tooltip="Logout"><i class="fas fa-sign-out-alt"></i></button> 
+  <!-- //Loader Animation -->
+  <div id="loadingOverlay">
+      <div class="loader-container" id="loader-container">
+        <div class="loader"></div>
       </div>
-    </div>
-      </div>
-  
-<section id="loginPanel" class="loginPanel">
- 
-  <div class="screen">
-    <div class="userIcon"><i class="fas fa-user"></i></div>
-    <div class="screen__content login">
-      <div class="title">Sign In</div>
-      <div class="login__field">
-        <i class="fas fa-user"></i>
-        <input type="text" placeholder=" " class="login__input" name="username" id="username" autocomplete="off"   required>
-        <label class="login__label">User Name</label>
-      </div>
-      <div class="login__field">
-        <i class="fas fa-lock"></i>
-        <input id="password" type="password" name="password" class="login__input" placeholder="" autocomplete="off" required>
-        <label class="login__label">Password</label>
-      </div>
-    </div>
-    <button onclick="loginUser()" class="button login__submit button__text"> Sign In   ></button>
-    <div class="screen__background">
-      <span class="screen__background__shape screen__background__shape4"></span>
-      <span class="screen__background__shape screen__background__shape3"></span>
-      <span class="screen__background__shape screen__background__shape2"></span>
-      <span class="screen__background__shape screen__background__shape1"></span>
-    </div>
   </div>
-  
-</section>
 
-<div class="container" id="container">
-     <!-- <div class="header-spacer"></div> -->
-  <div class="sidebar close" id="sidebar">
+  <!-- //Toast Notification -->
+  <div class="notifications"> 
+  </div>
+
+  <header>
+    <span id="header" class="header" ></span>
+    <span id="LinkHost" class="header" ></span>
+  </header>
+  
+  <div class="sidebar">
+    <div class="logo_details">
+      <i class="bx bxl-audible icon"></i>
+      <div class="logo_name">SEO App</div>
+      <i class="bx bx-menu" id="btn"></i>
+    </div>
 
     <ul class="nav-list">
-      <div class="logo_details">
-        <i class="bx bxl-audible icon"></i>
-        <div class="logo_name">SEO App</div>
-        <i class="bx bx-menu" id="btn"></i>
-        <span class="tooltip hidden" id="btnToolTip">Show Sidebar</span>
-      </div>
-
-      <ul class="user-details">
-        <span id="userIcon" class="user-icon"></span>
-        <span id="userName"></span>
-        <span id="UserType"></span>
-      </ul>
-      <ul id="getUsers" class="nav-list">
+    <ul>
         <li class="divider">
-        <a href="#" id="getUser-link" onclick="fetchUsers()">
-          <i class="fas fa-users"></i>
-        <span class="link_name">Get Users Info</span>
-        <span class="tooltip hidden">Get Users Info</span>
+        <a href="#" id="dashboard-link"  onclick="fetchAPI()">
+          <i class="fa fa-home sidebar-option-icon"> </i><span class="link_name">Dashboard</span>
+        <span class="tooltip">Dashboard</span>
         </a> 
       </li> 
     </ul> 
 
 
-      <ul>
-          <li class="divider">
-            
-          <a href="#" id="dashboard-link"  onclick="fetchAPI()">
-            <i class='bx bx-grid-alt' ></i> </i><span class="link_name">Dashboard</span>
-          <span class="tooltip hidden">Dashboard</span>
-          </a> 
-        </li> 
-      </ul> 
+      <li class="divider">
+      <!-- <a href="#" id="project-link"  onclick="fetchAPI()"> -->
+        <i class="fas fa-project-diagram sidebar-option-icon"></i>
+      <span class="link_name">All Projects</span>
+      <span class="count" id="allproject-count"></span>
+      <span class="tooltip">All Projects</span>
+      <!-- </a> -->
+    </li>
 
-        <li class="divider">
-        <!-- <a href="#" id="project-link"  onclick="fetchAPI()"> -->
-          <i class="fas fa-project-diagram "></i>
-        <span class="link_name">All Projects</span>
-        <span class="count sticky" id="allproject-count"></span>
-        <span class="tooltip hidden">All Projects</span>
-        <!-- </a> -->
-      </li>
-
-        <li > 
-          <a href="#" id="article-link"  onclick="fetchArticleCreator()">
-            <i class="fas fa-pencil-alt "></i>
-              <span class="link_name">Article Creator</span>
-              <span class="count sticky" id="creator-count"></span>
-              <span class="tooltip hidden">Article Creator</span>
-            </a>
+      <li>
+        <a href="#" id="article-link"  onclick="fetchArticleCreator()">
+          <i class="fas fa-pencil-alt sidebar-option-icon"></i>
+            <span class="link_name">Article Creator</span>
+            <span class="count" id="creator-count"></span>
+            <span class="tooltip">Article Creator</span>
           </a>
-        </li>
-
-        <li>
-          <a href="#" id="post-link"  onclick="fetchPostUploader()">
-            <i class="fas fa-cloud-upload "></i>
-          <span class="link_name">Post Uploader </span>
-          <span class="count sticky" id="poster-count"></span>
-          <span class="tooltip hidden">Post Uploader</span>
         </a>
       </li>
 
       <li>
-        <a href="#" id="read-json-link"  onclick="ReadJsonFile()">
-          <i class="fas fa-file-code"></i>
-        <span class="link_name">Read JSON </span>
-        <span class="count sticky" id="json-count"></span>
-        <span class="tooltip hidden">Read JSON File</span>
+        <a href="#" id="post-link"  onclick="fetchPostUploader()">
+          <i class="fas fa-cloud-upload sidebar-option-icon"></i>
+        <span class="link_name">Post Uploader </span>
+        <span class="count" id="poster-count"></span>
+        <span class="tooltip">Post Uploader</span>
       </a>
+    </li>
+
+    <li>
+      <a href="#" id="read-json-link"  onclick="ReadJsonFile()">
+        <i class="fas fa-file-code"></i>
+      <span class="link_name">Read JSON </span>
+      <span class="count" id="json-count"></span>
+      <span class="tooltip">Read JSON File</span>
+    </a>
+  </li>
+
+      <li class="divider">
+          <!-- <a href="#" id="status-link" onclick="fetchAPI()"> -->
+          <i class="fas fa-chart-bar sidebar-option-icon"></i>
+          <span class="link_name">Status</span>
+          <span class="tooltip">Status</span>
+          <!-- </a> -->
      </li>
 
-        <li class="divider">
-            <!-- <a href="#" id="status-link" onclick="fetchAPI()"> -->
-            <i class="fas fa-chart-bar "></i>
-            <span class="link_name">Status</span>
-            <span class="tooltip hidden">Status</span>
-            <!-- </a> -->
+
+     <li class="count-wrapper">
+      <a href="#" class="sidebar-link"  onclick="fetchArticleCreatorbyStatus('draft')">
+      <i class="fas fa-file sidebar-option-icon"></i>
+      <span class="link_name">Draft</span>
+      <span class="count" id="draft-count"></span>
+      <span class="tooltip">Draft</span>
+      </a> 
+    </li>     
+
+    <li class="count-wrapper">
+      <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('waiting')">
+       <i class="fas fa-hourglass sidebar-option-icon"></i>
+      <span class="link_name">Waiting</span>
+      <span class="count" id="waiting-count"></span>
+      <span class="tooltip">Waiting</span>
+      </a>
+    </li>    
+
+        <li class="count-wrapper">
+          
+          <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('failed')">
+          <i class="fas fa-exclamation sidebar-option-icon"></i> 
+          <span class="link_name"> Failed </span>
+          <span class="count" id="failed-count"></span>
+          <span class="tooltip">Failed</span>
+          </a>
+          
+      </li>
+
+      <li class="count-wrapper">
+
+        <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('aborted')">
+          <i class="fas fa-ban sidebar-option-icon"></i>
+        <span class="link_name">Aborted</span>
+        <span class="count" id="aborted-count"></span>
+        <span class="tooltip">Aborted</span>
+        </a>
+      
+      </li>
+
+
+
+      <li class="count-wrapper">
+        <a href="#" class="sidebar-link"  onclick="fetchArticleCreatorbyStatus('complete')">
+        <i class="fas fa-check sidebar-option-icon"></i>
+        <span class="link_name">Completed</span>
+        <span class="count" id="complete-count"></span>
+        <span class="tooltip">Completed</span>
+        </a>
       </li>
 
 
       <li class="count-wrapper">
-        <a href="#" class="sidebar-link"  onclick="fetchArticleCreatorbyStatus('draft')">
-        <i class="fas fa-file "></i>
-        <span class="link_name">Draft</span>
-        <span class="count" id="draft-count"></span>
-        <span class="tooltip hidden">Draft</span>
-        </a> 
-      </li>     
 
-      <li class="count-wrapper">
-        <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('waiting')">
-        <i class="fas fa-hourglass "></i>
-        <span class="link_name">Waiting</span>
-        <span class="count sticky" id="waiting-count"></span>
-        <span class="tooltip hidden">Waiting</span>
+        <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('running')">
+        <i class="fas fa-play sidebar-option-icon"></i>
+        <span class="link_name">Running</span>
+        <span class="count" id="running-count"></span>
+        <span class="tooltip">Running</span>
         </a>
-      </li>    
+      
+      </li>
 
-          <li class="count-wrapper">
-            
-            <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('failed')">
-            <i class="fas fa-exclamation "></i> 
-            <span class="link_name"> Failed </span>
-            <span class="count sticky" id="failed-count"></span>
-            <span class="tooltip hidden">Failed</span>
-            </a>
-            
+     
+      <li class="count-wrapper">
+        <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('aborting...')">
+        <i class="fas fa-stop sidebar-option-icon"></i>
+        <span class="link_name">Aborting...</span>
+        <span class="count" id="aborting-count"></span>
+        <span class="tooltip">Aborting...</span>
+        </a> 
+      </li>
+
+          <li class="divider">
+        <!-- <a href="#" id="setting-link"  onclick="fetchAPI()"> -->
+          <i class="fas fa-cog sidebar-option-icon"></i>
+          <span class="link_name"></i>Setting</span>
+          <span class="tooltip">Setting</span>
+       <!-- </a>    -->
         </li>
 
-        <li class="count-wrapper">
-
-          <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('aborted')">
-            <i class="fas fa-ban "></i>
-          <span class="link_name">Aborted</span>
-          <span class="count sticky" id="aborted-count"></span>
-          <span class="tooltip hidden">Aborted</span>
-          </a>
-        
+          <li>
+            <a href="#" id="project-setting-link" onclick="openSettingDialog()">
+              <i class="fas fa-cogs"></i>
+          <span class="link_name">Project Setting</span>
+          <span class="tooltip">Project Setting</span>
+        </a>
         </li>
-
-        <li class="count-wrapper">
-          <a href="#" class="sidebar-link"  onclick="fetchArticleCreatorbyStatus('complete')">
-          <i class="fas fa-check "></i>
-          <span class="link_name">Completed</span>
-          <span class="count sticky" id="complete-count"></span>
-          <span class="tooltip hidden">Completed</span>
-          </a>
-        </li>
-
-
-        <li class="count-wrapper">
-
-          <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('running')">
-          <i class="fas fa-play "></i>
-          <span class="link_name">Running</span>
-          <span class="count sticky" id="running-count"></span>
-          <span class="tooltip hidden">Running</span>
-          </a>
-        
-        </li>
-        <li class="count-wrapper">
-          <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('aborting...')">
-          <i class="fas fa-stop "></i>
-          <span class="link_name">Aborting...</span>
-          <span class="count sticky" id="aborting-count"></span>
-          <span class="tooltip hidden">Aborting...</span>
-          </a> 
-        </li>
-       </ul>   
-    
-
-  </div>
- 
-   <!-- <section class="home-section"> -->
-    <div class="table_box" id="mainSectionTable">
-      <div class="table__header">
-         
-          <button id="AddProject" class="New-Button" data-tooltip="Add New Project" onclick="createnewJobID()"> <i class="fas fa-plus-circle"></i> Add Project</button>
-          <button id="AddNewUser" class="New-Button" data-tooltip="Add New User" onclick="showAddUserDialog()"> <i class="fas fa-user-plus"></i>Add User</button>
-
-          <span id="recordCount"></span>
-          <div class="input-group">
-              <input type="search" id="search-input" placeholder="Search...">
-              <i class="fas fa-search"></i>
-          </div>
-          <div class="custom-select" id="table-filter">
-            <div class="selected-option"><i class="fas fa-list-ul"></i> All Projects  <span class="arrow"></span></div>
-            <div class="options">
-              <div class="option" data-value=""><i class="fas fa-list-ul"></i> All Projects</div>
-              <div class="option" data-value="running"><i class="fas fa-play"></i> Running</div>
-              <div class="option" data-value="complete"><i class="fas fa-check"></i> Complete</div>
-              <div class="option" data-value="failed"><i class="fas fa-exclamation"></i> Failed</div>
-              <div class="option" data-value="waiting"><i class="fas fa-hourglass"></i> Waiting</div>
-              <div class="option" data-value="aborted"><i class="fas fa-ban"></i> Aborted</div>
-              <div class="option" data-value="draft"><i class="fas fa-file"></i> Draft</div>
-              <div class="option" data-value="aborting..."><i class="fas fa-stop"></i> Aborting...</div>
-            </div>
-          </div>          
-
-             <button id="updateProjectSettings" class="New-Button" data-tooltip="Change Project Settings" onclick="openSettingDialog()"> <i class="fas fa-cog"></i>Settings</button>
-              <!-- <button id="Run-Buton" class="New-Button" onclick=" toggleNotificationPanel()"> <i class="fas fa-play"></i>  Running </button> -->
-        </div >
-
-        <div class="table__body">  
-          <table id="main" class="SEOTable"></table>
-        </div >
-      </div > 
-</div> 
-
- <!-- Custom Context Menu -->
-
-  <div class="wrapper">
-    <div class="content">
-      <ul class="menu">
-
-        <li class="item" id="customAddData">
-          <i></i>
-          <span>Create Project</span>
-        </li>
-
-        <li class="item" id="customEditData">
-          <i></i>
-          <span>Edit</span>
-        </li>
-
-        <li class="item" id="customDeleteData">
-          <i></i>
-          <span>Delete</span>
-        </li>
-
-        <!-- <li class="item" onclick="runProjectById()">
-          <i class="fas fa-play"></i>
-          <span>Run Project</span>
-        </li> -->
-        
-        <br>
-        <li class="item" onclick="openSettingDialog()">
-          <i class="fas fa-cog"></i>
-          <span>Project Default Settings</span>
-        </li>
-
-        <li class="item share">
-          <div>
-            <i class="fas fa-file-export"></i>
-            <span>Export</span>
-          </div>
-          <i class="fas fa-angle-right"></i>
-          <ul class="share-menu">
-
-            <li class="item" id="pdfBtn">
-              <i class="far fa-file-pdf"></i>
-              <span>PDF</span>
-            </li>
-
-            <li class="item" id="excelBtn">
-              <i class="far fa-file-excel"></i> 
-              <span>Excel</span>
-            </li>
-            <li class="item" id="csvBtn">
-              <i class="fas fa-file-csv"></i>
-              <span>CSV</span>
-            </li>
-          
-            <li class="item" id="jsonBtn">
-              <i class="fas fa-code"></i>
-              <span>JSON</span>
-            </li>
-          </ul>
+<!-- 
+        <ul>
+        <li class="profile">
+          <a href="#" id="project-reload-link" onclick="location.reload()">
+             <i class="fas fa-sync-alt"></i> 
+        <span class="link_name">Re-Load App</span>
+        <span class="tooltip">Re-Load App</span>
+      </a>
         </li>
       </ul>
-    </div>
+
+      <ul>
+       <li class="profile">
+        <a href="#" id="project-close-link" onclick="window.close()"> 
+          <i class="fas fa-times"></i>
+      <span class="link_name">Close App</span>
+     <span class="tooltip">Close App</span>
+      </a> 
+      </li>
+    </ul> -->
+
+
+      <ul class="nav-list">
+        <li class="divider">
+          <a href="#" id="project-reload-link" onclick="location.reload()">
+            <i class="fas fa-sync-alt"></i> 
+            <span class="link_name">Re-Load App</span>
+            <span class="tooltip">Re-Load App</span>
+          </a>
+        </li>
+        <li class="divider">
+          <a href="#" id="project-close-link" onclick="window.close()"> 
+            <i class="fas fa-times"></i>
+            <span class="link_name">Close App</span>
+            <span class="tooltip">Close App</span>
+          </a>
+        </li>
+      </ul>
+       
   </div>
-  <!-- End of Custom Context Menu -->
 
-  <!-- Custom Dialog Box for Updating the All Projects data-->
-  <dialog id="myDialog">
+  <!-- <section class="home-section"> -->
+    <main class="table">
+      <section class="table__header">
+       
+          <span id="recordCount"></span>
+          <div class="input-group">
+              <!-- <input type="text" placeholder="Search Data..." id="search-input"> -->
+              <input type="search" id="search-input" placeholder="Search...">
+              <!-- <img src="images/search.png" alt=""> -->
+              <i class="fas fa-search"></i>
+          </div>
+            <select id="table-filter">
+              <option value="" selected>All Projects</option>
+              <option value="running">Running</option>
+              <option value="complete">Complete</option>
+              <option value="failed">Failed</option>
+              <option value="aborted">Aborted</option>
+              <option value="draft">Draft</option>
+            </select>
+          
+          <!-- <div class="export__file">
+              <label for="export-file" class="export__file-btn" title="Export File"></label>
+              <input type="checkbox" id="export-file">
+              <div class="export__file-options">
+  
+                  <label>Export As &nbsp; &#10140;</label>
+                  <label for="export-file" id="toPDF">PDF <img src="images/pdf.png" alt=""></label>
+                  <label for="export-file" id="toJSON">JSON <img src="images/json.png" alt=""></label>
+                  <label for="export-file" id="toCSV">CSV <img src="images/csv.png" alt=""></label>
+                  <label for="export-file" id="toEXCEL">EXCEL <img src="images/excel.png" alt=""></label>
+              </div>
 
-    <div id="dialogTitle"></div>
-
-    <div id="articlecreator" class="subheading"></div>
-
-    <div id="articleCreatorSection" class="dialog-section section1">
-
-      <!-- FORM START -->
-      <!-- <form id="createProjectForm" class="createProjectForm"> -->
+             <button onclick="downloadFiles()">Download Files</button>
+    
+          </div> -->
+          
+          <button id="Run-Buton" class="New-Buton" onclick=" toggleNotificationPanel()"> <i class="fas fa-play"></i>  Running </button>
         
-      <label for="ProjectID">Article Creator ID:</label>
-      
-      <input type="text" id="ProjectID" name="ProjectID" readonly>
+          <!-- <button id="Reload-Button" class="New-Buton" onclick="restartApp()"><i class="fas fa-refresh"></i>Re-Reload App</button> -->
 
-      <label for="articleProjectName">Article Project Name:</label>
-      
-      <input type="text" id="articleProjectName" name="ProjectName" required>
+      </section>
+      <section class="table__body">  
+        <table id="main" class="customers_table"></table>
+      </section>
+    </main> 
 
-        <label for="articleKeywordsFile">Article Keywords: </label>
-        <input type="text" id="articleKeywordsFile"  name="ProjectKeywords" required>
+</div> 
+
+<!-- Custom Context Menu -->
+
+<div class="wrapper">
+  <div class="content">
+    <ul class="menu">
+      <li class="item" onclick=" fetchAndPopulateDialog()">
+        <i class="far fa-edit"></i>
+        <span>Edit</span>
+      </li>
+
+      <li class="item" onclick="deleteUsingAPI()">
+        <i class="fas fa-trash-alt"></i>
+        <span>Delete</span>
+      </li>
+
+      <li class="item" onclick=" createnewJobID()">
+        <i class="fas fa-plus"></i>
+        <span>Create Project</span>
+      </li>
+
+      <li class="item" onclick="runProjectById()">
+        <i class="fas fa-play"></i>
+        <span>Run Project</span>
+      </li>
+
+
+      <li class="item share">
+        <div>
+          <i class="fas fa-file-export"></i>
+          <span>Export</span>
+        </div>
+        <i class="fas fa-angle-right"></i>
+        <ul class="share-menu">
+
+          <li class="item" id="pdfBtn">
+            <i class="far fa-file-pdf"></i>
+            <span>PDF</span>
+          </li>
+
+          <li class="item" id="excelBtn">
+            <i class="far fa-file-excel"></i> 
+            <span>Excel</span>
+          </li>
+          <li class="item" id="csvBtn">
+            <i class="fas fa-file-csv"></i>
+            <span>CSV</span>
+          </li>
+         
+          <li class="item" id="jsonBtn">
+            <i class="fas fa-code"></i>
+            <span>JSON</span>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+<!-- End of Custom Context Menu -->
+
+<!-- Custom Dialog Box for Updating the All Projects data-->
+<dialog id="myDialog">
+
+  <div id="dialogTitle"></div>
+
+  <div id="articlecreator" class="subheading"></div>
+
+  <div id="articleCreatorSection" class="dialog-section section1">
+
+    <label for="articleProjectName">Article Project Name:</label>
     
-      <label for="articleCategories">Article Categories: </label>
-      
-      <input type="text" id="articleCategories" name="ProjectCategories" required>
+    <input type="text" id="articleProjectName">
 
-      <label for="ProjectStatus">Article Creartor Status:</label>
-      
-      <input type="text" id="ProjectStatus" name="ProjectStatus" readonly>
+      <label for="articleKeywordsFile">Article Keywords: </label>
+      <input type="text" id="articleKeywordsFile">
+  
+    <label for="articleCategories">Article Categories: </label>
+    
+    <input type="text" id="articleCategories">
 
+  </div>
+
+  <div class="subheading" id="postuploader"></div>
+
+  <div id="postUploaderSection" class="dialog-section section2">
+    
+    <label for="postJobName">Post Job Name:</label>
+    <input type="text" id="postJobName">
+
+    <label for="postDate">Post Date:</label>
+    <input type="date" id="postDate">
+  
+    <label for="postsPerDay">Post Per Day:</label>
+    <input type="number" id="postsPerDay">
+
+    <label for="postIntervalFrom">Post Interval From:</label>
+    <input type="number" id="postIntervalFrom">
+   
+    <label for="postIntervalTo">Post Interval To:</label>
+    <input type="number" id="postIntervalTo">
+
+    <label for="articleTitle">Article Title:</label>
+    <input type="text" id="articleTitle">
+
+    <label for="articleFolder">article Folder Path:</label>
+    <input type="text" id="articleFolder">
+
+
+  </div>
+
+  <div class="subheading" id="blogIdNo">Blog Setting</div>
+
+  <div id="blogSettingSection" class="dialog-section section3">
+   
+    <label for="blogUserName">Blog User Name:</label>
+    <input type="text" id="blogUserName">
+   
+    <label for="blogPassword">Blog Password:</label>
+    <input type="text" id="blogPassword">
+
+    <label for="blogUrl">Blog URL:</label>
+    <input type="text" id="blogUrl">
+
+    <label for="blogGroup">Blog Group:</label>
+    <input type="text" id="blogGroup">
+
+  </div>
+
+  <span class="btn">
+
+    <button class="btn closeDialog" id="updatedata" onclick="updateDataToApi()">
+      <i class="fas fa-sync"></i> Update
+    </button>
+    <button class="btn closeDialog" id="closeDialog" onclick="closeDialog('myDialog')">
+      <i class="fas fa-times-circle"></i> Cancel
+    </button>
+    
+  </span>
+  
+</dialog>
+<!-- Closing of Custom Dialog Box for Updating the All Projects data-->
+
+
+<!-- Custom Dialog Box for Showing and updating the default Project Settings-->
+
+<dialog id="fileDialog" class="dialog">
+
+  <div id="dialogTitle">Universal Porject Custom Settings</div>
+
+  <div class="subheading">Article Creator Settings</div>
+
+  <div class="dialog-section"> 
+
+    <div class="full-width-input">
+      <label for="listofContentFilter">List of Content Filter:</label>
+      <input type="text" id="listofContentFilter">
+    </div>
+    
+    <div class="subsection">
+      <label for="urlsDownloadResultLimits">URLs Download Result Limits:</label>
+      <input type="number" id="urlsDownloadResultLimits" >
     </div>
 
-    <div class="subheading" id="postuploader"></div>
-
-    <div id="postUploaderSection" class="dialog-section section2">
-      
-      <label for="PostUploaderId">Post Uploader ID:</label>
-      
-      <input type="text" id="PostUploaderId" name="PostUploaderId" readonly>
-
-      <label for="postJobName">Post Job Name:</label>
-      <input type="text" id="postJobName" name="PostUploaderName" required>
-
-      <label for="PostUploaderStatus">Post Uploader Status:</label>
-      <input type="text" id="PostUploaderStatus" name="PostUploaderStatus" readonly>
-
-      <label for="postDate">Post Date:</label>
-      <input type="date" id="postDate" name="PostStartDate" required>
-
+    <div class="subsection">
+      <labelfor="articleCount">Article Count:</label>
+      <input type="number" id="articleCount">
+    </div>
+    <div class="subsection">
+      <label for="insertNoofImagesFROM">Insert No of Images FROM:</label>
+      <input type="number" id="insertNoofImagesFROM">
+    </div>
+    <div class="subsection">
+      <label for="insertNoofImagesTO">Insert No of Images TO:</label>
+      <input type="number" id="insertNoofImagesTO">
     </div>
 
-    <div class="subheading" id="blogIdNo">Blog Setting</div>
-
-    <div id="blogSettingSection" class="dialog-section section3">
-
-
-      <label for="BlogIdId">Blog ID:</label>
-      
-      <input type="text" id="BlogId" name="BlogId" readonly>
-
-
-      <label for="blogUserName">Blog User Name:</label>
-      <input type="text" id="blogUserName" name="username" required>
-    
-      <label for="blogPassword">Blog Password:</label>
-      <input type="text" id="blogPassword" name="password" required> 
-
-      <label for="blogUrl">Blog URL:</label>
-      <input type="text" id="blogUrl" name="url" required>
-
-      <label for="blogGroup">Blog Group:</label>
-      <input type="text" id="blogGroup" name="group" required>
-
-      <label for="SEOStatus">SEO Status:</label>
-      <input type="text" id="SEOStatus" name="SEOStatus" readonly>
-    
-    </div>
-
-    <span class="btn">
-      <button class="btn closeDialog" id="updateProjectData" onclick="updateDataToApi()">
-        <i class="fas fa-sync"></i> Update
-      </button>
-
-      <button class="btn closeDialog" id="createProjectData" onclick="createProjects()">
-        <i class="fas fa-plus"></i> Add
-      </button>
-
-      <button  class="btn closeDialog" id="closeDialog" onclick="closeDialog('myDialog')">
-        <i class="fas fa-times-circle"></i> Cancel
-      </button>
-    <!-- </form> -->
-    </span>
-    
-  </dialog>
-  <!-- Closing of Custom Dialog Box for Updating the All Projects data-->
-
-
-  <!-- Custom Dialog Box for Showing and updating the default Project Settings-->
-
-  <dialog id="fileDialog" class="dialog">
-
-    <div id="dialogTitle">Universal Porject Custom Settings</div>
-
-    <div class="subheading">Article Creator Settings</div>
-
-    <div class="dialog-section"> 
-
-      <div class="subsection">
-        <label for="sheetID">Google Sheet ID:</label>
-        <input type="text" id="sheetID">
-      </div>
-
-      <div class="full-width-input">
-        <label for="listofContentFilter">List of Content Filter:</label>
-        <input type="text" id="listofContentFilter" required>
-      </div>
-      
-      <div class="subsection">
-        <label for="urlsDownloadResultLimits">URLs Download Result Limits:</label>
-        <input type="number" id="urlsDownloadResultLimits" required>
-      </div>
-
-      <div class="subsection">
-        <label for="articleCount">Article Count:</label>
-        <input type="number" id="articleCount">
-      </div>
-      <div class="subsection">
-        <label for="insertNoofImagesFROM">Insert No of Images FROM:</label>
-        <input type="number" id="insertNoofImagesFROM" required>
-      </div>
-      <div class="subsection">
-        <label for="insertNoofImagesTO">Insert No of Images TO:</label>
-        <input type="number" id="insertNoofImagesTO" required>
-      </div>
-
-
-      <div class="subsection">
-        <div class="toggle-button">
-          <input type="checkbox" id="articleUseCategoryInsert" class="toggle-checkbox">
-          <label for="articleUseCategoryInsert" class="toggle-label"></label>
-        </div>
-        <label for="articleUseCategoryInsert">Use WordPress Catagory Insert Files</label>
-      </div>
-      
-      <div class="subsection">
-        <div class="toggle-button">
-          <input type="checkbox" id="useImages" class="toggle-checkbox">
-          <label for="useImages" class="toggle-label"></label>
-        </div>
-        <label for="useImages">Use Images</label>
-      </div>
-
-
-      <div class="subsection">
-          <label for="imageInserType">Wordpress Image Upload Options</label>
-          <select id="imageInserType" name="imageInserType" required>
-            <option value="hotlink"> &#128279; Image Links</option>
-            <option value="base64"> &#128295; base64 URLs</option>
-            <option value="local" selected>  &#128190;Save Locally</option>
-          </select>
-      </div>
-      
-
-      <div class="subsection">
-        <div class="toggle-button">
-          <input type="checkbox" id="InsertAtStartOfBody" class="toggle-checkbox">
-          <label for="InsertAtStartOfBody" class="toggle-label"></label>
-        </div>
-        <label for="InsertAtStartOfBody">Use Feature Image</label>
-      </div>
-
-      <div class="subsection">
-        <div class="toggle-button">
-          <input type="checkbox" id="useBingImages" class="toggle-checkbox">
-          <label for="useBingImages" class="toggle-label"></label>
-        </div>
-        <label for="useBingImages">Use Bing Images</label>
-      </div>
-
-      <div class="subsection">
-        <div class="toggle-button">
-          <input type="checkbox" id="useYoutubeThumbnails" class="toggle-checkbox">
-          <label for="useYoutubeThumbnails" class="toggle-label"></label>
-        </div>
-        <label for="useYoutubeThumbnails">Use YouTube Thumbnails</label>
-      </div>
-
-      <div class="subsection">
-        <div class="toggle-button">
-          <input type="checkbox" id="useCreativeCommonsImages" class="toggle-checkbox">
-          <label for="useCreativeCommonsImages" class="toggle-label"></label>
-        </div>
-        <label for="useCreativeCommonsImages">Use Creative Commons Images</label>
-      </div>
-
-      <div class="subsection">
-        <div class="toggle-button">
-          <input type="checkbox" id="useBingCCImages" class="toggle-checkbox">
-          <label for="useBingCCImages" class="toggle-label"></label>
-        </div>
-        <label for="useBingCCImages">Use Bing CC Images</label>
-      </div>
-    </div>
-
-    <div class="subheading"> Post Uploader Settings </div>
-
-    <div class="dialog-section">
 
     <div class="subsection">
       <div class="toggle-button">
-        <input type="checkbox" id="postUseToday" class="toggle-checkbox">
-        <label for="postUseToday" class="toggle-label"></label>
+        <input type="checkbox" id="articleUseCategoryInsert" class="toggle-checkbox">
+        <label for="articleUseCategoryInsert" class="toggle-label"></label>
       </div>
-      <label for="postUseToday">Post Use Today</label>
+      <label for="articleUseCategoryInsert">Use WordPress Catagory Insert Files</label>
+    </div>
+    
+    <div class="subsection">
+      <div class="toggle-button">
+        <input type="checkbox" id="useImages" class="toggle-checkbox">
+        <label for="useImages" class="toggle-label"></label>
+      </div>
+      <label for="useImages">Use Images</label>
     </div>
 
-      <div class="subsection">
-        <label for="postsperDay">Posts per Day:</label>
-        <input type="number" id="postsperDay" required>
+    <div class="subsection">
+      <div class="toggle-button">
+        <input type="checkbox" id="useBingImages" class="toggle-checkbox">
+        <label for="useBingImages" class="toggle-label"></label>
       </div>
-      <div class="subsection">
-        <label for="postIntervaldaysFROM">Post Interval days FROM:</label>
-        <input type="number" id="postIntervaldaysFROM" required>
-      </div>
-      <div class="subsection">
-        <label for="postIntervaldaysTO">Post Interval days TO:</label>
-        <input type="number" id="postIntervaldaysTO" required>
-      </div>
-      <div class="subsection">
-        <label for="postarticleTitle">Article Title:</label>
-        <input type="text" id="postarticleTitle" required>
-      </div>
-
-      <div class="subsection">
-        <label for="seoStatus">SEO Status:</label>
-        <input type="text" id="seoStatus" readonly>
-      </div>
-
+      <label for="useBingImages">Use Bing Images</label>
     </div>
+
+    <div class="subsection">
+      <div class="toggle-button">
+        <input type="checkbox" id="useYoutubeThumbnails" class="toggle-checkbox">
+        <label for="useYoutubeThumbnails" class="toggle-label"></label>
+      </div>
+      <label for="useYoutubeThumbnails">Use YouTube Thumbnails</label>
+    </div>
+
+    <div class="subsection">
+      <div class="toggle-button">
+        <input type="checkbox" id="useCreativeCommonsImages" class="toggle-checkbox">
+        <label for="useCreativeCommonsImages" class="toggle-label"></label>
+      </div>
+      <label for="useCreativeCommonsImages">Use Creative Commons Images</label>
+    </div>
+
+    <div class="subsection">
+      <div class="toggle-button">
+        <input type="checkbox" id="useBingCCImages" class="toggle-checkbox">
+        <label for="useBingCCImages" class="toggle-label"></label>
+      </div>
+      <label for="useBingCCImages">Use Bing CC Images</label>
+    </div>
+  </div>
+
+  <div class="subheading"> Post Uploader Settings </div>
+
+  <div class="dialog-section">
+
+  <div class="subsection">
+    <div class="toggle-button">
+      <input type="checkbox" id="postUseToday" class="toggle-checkbox">
+      <label for="postUseToday" class="toggle-label"></label>
+    </div>
+    <label for="postUseToday">Post Use Today</label>
+  </div>
+
+    <div class="subsection">
+      <label for="postsperDay">Posts per Day:</label>
+      <input type="number" id="postsperDay">
+    </div>
+    <div class="subsection">
+      <label for="postIntervaldaysFROM">Post Interval days FROM:</label>
+      <input type="number" id="postIntervaldaysFROM">
+    </div>
+    <div class="subsection">
+      <label for="postIntervaldaysTO">Post Interval days TO:</label>
+      <input type="number" id="postIntervaldaysTO">
+    </div>
+    <div class="subsection">
+      <label for="postarticleTitle">Article Title:</label>
+      <input type="text" id="postarticleTitle">
+    </div>
+  </div>
+<span class="btn">
+  <button class="closeDialog" onclick="UpdateCustomSettig()">
+    <i class="fas fa-sync"></i>  Update
+  </button>
+  <button class="closeDialog"  onclick="closeDialog('fileDialog')">
+  <i class="fas fa-times-circle"></i>  Cancel
+</button> 
+</span>
+
+</dialog>
+
+<div id="popupContainer" style="display: none;">
+ 
+  <div class="project-popup" id="notificationTableTemplate">
+    <h3 class="notification-title-container">List of Active Projects(s)</h3>
+    <button class="close-btn"> <i class="fas fa-times"></i> clear Notification</button>
+    <div class="notification-table">
+      <div class="notification-header">
+        <div class="header-cell">ID</div>
+        <div class="header-cell">Name</div>
+        <div class="header-cell">Type</div>
+        <div class="header-cell">Status</div>
+      </div>
+      <div class="notification-body" id="notificationTableBody">
+    
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <button onclick="openDialog()"> Open Confirm Dialog
+</button> -->
+
+<dialog id="confrimDialog" class="dialog">
+  <div class="dialogTitle" id="dialogHeader"></div>
+  <div class="confirmText">
+    <i class="fas fa-check-circle"></i>
+  <span id="confirmMessage"></span>
+ </div>
+
   <span class="btn">
-    <button class="closeDialog" onclick="UpdateCustomSettig()">
-      <i class="fas fa-sync"></i>  Update
+    <button class="closeDialog" id="confirmButton">
+      <i class="fas fa-check-circle"></i>  Confirm
     </button>
-    <button class="closeDialog"  onclick="closeDialog('fileDialog')">
+    <button class="closeDialog" id="cancelButton">
     <i class="fas fa-times-circle"></i>  Cancel
   </button> 
-  </span>
-
-  </dialog>
-
-  <!-- ######### USER DIALOG #########  -->
-
-  <dialog id="userDialog" class="dialog">
-
-    <div id="dialogTitle">Add New Users to Google Sheet</div>
-    
-      
-    <div class="subheading">Add User's Info</div>
-
-    <div class="dialog-section" section3> 
-
-          <div class="subsection">
-            <label for="usersheetID">Google Sheet ID:</label>
-            <input type="text" id="usersheetID" readonly>
-          </div>
-
-          <div class="subsection">
-            <label for="userFullInput">User Full Name</label>
-            <input type="text" id="userFullInput" required>
-          </div>
-          
-          <div class="subsection">
-            <label for="usernameInput">User Name</label>
-            <input type="text" id="usernameInput" required>
-          </div>
-          
-          <div class="subsection">
-            <label for="passwordInput">User Password</label>
-            <input type="text" id="passwordInput" required>
-          </div>
-
-          <div class="subsection">
-            <label for="timeCount">Default User Logout Time</label>
-            <input type="number" id="timeCount" required>
-          </div>
-
-          <div class="subsection">
-
-            <label for="userType">User Type</label>
-            <select id="userType" name="userType" required>
-              <option value="SuperAdmin">&#128081; SuperAdmin</option>
-              <option value="Admin" selected>&#128084; Admin</option>
-              <option value="User"> &#128105; User</option>
-
-            </select>
-          </div>   
-
-          <div class="subsection">
-            <label for="SEOdInput">SEO Status</label>
-            <input type="text" id="seoStatusinput" readonly>
-          </div>
-        
-      </div>
-
-
-  <span class="btn">
-    <button class="btn closeDialog" id="udateUserInfo" onclick="updateUserDatabtnclk()">
-      <i class="fas fa-sync"></i> Update
-    </button>
-
-    <button class="btn closeDialog" id="addUserInfo" onclick="showAddUserDialog()">
-      <i class="fas fa-plus"></i> Add User
-    </button>
-
-    <button  class="btn closeDialog" id="UsercloseDialog" onclick="closeDialog('userDialog')">
-      <i class="fas fa-times-circle"></i> Cancel
-    </button>
 
   </span>
-  </dialog>
 
 
-  <div id="popupContainer" style="display: none;">
-  
-    <div class="project-popup" id="notificationTableTemplate">
-      <h3 class="notification-title-container">List of Active Projects(s)</h3>
-      <button class="close-btn"> <i class="fas fa-times"></i> clear Notification</button>
-      <div class="notification-table">
-        <div class="notification-header">
-          <div class="header-cell">ID</div>
-          <div class="header-cell">Name</div>
-          <div class="header-cell">Type</div>
-          <div class="header-cell">Status</div>
-        </div>
-        <div class="notification-body" id="notificationTableBody">
-      
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- <button onclick="openDialog()"> Open Confirm Dialog
-  </button> -->
-
-  <dialog id="confrimDialog" class="dialog">
-    <div class="dialogTitle" id="dialogHeader"></div>
-    <div class="confirmText">
-      <i class="fas fa-check-circle"></i>
-    <span id="confirmMessage"></span>
-  </div>
-
-    <span class="btn">
-      <button class="closeDialog" id="confirmButton">
-        <i class="fas fa-check-circle"></i>  Confirm
-      </button>
-      <button class="closeDialog" id="cancelButton">
-      <i class="fas fa-times-circle"></i>  Cancel
-    </button> 
-
-    </span>
-
-
-  </dialog>
-
+</dialog>
 
 
 <!--Closing of Custom Dialog Box for Showing and updating the default Project Settings-->
-<script src="./login.js"></script>
 <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 <script src="./maintablefunctions.js"></script>
 <script src="./apifunctions.js"></script>
-
 <!-- <script src="./toastapp.js"></script> -->
 
 </body>
 </html>
+
