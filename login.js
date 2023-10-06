@@ -52,10 +52,10 @@ let confirmDialogUse = false;
 let LoggedUsername ;
 let LoggedFullName;
 
-const seourl ='http://localhost:8008'
-const seoProjectsUrl = `${seourl}/project`
+// const seourl ='http://localhost:8008'
+// const seoProjectsUrl = `${seourl}/project`
 
-const appurl ='http://localhost:3000'
+// const appurl ='http://localhost:3000'
 
 // Google App Script URL for Web App and Make Local Request.
 // const googleurl ='https://script.google.com/macros/s/AKfycbxgyT3rHw0zc7xeF_HWP3fxiy9VjaBcwzE18b6eA7HzFejEvCQEJewrJSzDFkeaUa4m/exec'
