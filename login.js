@@ -8,7 +8,7 @@ let isLoggedIn=false;
 
 // SyncCalled from Auto AddData
 // convert Web app to Local App =false
-let isWebApp;
+let isWebApp=true;
 // Allow GOOGLE SERVER API CALL WHEN ADDING UPDATING /DELETING DATA
 
 let GAPIRequired;
@@ -454,64 +454,64 @@ const lablecheckLableWeb = document.getElementById('checkLableWeb');
 
 dialogPopupCommonDialog.style.display = 'none';
 
-async function getAppSettings() {
-let success =false;
-  try {
-    // Retrieve the file content from the API
-  const response = await fetch(`${appurl}/AppSettings`, {
-   method: 'GET',
-   headers: {
-     'Content-Type': 'application/json'
-   }
-  });
+// async function getAppSettings() {
+// let success =false;
+//   try {
+//     // Retrieve the file content from the API
+//   const response = await fetch(`${appurl}/AppSettings`, {
+//    method: 'GET',
+//    headers: {
+//      'Content-Type': 'application/json'
+//    }
+//   });
   
-  if (response.ok) {
+//   if (response.ok) {
   
-   const data = await response.json();
+//    const data = await response.json();
   
-  console.log("Application Data")
-  console.table(data)
+//   console.log("Application Data")
+//   console.table(data)
   
-  // Populate the input elements with the retrieved values
-  // convert Web app to Local App =false
- isWebApp = data.checkWebApp;
+//   // Populate the input elements with the retrieved values
+//   // convert Web app to Local App =false
+//  isWebApp = data.checkWebApp;
 
- // To show Local Data and dont load Tables
-  testing = data.checkTesting;
+//  // To show Local Data and dont load Tables
+//   testing = data.checkTesting;
  
-  // Allow GOOGLE SERVER API CALL WHEN ADDING UPDATING /DELETING DATA
- GAPIRequired = data.checkUseGAPI;
+//   // Allow GOOGLE SERVER API CALL WHEN ADDING UPDATING /DELETING DATA
+//  GAPIRequired = data.checkUseGAPI;
  
- SyncGoogle = data.checkSyncGoogle;
+//  SyncGoogle = data.checkSyncGoogle;
  
- // Use Temp BlogData not SEO Data
- UseLocalDataForTable = data.checkUseLocalData;
+//  // Use Temp BlogData not SEO Data
+//  UseLocalDataForTable = data.checkUseLocalData;
  
-   // For Showing Test Buttons
- showtestButtons = data.checkShowTestButtons;
+//    // For Showing Test Buttons
+//  showtestButtons = data.checkShowTestButtons;
  
- // Write Logges in console or in Log File
- iswriteLogs = data.checkWriteLogs;
+//  // Write Logges in console or in Log File
+//  iswriteLogs = data.checkWriteLogs;
 
 
-  valprojectStatusInMilliseconds = parseInt(data.projectStatusInterval) * 60000;
+//   valprojectStatusInMilliseconds = parseInt(data.projectStatusInterval) * 60000;
   
 
-  console.log("valprojectStatusInterval:", valprojectStatusInMilliseconds, "milliseconds");
+//   console.log("valprojectStatusInterval:", valprojectStatusInMilliseconds, "milliseconds");
 
   
-  return success=true;
+//   return success=true;
   
-  }
+//   }
   
-   } catch (error) {
-     console.error('Error retrieving Application settings:', error);
-    //  createToast('SettingsToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'Error retrieving App settings from Local Server: ' + error);
-     hideLoader();
-     return success=false;
-   }
+//    } catch (error) {
+//      console.error('Error retrieving Application settings:', error);
+//     //  createToast('SettingsToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'Error retrieving App settings from Local Server: ' + error);
+//      hideLoader();
+//      return success=false;
+//    }
   
-  }
+//   }
 
 
   let checkAppSetting;
@@ -520,50 +520,50 @@ let success =false;
 //Load things on Page Loads when Showing Login Panel
   window.onload = async () => {
 
-   checkAppSetting = getAppSettings()
-
-    try {
+   // checkAppSetting = getAppSettings()
+  hideLoader();
+    // try {
 
       // Call the LocalServerSEO function
-      RunningLocalServer = await LocalServerSEO();
+      // RunningLocalServer = await LocalServerSEO();
 
-    } catch (error) {
+    // } catch (error) {
 
-      console.error('Error calling LocalServerSEO:', error);
-    }
+    //   console.error('Error calling LocalServerSEO:', error);
+    // }
 
   // Auto Web App 
 
 
-   if (RunningLocalServer) {
+   // if (RunningLocalServer) {
 
-    txttopTitle.textContent="SEO Content Machine Desktop App"
+//     txttopTitle.textContent="SEO Content Machine Desktop App"
 
-   if (checkAppSetting) {
+//    if (checkAppSetting) {
 
-    DivApplicationtoWebAppCheck.style.display = 'flex';
+//     DivApplicationtoWebAppCheck.style.display = 'flex';
 
-    togglewebAppCheckBox.removeEventListener('change', LoadAsWebApp);
+//     togglewebAppCheckBox.removeEventListener('change', LoadAsWebApp);
 
-    togglewebAppCheckBox.addEventListener('change', LoadAsWebApp);
+//     togglewebAppCheckBox.addEventListener('change', LoadAsWebApp);
 
-    btnShowAppSetting.style.display = 'flex';
+//     btnShowAppSetting.style.display = 'flex';
 
-  }
+//   }
 
-// Load Local App
-    if (!isWebApp) {
-      togglewebAppCheckBox.checked = false
-      lablecheckLableWeb.textContent="Destkop App"
-      userIcon_Name.style.display = 'none';
-      siderbar_Table.style.display = 'flex';
-      loginPanel.style.display = 'none';
-      showAdminPanel();
-      isLoggedIn=true
+// // Load Local App
+//     if (!isWebApp) {
+//       togglewebAppCheckBox.checked = false
+//       lablecheckLableWeb.textContent="Destkop App"
+//       userIcon_Name.style.display = 'none';
+//       siderbar_Table.style.display = 'flex';
+//       loginPanel.style.display = 'none';
+//       showAdminPanel();
+//       isLoggedIn=true
 
-      callCronJob(isLoggedIn, RunningLocalServer)
+//       callCronJob(isLoggedIn, RunningLocalServer)
 
-    } else {
+//     } else {
       togglewebAppCheckBox.checked = true
       lablecheckLableWeb.textContent="Web App"
       txttopTitle.textContent="SEO Content Machine Web App"
@@ -571,7 +571,7 @@ let success =false;
       siderbar_Table.style.display = 'none';
       isLoggedIn=false
      
-    }
+    // }
 
      // Show Panel without use of SEO
      if (testing || UseLocalDataForTable) {
@@ -593,45 +593,45 @@ let success =false;
 
 
 
-  //Check the Server
-async function LocalServerSEO() {
+//   //Check the Server
+// async function LocalServerSEO() {
  
-   // Show Login     
-let success=false;
+//    // Show Login     
+// let success=false;
 
-  showLoader();
+//   showLoader();
 
-  try {
-    const response = await fetch(`${seourl}/test`, {
-      method: 'GET'
-    });
+//   try {
+//     const response = await fetch(`${seourl}/test`, {
+//       method: 'GET'
+//     });
 
-    const data = await response.json();
+//     const data = await response.json();
 
-    console.log(data)
+//     console.log(data)
 
-    if (data.success)  {
+//     if (data.success)  {
 
 
-  hideLoader();
+//   hideLoader();
   
-  createToast('bodyToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', 'SEO Server is Running.');
-  txttopTitle.textContent="SEO Content Machine Desktop App (Connected)"
+//   createToast('bodyToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', 'SEO Server is Running.');
+//   txttopTitle.textContent="SEO Content Machine Desktop App (Connected)"
      
-  return success=true;
-  }
+//   return success=true;
+//   }
 
-  } catch (error) {
-    loginPanel.style.display = 'none';
-      console.error(error)
-      createToast('bodyToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'error', 'SEO Content Machine is not Running on this Machine. '+error);
-      txttopTitle.textContent="SEO Content Machine Desktop App (Disconnected)"
-      hideLoader();
+//   } catch (error) {
+//     loginPanel.style.display = 'none';
+//       console.error(error)
+//       createToast('bodyToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'error', 'SEO Content Machine is not Running on this Machine. '+error);
+//       txttopTitle.textContent="SEO Content Machine Desktop App (Disconnected)"
+//       hideLoader();
    
-  }
+//   }
 
-  return 
-}
+//   return 
+// }
 
 // Event Listeners for Input Fields and Submit Buttons 
 
