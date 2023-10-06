@@ -1,4 +1,4 @@
-const cronjob = require('node-cron');
+// const cronjob = require('node-cron');
 
 
 // Variable for Update Info if Shown
@@ -887,183 +887,183 @@ function formatName(name) {
 
 // Loggs
 
-async function callCronJob(isLoggedIn, RunningLocalServer) {
+// async function callCronJob(isLoggedIn, RunningLocalServer) {
 
- let appSettingData; 
-  try {
-if (isLoggedIn &&  RunningLocalServer) {
-console.log("Called from Cron Job  is Logged: " + isLoggedIn)
-  // Retrieve the file content from the API
-const response = await fetch(`${appurl}/AppSettings`, {
- method: 'GET',
- headers: {
-   'Content-Type': 'application/json'
- }
-});
+//  let appSettingData; 
+//   try {
+// if (isLoggedIn &&  RunningLocalServer) {
+// console.log("Called from Cron Job  is Logged: " + isLoggedIn)
+//   // Retrieve the file content from the API
+// const response = await fetch(`${appurl}/AppSettings`, {
+//  method: 'GET',
+//  headers: {
+//    'Content-Type': 'application/json'
+//  }
+// });
 
-if (response.ok) {
+// if (response.ok) {
 
-  appSettingData = await response.json();
+//   appSettingData = await response.json();
 
-console.log("Application Data")
-console.table(appSettingData)
-}
-// Populate the input elements with the retrieved values
+// console.log("Application Data")
+// console.table(appSettingData)
+// }
+// // Populate the input elements with the retrieved values
    
-function myScheduledTask() {
-  console.log(`This Test is Running every ${appSettingData.montiroingInterval} using Schedular`);
-}
+// function myScheduledTask() {
+//   console.log(`This Test is Running every ${appSettingData.montiroingInterval} using Schedular`);
+// }
 
 
-// Ensure valmontiroingIntervalMinutes is defined and a valid number
-if (!appSettingData.checkWebApp) {
-  // Schedule a task to run every valmontiroingIntervalMinutes minutes
+// // Ensure valmontiroingIntervalMinutes is defined and a valid number
+// if (!appSettingData.checkWebApp) {
+//   // Schedule a task to run every valmontiroingIntervalMinutes minutes
   
-  cronjob.schedule(`*/${appSettingData.montiroingInterval} * * * *`, () => {
+//   cronjob.schedule(`*/${appSettingData.montiroingInterval} * * * *`, () => {
 
-    try {
-    myScheduledTask();
+//     try {
+//     myScheduledTask();
 
-    if (!appSettingData.checkWebApp) {
+//     if (!appSettingData.checkWebApp) {
 
-      console.log(`This Monitoring of  Running and Waiting Projects check after every ${appSettingData.montiroingInterval} using Schedular`);
-      startMonitoringProjects();
+//       console.log(`This Monitoring of  Running and Waiting Projects check after every ${appSettingData.montiroingInterval} using Schedular`);
+//       startMonitoringProjects();
   
-    }
+//     }
 
-  } catch (error) {
-    console.error('An Error occured in sechuling the cron:', error);
-  }
+//   } catch (error) {
+//     console.error('An Error occured in sechuling the cron:', error);
+//   }
 
-  });
-} 
+//   });
+// } 
 
-if (appSettingData.checkSyncGoogle) {
-// Make Google Syn Call Every Set Timer
-cronjob.schedule(`*/${appSettingData.GAPISyncTime} * * * *`, () => {
-  try {
-      console.log(`This Google Sync API Call run after every ${appSettingData.GAPISyncTime} using Schedular`);
+// if (appSettingData.checkSyncGoogle) {
+// // Make Google Syn Call Every Set Timer
+// cronjob.schedule(`*/${appSettingData.GAPISyncTime} * * * *`, () => {
+//   try {
+//       console.log(`This Google Sync API Call run after every ${appSettingData.GAPISyncTime} using Schedular`);
    
-      getProjectsfromGAPI();
+//       getProjectsfromGAPI();
 
-  } catch (error) {
-    console.error('An Error occured in sechuling the cron:', error);
-  }
-});
-}
+//   } catch (error) {
+//     console.error('An Error occured in sechuling the cron:', error);
+//   }
+// });
+// }
 
-if (appSettingData.checkWriteLogs) {
-// Clear Logs
-cronjob.schedule(`*/${appSettingData.logClearTimer} * * * *`, () => {
-  try {
+// if (appSettingData.checkWriteLogs) {
+// // Clear Logs
+// cronjob.schedule(`*/${appSettingData.logClearTimer} * * * *`, () => {
+//   try {
 
-       //  Write Logs in the File.
-    //  Call the function to clear the log file when the application starts
-    console.log(`This Clear old Loggs  after every ${appSettingData.logClearTimer} using Schedular`);
+//        //  Write Logs in the File.
+//     //  Call the function to clear the log file when the application starts
+//     console.log(`This Clear old Loggs  after every ${appSettingData.logClearTimer} using Schedular`);
    
-    clearLogFile();
+//     clearLogFile();
 
 
-  } catch (error) {
-    console.error('An Error occured in sechuling the cron for Clear Log:', error);
-  }
-});
-}
-}
-  } catch(error) {
+//   } catch (error) {
+//     console.error('An Error occured in sechuling the cron for Clear Log:', error);
+//   }
+// });
+// }
+// }
+//   } catch(error) {
     
-    console.error('An Error occured in sechuling the cron Jobs:', error);
-  }
-}
+//     console.error('An Error occured in sechuling the cron Jobs:', error);
+//   }
+// }
 
-function ensureLogDirectoryExists(logDirectory) {
-  const fs = require('fs');
-    const path = require('path');
-  if (!fs.existsSync(logDirectory)) {
-    fs.mkdirSync(logDirectory, { recursive: true }, (err) => {
-      if (err) {
-        console.error('Error creating log directory:', err);
-      }
-    });
-  }
-}
-
-
-  // Clear the log file when the application starts
-function clearLogFile() {
-  const fs = require('fs');
-    const path = require('path');
-
-  const logDirectory = 'logs';
-  const logPath = path.join(logDirectory, 'app.log');
-
-  ensureLogDirectoryExists(logDirectory);
-
-  fs.writeFileSync(logPath, ''); // This will clear the log file
-}
+// function ensureLogDirectoryExists(logDirectory) {
+//   const fs = require('fs');
+//     const path = require('path');
+//   if (!fs.existsSync(logDirectory)) {
+//     fs.mkdirSync(logDirectory, { recursive: true }, (err) => {
+//       if (err) {
+//         console.error('Error creating log directory:', err);
+//       }
+//     });
+//   }
+// }
 
 
-  function getCurrentTimestamp() {
-    return new Date().toLocaleString(); // Use locale-specific date and time format
-  }
+//   // Clear the log file when the application starts
+// function clearLogFile() {
+//   const fs = require('fs');
+//     const path = require('path');
+
+//   const logDirectory = 'logs';
+//   const logPath = path.join(logDirectory, 'app.log');
+
+//   ensureLogDirectoryExists(logDirectory);
+
+//   fs.writeFileSync(logPath, ''); // This will clear the log file
+// }
+
+
+//   function getCurrentTimestamp() {
+//     return new Date().toLocaleString(); // Use locale-specific date and time format
+//   }
   
-  function writeToLog(message) {
-     const fs = require('fs');
-    const path = require('path');
-    const { app } = require('electron'); // Import the app object from Electron
-       const logDirectory = 'logs';
-       const maxLogEntries = 10000; // Set the maximum number of log entries
+//   function writeToLog(message) {
+//      const fs = require('fs');
+//     const path = require('path');
+//     const { app } = require('electron'); // Import the app object from Electron
+//        const logDirectory = 'logs';
+//        const maxLogEntries = 10000; // Set the maximum number of log entries
 
-    const logPath = path.join(logDirectory, 'app.log');
+//     const logPath = path.join(logDirectory, 'app.log');
   
-    ensureLogDirectoryExists(logDirectory);
+//     ensureLogDirectoryExists(logDirectory);
 
-    const timestamp = getCurrentTimestamp();
-    const formattedMessage = `[${timestamp}] ${message}\n`;
+//     const timestamp = getCurrentTimestamp();
+//     const formattedMessage = `[${timestamp}] ${message}\n`;
   
-    fs.appendFile(logPath, formattedMessage, (err) => {
-      if (err) {
-        console.error('Error writing to log file:', err);
-      }
-    });
+//     fs.appendFile(logPath, formattedMessage, (err) => {
+//       if (err) {
+//         console.error('Error writing to log file:', err);
+//       }
+//     });
   
-    // Check if the log file exists and its size
-    fs.stat(logPath, (err, stats) => {
-      if (!err && stats.size > maxLogEntries * 1024) {
-        // If the log file exceeds the maximum size (in kilobytes), truncate it
-        fs.truncate(logPath, 0, (err) => {
-          if (err) {
-            console.error('Error truncating log file:', err);
-          }
-        });
-      }
-    });
+//     // Check if the log file exists and its size
+//     fs.stat(logPath, (err, stats) => {
+//       if (!err && stats.size > maxLogEntries * 1024) {
+//         // If the log file exceeds the maximum size (in kilobytes), truncate it
+//         fs.truncate(logPath, 0, (err) => {
+//           if (err) {
+//             console.error('Error truncating log file:', err);
+//           }
+//         });
+//       }
+//     });
 
 
-  }
+//   }
   
 
     
-  function customLogger(...args) {
-    args.forEach((logArg) => {
-      writeToLog(JSON.stringify(logArg, null, 2).replace(/\n/g, '\n\t'));
-    });
-  }
+//   function customLogger(...args) {
+//     args.forEach((logArg) => {
+//       writeToLog(JSON.stringify(logArg, null, 2).replace(/\n/g, '\n\t'));
+//     });
+//   }
 
 
 
-  if (showtestButtons) {
-    btChecktest.style.display = 'flex';
-    btnuploadedImages.style.display = 'flex';
+//   if (showtestButtons) {
+//     btChecktest.style.display = 'flex';
+//     btnuploadedImages.style.display = 'flex';
    
-  } else {
-    btChecktest.style.display = 'none';
-    btnuploadedImages.style.display = 'none';
+//   } else {
+//     btChecktest.style.display = 'none';
+//     btnuploadedImages.style.display = 'none';
   
-  }
+//   }
 
-  if (iswriteLogs) {
-    console.log = customLogger;
-    console.table = customLogger; 
+//   if (iswriteLogs) {
+//     console.log = customLogger;
+//     console.table = customLogger; 
  
-  }
+//   }
