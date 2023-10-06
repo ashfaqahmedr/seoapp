@@ -5,32 +5,59 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-<title>SEO Content Machine App</title>
+<title>SEO Content Machine Desktop & Web App</title>
+<link rel="icon" href="seoapp.ico" type="image/x-icon">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
   <link rel="stylesheet" href="login.css">
-  <link rel="stylesheet" href="dialogs.css">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <link rel="stylesheet" href="sidebarcss.css">
+  <link rel="stylesheet" href="dialogs.css">
   <link rel="stylesheet" href="tablecss.css">
   <link rel="stylesheet" href="responsive.css">
-  <link rel="stylesheet" href="runningPorojecs.css">
+  <link rel="stylesheet" href="runningPorojects.css">
   <link rel="stylesheet" href="contextLoader.css">
 
 </head>
 <body>
- 
-  <div class="header-content" id="userHeader">
-    <span id="topTitle" class="sidebar-Header"></span>
-    <div class="user-info">
-      <i class="fas fa-user-circle text-hide" id="user-icon"></i>
-      <span class="fullname text-hide" id="fullName"></span>
-      <button id="logoutButton"  data-tooltip="Log Out" class="New-Button" onclick="logout()" >
+    <!-- //Toast Notification -->
+    <div id="bodyToastDiv" class="sub-notifications"></div>
+     <!-- //Loader Animation -->
+     <div id="loadingOverlay">
+      <div class="loader-container" id="loader-container">
+        <div class="loader"></div>
+      </div>
+    </div>
   
+  <div class="header-content" id="userHeader">
+
+    <button id="projectSettings" data-tooltip="App Config." class="New-Button" onclick="showProjSettDialog()">
+      <i class="fas fa-sliders-h"></i>
+      <span class="text-hide">App Config.</span>
+    </button>
+
+    <!-- Load Application as Desktop app or Web App -->
+    <div id="toggleApplicationtoWebApp" data-tooltip="Web App">
+      <div class="toggle-button">
+        <input type="checkbox" id="webAppCheckBox" class="toggle-checkbox">
+        <label for="webAppCheckBox" class="toggle-label"></label>
+      </div>
+      <label for="webAppCheckBox" id="checkLableWeb">Web App</label>
+    </div>
+
+    <div class="user-info">
+      <div id="userIcon_Name">
+      <i class="fas fa-user-circle text-hide" id="userIcon"></i>
+      <span class="fullname text-hide" id="fullName"></span>
+    </div>
+  </div>
+    <span id="topTitle" class="sidebar-Header"></span>
+ 
+      <button id="logoutButton" data-tooltip="Log Out" class="New-Button" onclick="logout()" >
         <i class="fas fa-sign-out-alt"></i>
         <span class="text-hide"> Log Out</span>
       </button>
-  </div>
+      
   
   </div>
  
@@ -38,7 +65,7 @@
     
     <span class="login-Header" id="loginHeader">SEO Content Machine Web App </span>
     
-    <div class="container-login">
+    <div class="container-login" id="sectionLogin">
 
       <div class="screen__background">
          
@@ -102,7 +129,7 @@
      <ul>
          <li class="divider">
            
-         <a href="#" id="dashboard-link"  onclick="fetchAPI()">
+         <a href="#" id="dashboard-link"  onclick="getAllProjectsDataDashBoard()">
            <i class='bx bx-grid-alt' ></i> </i><span class="link_name">Dashboard</span>
          <span class="tooltip hidden">Dashboard</span>
          </a> 
@@ -110,7 +137,7 @@
     
 
        <li class="divider">
-       <!-- <a href="#" id="project-link"  onclick="fetchAPI()"> -->
+       <!-- <a href="#" id="project-link"  onclick="getAllProjectsDataDashBoard()"> -->
          <i class="fas fa-project-diagram "></i>
        <span class="link_name">All Projects</span>
        <span class="count sticky" id="allproject-count"></span>
@@ -150,7 +177,7 @@
 
     <ul class="nav-list">
        <li class="divider">
-           <!-- <a href="#" id="status-link" onclick="fetchAPI()"> -->
+           <!-- <a href="#" id="status-link" onclick="getAllProjectsDataDashBoard()"> -->
            <i class="fas fa-chart-bar "></i>
            <span class="link_name">Status</span>
            <span class="tooltip hidden">Status</span>
@@ -213,7 +240,7 @@
        <li class="count-wrapper">
 
          <a href="#" class="sidebar-link" onclick="fetchArticleCreatorbyStatus('running')">
-         <i class="fas fa-play "></i>
+         <i class="fas fa-play"></i>
          <span class="link_name">Running</span>
          <span class="count sticky" id="running-count"></span>
          <span class="tooltip hidden">Running</span>
@@ -242,7 +269,7 @@
         <span id="recordCount" class="text-Header"></span>
         
         <div class="input-group">
-          <input type="search" id="search-input" placeholder="Search...">
+          <input type="search" id="searchInput" placeholder="Search...">
           <i class="fas fa-search"></i>
         </div>
        
@@ -266,21 +293,31 @@
           <button id="AddProject" class="New-Button" data-tooltip="Add New Project" onclick="createnewJobID()"> <i class="fas fa-plus-circle"></i><span class="text-hide"> Add Project</span></button>
           <button id="AddNewUser" class="New-Button" data-tooltip="Add New User" onclick="showAddUserDialog()"> <i class="fas fa-user-plus"></i> <span class="text-hide">Add User</span></button>
             
-          <!-- <button id="confirmdialog" class="New-Button" data-tooltip="Show Confrim Dialog" onclick="openDialog()"> <i class="fas fa-cog"></i> <span class="text-hide">View Confirm</span></button> -->
+          <!-- <button id="confirmdialog" class="New-Button" data-tooltip="Show Confrim Dialog" onclick="getProjectsfromGAPI()"> <i class="fas fa-list-ul"></i> <span class="text-hide">View Confirm</span></button> -->
+
+          <button id="confirmdialog" class="New-Button" data-tooltip="Show Wordpress Actions" onclick="fetchDomainsAndShowCoDialog(false)"> <i class="fa-brands fa-wordpress"></i> <span class="text-hide">Show Wordpress</span></button>
 
           <button id="updateProjectSettings" class="New-Button" data-tooltip="Change Project Settings" onclick="openSettingDialog()"> <i class="fas fa-cog"></i> <span class="text-hide">Settings</span></button>
-              <!-- <button id="Run-Buton" class="New-Button" onclick=" toggleNotificationPanel()"> <i class="fas fa-play"></i>  Running </button> -->
+         
+          <button id="btntoggleNotification" class="New-Button" data-tooltip="Show Notification" onclick="toggleNotificationPanel()"> <i class="fa fa-eye"></i> <span class="text-hide" id="btnTogglenotiText">Show Notification</span></button>
+
+          <button id="Checktest" class="New-Button" data-tooltip="For Testing Functions" onclick="getProjectsfromGAPI()"> <i class="fas fa-star"></i> <span class="text-hide">Testing Functions</span></button>
+        
+        
+          <!-- <button id="Run-Buton" class="New-Button" onclick=" toggleNotificationPanel()"> <i class="fas fa-play"></i>  Running </button> -->
       </div >
 
       <div class="table__body">  
-          <table id="main" class="SEOTable"></table>
+          <table id="main" class="SEOTable">
+            <!-- <tbody id="mainTableBody"></tbody> -->
+          </table>
       </div >
   </div > 
 </div> 
 
  <!-- Custom Context Menu -->
 
-  <div class="wrapper" id="wrapper">
+  <div class="wrapper" id="wrapper" style="display: none;">
     <div class="content">
       <ul class="menu">
 
@@ -307,6 +344,11 @@
         <li class="item" onclick="openSettingDialog()">
           <i class="fas fa-cog"></i>
           <span>Project Default Settings</span>
+        </li>
+
+        <li class="item" onclick="OpenAddDomainDialog()">
+          <i class="fas fa-globe"></i>
+          <span>Add New Domain</span>
         </li>
 
         <li class="item share">
@@ -344,18 +386,29 @@
 
   <!-- Custom Dialog Box for Updating the All Projects data-->
   <dialog id="ProjectsDialog" class="projectDialog">
+    <div id="ProjectToastDiv" class="sub-notifications"></div>
 
-      <div id="dialogTitle" class="dialogTitle"></div>
+      <div class="dialogTitle"><span id="dialogTitle"></span>
+        <button class="New-Button"  data-tooltip="close" id="cancelButton" onclick="closeDialog('ProjectsDialog')">
+          <i class="fas fa-window-close"></i>
+        </button>
+      </div>
 
-      <div id="articlecreator" class="subheading"></div>
+      <div class="subheading"> <span id="articlecreator"> </span> 
+        <button class="New-Button" id="projectsettingsOpen" data-tooltip="Show Default Settings" onclick="openSettingDialog()">
+          <i class="fas fa-cog"></i>
+          <span class="text-hide">Default Settings</span>
+        </button>
+        
+        </div>
 
       <div id="articleCreatorSection" class="dialog-section">
 
-       
       <div class="full-width-input">
         <label for="articleProjectName">Article Project Name:</label>
         
-        <input type="text" id="articleProjectName" name="ProjectName" required autocomplete="off">
+        <input type="text" id="articleProjectName" name="ProjectName" list="projectNames" required autocomplete="off">
+        <datalist id="projectNames"></datalist>
 
       </div>
 
@@ -378,25 +431,69 @@
         <input type="text" id="ProjectID" name="ProjectID" readonly disabled>
       </div>
       </div>
+     
+      <div class="subsection">
+    
+        <label for="ProjectStatus">Project Cron String:</label>
+        
+        <input type="text" id="projectCronString" name="projectCronString" value="0 0 * * 7" required>
       
-    <div class="subsection">
-      <div id="DivProjectCreatorStatus">
-      <label for="ProjectStatus">Article Creartor Status:</label>
-      
-      <input type="text" id="ProjectStatus" name="ProjectStatus" readonly disabled>
       </div>
+
+      <div  class="subsection">
+        <label for="projectImageType">Image Options</label>
+        <select id="projectImageType" name="projectImageType" required autocomplete="off">
+          <option value="local"  selected>  &#128190;Save Locally</option>
+          <option value="base64"> &#128295; base64 URLs</option>
+          <option value="hotlink"> &#128279; Image Links</option>
+        </select>
+      </div>
+
+
+      <div class="subsection" id="DivImageStatus">
+        <label for="ImageStatus">Image Upload Status:</label>
+        <input type="text" id="ImageStatus" name="ImageStatus" readonly disabled>
+      </div>
+
+    <div class="subsection" id="DivProjectCreatorStatus">
+      <label for="ProjectStatus">Article Creartor Status:</label>
+      <input type="text" id="ProjectStatus" name="ProjectStatus" readonly disabled>
+    </div>
+
+    <div class="subsection" id="DivcreatedOn">
+      <label for="createdOn">Project Creation Date:</label>
+      <input type="text" id="createdOn" name="createdOn" readonly disabled>
     </div>
 
     </div>
 
-    <div class="subheading" id="postuploader"></div>
+    <div class="subheading" >
+       <span id="postuploader"></span>
+
+
+       <div class="subsection" id="showeditPostName">
+        <div class="toggle-button">
+          <input type="checkbox" id="toggleditPostName" class="toggle-checkbox">
+          <label for="toggleditPostName" class="toggle-label"></label>
+        </div>
+
+        <label for="toggleditPostName">Edit Post Project Name </label>
+        </div>
+
+        <button id="addNewPosterID" class="New-Button" data-tooltip="Add Post Uploader" onclick="EditDialogAddPostUploader()"> 
+      
+          <i class="fas fa-plus-circle"></i>
+        <span class="text-hide">Add Post Uploader</span>
+         </button>
+
+    </div>
 
     <div id="postUploaderSection" class="dialog-section">
-      
-
+    
       <div class="subsection">
       <label for="postJobName">Post Job Name:</label>
-      <input type="text" id="postJobName" name="PostUploaderName" required autocomplete="off">
+      <input type="text" id="postJobName" list="postJobNameDataList" name="PostUploaderName" required autocomplete="off">
+      <datalist id="postJobNameDataList"></datalist>
 
     </div>
 
@@ -407,23 +504,19 @@
     </div>
 
 
-    <div id="DivProjectPosterrID">
-      <div class="subsection">
-      
+    <div id="DivProjectPosterrID" class="subsection">
+  
         <label for="PostUploaderId">Post Uploader ID:</label>
         
-        <input type="text" id="PostUploaderId" name="PostUploaderId" readonly disabled>
+        <input type="text" id="PostUploaderId" name="PostUploaderId" readonly required>
 
-        </div>
+       
       </div>
 
-      <div id="DivProjectPosterStatus">
+      <div id="DivProjectPosterStatus" class="subsection">
         
-      <div class="subsection">
-       
         <label for="PostUploaderStatus">Post Uploader Status:</label>
         <input type="text" id="PostUploaderStatus" name="PostUploaderStatus" readonly disabled>
-        </div>
 
       </div>
     
@@ -431,45 +524,70 @@
 
     </div>
 
-    <div class="subheading" id="blogIdNo">Blog Setting</div>
+    <div class="subheading"><span id="blogIdNo">Blog Setting</span>
+  
+      <button id="AddNewdomainInfo" class="New-Button" data-tooltip="Add New Domain" onclick="EditDialogAddDomain()"> 
+      
+        <i class="fas fa-globe"></i>
+      <span class="text-hide">Add domain</span>
+       </button>
+
+      <div class="subsection" id="checkshowBlogInfo">
+      <div class="toggle-button">
+        <input type="checkbox" id="toggleBlogInfo" class="toggle-checkbox">
+        <label for="toggleBlogInfo" class="toggle-label"></label>
+      </div>
+      <label for="toggleBlogInfo">Show BlogInfo</label>
+      </div>
+
+      <div class="subsection" id="checkAddBlogInfo">
+
+        <div class="toggle-button">
+          <input type="checkbox" id="addNewBlogInfo" class="toggle-checkbox">
+          <label for="addNewBlogInfo" class="toggle-label"></label>
+        </div>
+        <label for="addNewBlogInfo">Add New Domain</label>
+        </div>
+
+    </div>
 
 
     <div id="blogSettingSection" class="dialog-section">
 
-
-      <div id="DivProjectBlogID">
-
       <div class="subsection">
 
-        <label for="BlogIdId">Blog ID:</label>
-        
-        <input type="text" id="BlogId" name="BlogId" readonly disabled>
-        </div>
+        <label for="blogUrl">Blog URL:</label>
+        <input type="text" id="blogUrl"   list="BlogurlDataList" name="url" required autocomplete="off">
+  
+        <datalist id="BlogurlDataList"></datalist>
+   </div>
 
-      </div>
-
-      <div class="subsection">
+  
+      <div class="subsection" id="secBlogUsername">
       <label for="blogUserName">Blog User Name:</label>
       <input type="text" id="blogUserName" name="username" required autocomplete="off">
       </div>
-      <div class="subsection">
+      
+      <div class="subsection" id="secBlogPassword">
 
       <label for="blogPassword">Blog Password:</label>
       <input type="text" id="blogPassword" name="password" required autocomplete="off"> 
 
     </div>
-    <div class="subsection">
 
-      <label for="blogUrl">Blog URL:</label>
-      <input type="text" id="blogUrl" name="url" required autocomplete="off">
- </div>
-      <div class="subsection">
+ <div class="subsection"  id="DivProjectBlogID">
+    
+  <label for="BlogId">Blog ID:</label>
+  <input type="text" id="BlogId" name="BlogId" required>
+
+</div>
+
+      <div class="subsection" id="secBloggroup">
 
       <label for="blogGroup">Blog Group:</label>
       <input type="text" id="blogGroup" name="group" autocomplete="off">
  </div>
-
-
+        
     <div id="DivProjectSEOStatus">
       <div class="subsection">
         <label for="SEOStatus">SEO Status:</label>
@@ -478,17 +596,29 @@
 
       </div>
 
-
     </div>
 
     <span class="btn">
-      <button class="btn closeDialog" id="updateProjectData" onclick="updateDataToApi()">
-        <i class="fas fa-sync"></i> Update
+       <!-- Create Project or Duplicate Only Action will be createProjects()  not Run after Create Success  -->
+       <button class="btn closeDialog" id="createProjectData">
+        <i class="fas fa-plus"></i> <span id="createProjectText">Create</span>
       </button>
 
-      <button class="btn closeDialog" id="createProjectData" onclick="createProjects()">
-        <i class="fas fa-plus"></i> <span id="createProjectText"></span>
+      <!-- Update Only  Not Run  after Create Success -->
+      <button class="btn closeDialog" id="updateProjectData">
+        <i class="fas fa-pencil"></i> <span id="updateProjectText">Update</span>
       </button>
+          <!-- Update & Run after Update Success   -->
+          <button class="btn closeDialog" id="runActiveProject">
+            <i class="fas fa-play"></i> <span id="RunProjectText">Run</span>
+          </button>
+     
+      <!-- Duplicate with Same Settings Action will be createProjects(true) Run after Create Success -->
+      <button class="btn closeDialog" id="DuplcateActiveProject">
+        <i class="fas fa-clone"></i> <span id="DuplcateProjectText">Duplicate</span>
+      </button>
+
+
 
       <button  class="btn closeDialog" id="closeDialog" onclick="closeDialog('ProjectsDialog')">
         <i class="fas fa-times-circle"></i> Cancel
@@ -502,9 +632,17 @@
 
   <!-- Custom Dialog Box for Showing and updating the default Project Settings-->
 
-  <dialog id="customSettingDialog" class="settingDialog">
+  <dialog id="customSettingDialog" class="settingDialog" style="display: none;">
 
-    <div id="dialogTitle" class="dialogTitle">Universal Porject Custom Settings</div>
+    
+ <div id="SettingsToastDiv" class="sub-notifications"></div>
+
+
+    <div class="dialogTitle"> <span id="dialogTitle"> Project Custom Settings </span>
+      <button class="New-Button"  data-tooltip="close" id="settingCancleButton" onclick="closeDialog('customSettingDialog')">
+        <i class="fas fa-window-close"></i>
+      </button>
+    </div>
 
     <div class="subheading">Article Creator Settings</div>
 
@@ -512,7 +650,7 @@
 
       <div class="full-width-input">
   
-        <label for="sheetID">Google Sheet ID:</label>
+        <label for="CustomDialogsheetID">Google Sheet ID:</label>
         <input type="text" id="CustomDialogsheetID" readonly disabled>
     
     </div>
@@ -537,9 +675,15 @@
         <label for="insertNoofImagesFROM">Insert No of Images FROM:</label>
         <input type="number" id="insertNoofImagesFROM" required autocomplete="off">
       </div>
+
       <div class="subsection">
         <label for="insertNoofImagesTO">Insert No of Images TO:</label>
         <input type="number" id="insertNoofImagesTO" required autocomplete="off">
+      </div>
+
+      <div class="subsection">
+        <label for="jobcronString">Job Cron String:</label>
+        <input type="text" id="jobcronString" required autocomplete="off">
       </div>
 
 
@@ -615,6 +759,11 @@
     <div class="dialog-section">
 
       <div class="subsection">
+        <label for="todayDateInput">Today Date:</label>
+        <input type="date" id="todayDateInput" required autocomplete="off">
+      </div>
+
+      <div class="subsection">
         <div class="toggle-button">
           <input type="checkbox" id="postUseToday" class="toggle-checkbox">
           <label for="postUseToday" class="toggle-label"></label>
@@ -626,10 +775,12 @@
         <label for="postsperDay">Posts per Day:</label>
         <input type="number" id="postsperDay" required autocomplete="off">
       </div>
+
       <div class="subsection">
         <label for="postIntervaldaysFROM">Post Interval days FROM:</label>
         <input type="number" id="postIntervaldaysFROM" required autocomplete="off">
       </div>
+
       <div class="subsection">
         <label for="postIntervaldaysTO">Post Interval days TO:</label>
         <input type="number" id="postIntervaldaysTO" required autocomplete="off">
@@ -646,10 +797,10 @@
 
     </div>
   <span class="btn">
-    <button class="closeDialog" onclick="UpdateCustomSettig()">
+    <button class="closeDialog" id="btnupdateSetting" onclick="UpdateCustomSettig()">
       <i class="fas fa-sync"></i>  Update
     </button>
-    <button class="closeDialog"  onclick="closeDialog('customSettingDialog')">
+    <button class="closeDialog" id="btnsettingdialogClose" onclick="closeDialog('customSettingDialog')">
     <i class="fas fa-times-circle"></i>  Cancel
   </button> 
   </span>
@@ -657,11 +808,139 @@
   </dialog>
 
 
+   <!-- Custom Dialog Box for Showing and updating the default Project Settings-->
+
+   <dialog id="AppSettingDialog" class="settingDialog" style="display: none;">
+
+    
+    <div id="AppSettingToastDiv" class="sub-notifications"></div>
+   
+   
+       <div class="dialogTitle"> <span id="dialogTitle">Application Settings </span>
+         <button class="New-Button"  data-tooltip="close" id="AppCancleButton" onclick="closeDialog('AppSettingDialog')">
+           <i class="fas fa-window-close"></i>
+         </button>
+       </div>
+   
+       <div class="subheading">Application Running Setttings</div>
+   
+       <div class="dialog-section"> 
+   
+
+         <div class="subsection">
+          <div class="toggle-button">
+            <input type="checkbox" id="checkWebApp" class="toggle-checkbox">
+            <label for="checkWebApp" class="toggle-label"></label>
+          </div>
+          <label for="checkWebApp">Load As Web App?</label>
+        </div>
+
+
+        <div class="subsection">
+          <div class="toggle-button">
+            <input type="checkbox" id="checkTesting" class="toggle-checkbox">
+            <label for="checkTesting" class="toggle-label"></label>
+          </div>
+          <label for="checkTesting">Testing?</label>
+        </div>
+
+
+        <div class="subsection">
+          <div class="toggle-button">
+            <input type="checkbox" id="checkUseGAPI" class="toggle-checkbox">
+            <label for="checkUseGAPI" class="toggle-label"></label>
+          </div>
+          <label for="checkUseGAPI">Send Data to Google?</label>
+        </div>
+
+
+        <div class="subsection">
+          <div class="toggle-button">
+            <input type="checkbox" id="checkSyncGoogle" class="toggle-checkbox">
+            <label for="checkSyncGoogle" class="toggle-label"></label>
+          </div>
+          <label for="checkSyncGoogle">Sync Google Data? </label>
+        </div>
+   
+        
+        <div class="subsection">
+          <div class="toggle-button">
+            <input type="checkbox" id="checkUseLocalData" class="toggle-checkbox">
+            <label for="checkUseLocalData" class="toggle-label"></label>
+          </div>
+          <label for="checkUseLocalData">Use Sample Data? </label>
+        </div>
+   
+
+        <div class="subsection">
+          <div class="toggle-button">
+            <input type="checkbox" id="checkShowTestButtons" class="toggle-checkbox">
+            <label for="checkShowTestButtons" class="toggle-label"></label>
+          </div>
+          <label for="checkShowTestButtons">Show Test Buttons?</label>
+        </div>
+   
+
+        <div class="subsection">
+          <div class="toggle-button">
+            <input type="checkbox" id="checkWriteLogs" class="toggle-checkbox">
+            <label for="checkWriteLogs" class="toggle-label"></label>
+          </div>
+          <label for="checkWriteLogs">Write Loggs?</label>
+        </div>
+   
+       </div>
+   
+       
+       <div class="subheading"> Schedule Settings</div>
+   
+       <div class="dialog-section">
+   
+         <div class="subsection">
+           <label for="GAPISyncTime">Google Sync Interval (Minute(s))</label>
+           <input type="number" value="5" id="GAPISyncTime" required autocomplete="off">
+         </div>
+     
+       <div class="subsection">
+        <label for="montiroingInterval">Default Monitoring Interval (Minute(s))</label>
+        <input type="number" value="5" id="montiroingInterval" required autocomplete="off">
+       </div>
+      
+       <div class="subsection">
+        <label for="projectStatusInterval">Default Status Check Interval (Minute(s))</label>
+        <input type="number" value="5" id="projectStatusInterval" required autocomplete="off">
+       </div>
+       
+
+
+       <div class="subsection">
+        <label for="logClearTimer">Log Clear Interval (Minute(s))</label>
+        <input type="number" value="5" id="logClearTimer" required autocomplete="off">
+       </div>
+      
+
+      </div>
+     <span class="btn">
+       <button class="closeDialog" id="btnProjSettings" onclick="UpdateAppSettings()">
+         <i class="fas fa-sync"></i>  Update
+       </button>
+       <button class="closeDialog" id="btnProjSettingsClose" onclick="closeDialog('AppSettingDialog')">
+       <i class="fas fa-times-circle"></i>  close
+     </button> 
+     </span>
+   
+     </dialog>
+
   <!-- ######### USER DIALOG #########  -->
 
   <dialog id="userDialog" class="userDialog">
+    <div id="UserToastDiv" class="sub-notifications"></div>
 
-    <div id="userDialogTitle" class="dialogTitle"></div>
+    <div id="userDialogTitle" class="dialogTitle">
+      <button class="btnClose New-Button"  data-tooltip="close" id="cancelButton" onclick="closeDialog('userDialog')">
+        <i class="fas fa-window-close"></i>
+      </button>
+    </div>
     
     <div class="subheading" id="userDialogSubTitle">Add User's Info</div>
 
@@ -695,10 +974,10 @@
 
         <label for="timeCount">Default User Logout Time</label>
         <input type="number" id="timeCount" required autocomplete="off">
-        <label for="userType">User Type</label>
-
       </div>
+      
       <div class="subsection">
+        <label for="userType">User Type</label>
         <select id="userType" name="userType" required>
           <option value="SuperAdmin">&#128081; SuperAdmin</option>
           <option value="Admin" selected>&#128084; Admin</option>
@@ -710,7 +989,7 @@
      
         <div id="userDialogSeoStatus">
           <div class="subsection">
-            <label for="SEOdInput">SEO Status</label>
+            <label for="seoStatusinput">SEO Status</label>
             <input type="text" id="seoStatusinput" readonly disabled>
           </div>
     </div>
@@ -736,7 +1015,6 @@
 
 </dialog>
 
-
   <!-- Confirmation Dialog -->
   <dialog id="confrimDialog" class="confirmdialog">
     <div class="dialogTitle" id="dialogHeader"></div>
@@ -749,7 +1027,7 @@
       <button class="closeDialog" id="confirmButton">
         <i class="fas fa-check-circle"></i>  Confirm
       </button>
-      <button class="closeDialog" id="cancelButton">
+      <button class="closeDialog" onclick="closeDialog('confrimDialog')">
       <i class="fas fa-times-circle"></i>  Cancel
     </button> 
 
@@ -760,14 +1038,18 @@
 
   <div id="popupContainer">
     <div class="project-popup" id="notificationTableTemplate">
+      <div class="subsection">
       <h3 class="notification-title-container">List of Active Projects(s)</h3>
       <button class="close-btn"> <i class="fas fa-times"></i> clear Notification</button>
+    </div>
       <div class="notification-table">
         <div class="notification-header">
           <div class="header-cell">ID</div>
           <div class="header-cell">Name</div>
           <div class="header-cell">Type</div>
           <div class="header-cell">Status</div>
+          <div class="header-cell">Images</div>
+
         </div>
         <div class="notification-body" id="notificationTableBody">
       
@@ -776,29 +1058,186 @@
     </div>
   </div>
 
+
   <!-- <button onclick="openDialog()"> Open Confirm Dialog
   </button> -->
 
 
-     <!-- //Loader Animation -->
-     <div id="loadingOverlay">
-      <div class="loader-container" id="loader-container">
-        <div class="loader"></div>
+
+  <dialog id="DialogdomainInfo" class="DialogdomainInfo">
+    <div id="DialogdomainInfotDiv" class="sub-notifications"></div>
+
+      <div class="dialogTitle"><span id="DomaindialogTitle"> Add Domain Info</span>
+
+        <button class="New-Button"  data-tooltip="close" id="cancelButton" onclick="closeDialog('DialogdomainInfo')">
+          <i class="fas fa-window-close"></i>
+        </button>
       </div>
-  </div>
-  
-   <!-- //Toast Notification -->
-   <div class="notifications"> 
+
+
+
+<div class="subheading"><span id="blogDomainInfor">Domain Credentials</span>
+
   </div>
 
+ <div id="blogSettingSection" class="dialog-section">
+
+  <div class="full-width-input" id="secBlogUsername">
+    <label for="blogInfoId">New Blog Id:</label>
+    <input type="text" id="blogInfoId" name="username" readonly autocomplete="off">
+    </div>
+    
+
+      <div class="full-width-input" id="secBlogUsername">
+      <label for="blogInfoUserName">User Name:</label>
+      <input type="text" id="blogInfoUserName" name="username" required autocomplete="off">
+      </div>
+      
+      <div class="full-width-input" id="secBlogPassword">
+
+      <label for="blogInfoPassword">Password:</label>
+      <input type="text" id="blogInfoPassword" name="password" required autocomplete="off"> 
+
+    </div>
+
+    <div class="full-width-input">
+
+      <label for="blogInfoUrl">Domain URL:</label>
+      <input type="url" id="blogInfoUrl" name="url" required autocomplete="off">
+ </div>
+      <div class="full-width-input" id="secBloggroup">
+
+      <label for="blogInfoGroup">Domain Group:</label>
+      <input type="text" id="blogInfoGroup" name="group" autocomplete="off">
+ </div>
+        
+
+    </div>
+
+
+    <span class="btn">
+
+      <button id="AddNewdomainInfo" class="btn closeDialog" data-tooltip="Add New Domain" onclick="callAddNewDomain()"> 
+        <i class="fas fa-globe"></i>  Add domain
+       
+       </button>
+
+
+      <button  class="btn closeDialog" onclick="closeDialog('DialogdomainInfo')">
+        <i class="fas fa-times-circle"></i> Cancel
+      </button>
+
+  </span>
+
+  </dialog>
+
+  <!-- Table to Popup in Dialog -->
+
+  
+
+    <!-- Popup Dialog for Actions -->
+    <dialog id="popupCommonDialog" class="popupEditDialog">
+     <div id="WordpressToastDiv" class="sub-notifications"></div>
+
+     <div id="clonedContextMenu"></div>
+
+      <div class="dialogTitle"> <span id="popupCommonDialogHeader"> Wordpress Post and Media Delete </span>
+          <button class="New-Button"  data-tooltip="close" id="cancelButton" onclick="closeDialog('popupCommonDialog')">
+            <i class="fas fa-window-close"></i>
+        <!-- Close -->
+      </button>
+   </div>
+
+
+     <!-- Wordpress Manager -->
+    <div class="table_box">
+
+      <div class="table__header">
+        <span id="PoprecordCount" class="text-Header"></span>
+        
+        <div class="input-group">
+          <input type="search" id="popupsearchinput" placeholder="Search...">
+          <i class="fas fa-search"></i>
+        
+        </div>
+
+                  <!-- Action to Perform -->
+      <select id="popupActions">
+        <option value="" selected disabled>Select fetch Option</option>
+        <option value="getProjectsData">Get All Projects Data</option>
+        <option value="getPostData">Get Wordpress Post</option>
+        <option value="getMediaData">Get Wordpress Media</option>
+        <option value="getcatagoriesData">Get Catagories</option>
+        <option value="getPagesData">Get Wordpress Pages</option>
+        <option value="getMatchedData">Get Matched Project Data</option>
+        <option value="getUnmatchData">Get UnMatched Project Data</option>
+        <option value="getUpdatedData">Get Updated Project Data</option>
+          
+      </select>
+
+      <button id="getPopData" class="New-Button" data-tooltip="Fetch Data" onclick="getProjectData()"> <i class="fa-solid fa-circle-down"></i> <span class="text-hide" id="getDataText"></span></button>
+     
+
+      <select id="selectedActionToPerform">
+
+        <option value="" selected disabled>Select Action Option</option>
+        <option value="runCreatorPrjoct">Run Creator Project</option>
+        <option value="deleteWordpressData">Delete WordPress Data</option>
+        <option value="runPosterPrjoct">Run Post Uploader</option>
+
+        <option value="UpdaProjectsData">Update Projects Data</option>
+        <option value="deleteProject">Delete Projects</option>
+        <option value="updateUnmatchedData">Update Unmatch Projects BlogIDs</option>
+        <option value="updateRunUnmatchedData">Update & RunUnmatch Projects BlogIDs </option>
+
+      </select>
+
+            <button id="btnSEOOperations" class="New-Button" data-tooltip="Perform Selected Action" onclick="PerfromActionsToData()"> <i class="fas fa-arrow-right"></i> <span class="text-hide" id="btnActionText"></span></button>
+          
+            <button id="uploadedImages" class="New-Button" data-tooltip="Upload Images to Wordpress" onclick="uploadimagestoWordPress()"> <i class="fa-brands fa-wordpress"></i> <span class="text-hide" id="uploadImagesText"></span></button>
+         
+        </div>
+
+        <div id="sectionDomainInfo" class="table__header blogsection">
+          <label for="domainurl" class="text-Header">Domain URL:</label>
+          <input type="text" id="domainurl" list="urlDataList"  required autocomplete="off">
+          <datalist id="urlDataList"></datalist>
+          <label for="domaiusername" class="text-Header">User Name:</label>
+          <input type="text" id="domaiusername" required autocomplete="off" readonly>
+          <label for="domaipassword" class="text-Header">Password:</label>
+          <input type="text" id="domaipassword" required autocomplete="off" readonly> 
+          <label for="domaiBlogId" class="text-Header">Blog ID:</label>
+          <input type="text" id="domaiBlogId" readonly>
+      </div>
+
+
+
+    <div class="table__body">
+            <table id="popupCommonTable" class="SEOTable">
+              <!-- <tbody id="popupCommonTableBody">
+              </tbody> -->
+            </table>
+        </div >
+  </dialog>
   
 <!--Closing of Custom Dialog Box for Showing and updating the default Project Settings-->
+
+
+
 <script src="./login.js"></script>
+<script src="./googleAPIs.js"></script>
+<script src="./mainFunctions.js"></script>
+<script src="./DashboardFunctions.js"></script>
+<script src="./SeoLocalAPIs.js"></script>
 <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
-<script src="./maintablefunctions.js"></script>
-<script src="./apifunctions.js"></script>
-<script src="./localServerAPIs.js"></script>
+<script src="./exportTable.js"></script>
+<script src="./wordPress.js"></script>
+<script src="./blogData.js"></script>
+<script src="./uploader.js"></script>
 <script src="./monitoringProjects.js"></script>
+
+
+
 
 
 <!-- <script src="./toastapp.js"></script> -->

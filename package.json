@@ -1,9 +1,12 @@
 {
-  "name": "project-save-data",
-  "version": "1.0.0",
+  "name": "seo-desktop-web-app",
+  "version": "1.1.10",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "package": "electron-builder",
+    "build-installer": "electron-builder --win",
+    "postinstall": "electron-builder install-app-deps"
   },
   "keywords": [],
   "author": "",
@@ -12,10 +15,30 @@
     "body-parser": "^1.20.2",
     "express": "^4.18.2",
     "fs": "^0.0.1-security",
-    "googleapis": "^122.0.0"
+    "node-cron": "^3.0.2",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "electron": "^25.1.1"
+    "electron": "^25.1.1",
+    "electron-builder": "^24.6.4"
   },
-  "description": ""
+  "build": {
+    "appId": "com.seoapp.app",
+    "productName": "SEO Electron & Web App",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "icon": "build/seoapp.ico"
+    },
+    "linux": {
+      "target": [
+        "deb",
+        "AppImage",
+        "rpm"
+      ],
+      "icon": "build/seoapplinux.png"
+    }
+  },
+  "description": "SEO Desktop and Web App"
 }

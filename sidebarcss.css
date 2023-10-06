@@ -1,116 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
-
-:root{
-  --color-default:#004f83;
-  --color-second:#126d6d;
-  --color-white:#e4e2e2;
-  --color-body:#84a5f8;
-  --color-light:#5405ad;
-  --color-ul:#58cae7fd;
-  --accent-color: rgb(204, 0, 0);
-  --lightest-gray: rgb(212, 212, 206);
-  --light-gray: rgb(170, 169, 169);
-  --medium-gray: rgb(96, 96, 96);
-  --dark-gray: rgb(13, 13, 13);
-  --color-yellow: rgb(243, 181, 11);
-  --color-header: rgb(176, 223, 101);
-  --animation-duration: 200ms;
-  --animation-timing-curve: ease-in-out;
-  --sidebar-min-width: 100px;
-  --sidebar-max-width: 200px;
-  --header-height: 30px;
-
-}
-
-body, h1, h2, h3, h4, h5, h6, p, ul, ol, li {
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background: linear-gradient(180deg,  #2d2e2e, #6f996f, #ebf0ed);   
-  background-blend-mode: multiply;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
-}
-
-*{
-  font-family: 'Poppins', sans-serif;
-}
-
-
-.header-content {
-  user-select: none;
-  display: flex;
-  position: relative;
-  justify-content: space-around;
-  align-content: center;
-  text-align: center;
-  padding: 10px;
-  height: var(--header-height);
-  font-size: 22px;
-  font-weight: 600;
-  border-radius: 0px;
-  background-color: var(--color-second);
-  box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.616);
-  color: var(--color-white);
-  overflow: hidden;
-  position: sticky;
-  z-index: 1;
-}
-
-
-.user-info {
-  display: flex;
-  position: absolute;
-  right: 10px;
-  justify-content:space-between;
-  align-items: center;
-  width: 30%;
-  user-select: none;
-  text-align: center;
-  z-index: 2;
-}
-
-#user-icon {
-  position: absolute;
-  align-items: center;
-  left: 200px;
-  width: 30px;
-  height: 30px;
-  font-size: 1.5rem;
-  color: var(--color-light);
-  border-radius: 50%;
-
-}
-
-.fullname {
-  align-items: center;
-  position: absolute;
-  left: 250px;
-  border: none;
-  color: var(--color-light);
-  font-size: 1.5rem;
-  font-weight: 800;
-  border-radius: 10px;
-
-}
-
-#logoutButton {
-  position: absolute;
-  right: 0px;
-  top: -5px;
-  padding: 8px;
-  background-color: var(--color-yellow);
-  color: white;
-  z-index: 4;
-}
-
-#logoutButton:hover {
-  background-color: var(--color-default);
-  z-index: 5;
-}
 
 
 .container {
@@ -228,9 +115,9 @@ body {
 .sidebar.open .logo_details #btn {
   text-align: left;
   left: 150px;
-  /* transform: translateY(-50%); */
-  transform: translateY( -100%);
-  transform: translateX(30%);
+
+  transform: translateY(-100%) translateX(30%) rotate(0deg);
+
   color: var(--color-yellow);
 }
 
