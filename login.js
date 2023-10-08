@@ -849,7 +849,9 @@ async function loginUser() {
         userIconElement.classList.add('fas', 'fa-crown');
         btngetUsers.style.display = 'flex';
         btnAddNewUser.style.display = 'flex';
+         if (!webAppGitHub) { 
         btnShowAppSetting.style.display = 'flex';
+      }
 
         break;
       case 'Admin':
