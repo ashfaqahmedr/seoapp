@@ -28,8 +28,9 @@ body, h1, h2, h3, h4, h5, h6, p, ul, ol, li {
 }
 
 body {
-  background: linear-gradient(180deg,  #2d2e2e, #6f996f, #ebf0ed);   
-  background-blend-mode: multiply;
+  background: var( --light-gray);  
+  /* background: linear-gradient(180deg,  #2d2e2e, #6f996f, #ebf0ed);    */
+  /* background-blend-mode: multiply; */
   overflow: hidden;
   margin: 0;
   padding: 0;
@@ -61,7 +62,7 @@ body {
     user-select: none;
     display: flex;
     position: relative;
-    justify-content: space-evenly;
+    justify-content: flex-start;
     align-content: stretch;
     text-align: center;
     padding: 5px;
@@ -78,24 +79,19 @@ body {
     z-index: 10000;
   }
   
-
+/* 
   .topTitle {
 
-    justify-content:space-between;
-    align-content: center;
-    text-align: center;
-  }
+    /* justify-content:space-between; 
+    /* align-content: center;
+    text-align: center; 
+  } 
+  */
   
-  #projectSettings{
-    position: absolute;
-    left: 5px;
-    width: auto;
-  }
-
 
   #projectSettings {
 
-  position: absolute;
+  position: relative;
   left: 5px !important;
   top: 0px !important;
   padding: 5px !important;
@@ -112,7 +108,7 @@ body {
 
 
   #toggleApplicationtoWebApp {
-    position: absolute !important;
+    position: relative !important;
     width: fit-content !important;
     left: 100px !important;
     top: 0px !important;
@@ -127,8 +123,8 @@ body {
   
   .user-info {
     display: flex;
-    position: absolute;
-    left: 10px;
+    position: relative;
+    left: 150px;
     justify-content:center;
     align-items: stretch;
     width: 30%;

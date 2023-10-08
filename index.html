@@ -167,9 +167,9 @@
      <li>
        <a href="#" id="read-json-link"  onclick="ReadJsonFile()">
          <i class="fas fa-file-code"></i>
-       <span class="link_name">Read JSON </span>
+       <span class="link_name">Blog Domain Info</span>
        <span class="count sticky" id="json-count"></span>
-       <span class="tooltip hidden">Read JSON File</span>
+       <span class="tooltip hidden">Blog Domain Info</span>
      </a>
     </li>
 
@@ -1065,9 +1065,10 @@
 
 
   <dialog id="DialogdomainInfo" class="DialogdomainInfo">
+
     <div id="DialogdomainInfotDiv" class="sub-notifications"></div>
 
-      <div class="dialogTitle"><span id="DomaindialogTitle"> Add Domain Info</span>
+      <div class="dialogTitle"><span id="DomaindialogTitle"> Add New Domain Info</span>
 
         <button class="New-Button"  data-tooltip="close" id="cancelButton" onclick="closeDialog('DialogdomainInfo')">
           <i class="fas fa-window-close"></i>
@@ -1083,7 +1084,7 @@
  <div id="blogSettingSection" class="dialog-section">
 
   <div class="full-width-input" id="secBlogUsername">
-    <label for="blogInfoId">New Blog Id:</label>
+    <label for="blogInfoId">Blog Id:</label>
     <input type="text" id="blogInfoId" name="username" readonly autocomplete="off">
     </div>
     
@@ -1117,11 +1118,14 @@
 
     <span class="btn">
 
-      <button id="AddNewdomainInfo" class="btn closeDialog" data-tooltip="Add New Domain" onclick="callAddNewDomain()"> 
-        <i class="fas fa-globe"></i>  Add domain
-       
+      <button id="btnnewDomainDialog" class="btn closeDialog" data-tooltip="Add New Domain" onclick="callAddNewDomain()"> 
+        <i class="fas fa-plus"></i> Add domain 
        </button>
 
+       <button id="btnupdateDomainDialog" class="btn closeDialog" data-tooltip="Update Domain" onclick="updateDomainInfo()"> 
+        <i class="fas fa-sync"></i> Update domain
+        
+       </button>
 
       <button  class="btn closeDialog" onclick="closeDialog('DialogdomainInfo')">
         <i class="fas fa-times-circle"></i> Cancel

@@ -154,34 +154,83 @@ console.log("Selected Action to Perfrom Text Content: " + fetchSelectedActionCon
 
 }
 
+// get Local JSON file Api call
+async function fetchLocalData() {
+  try {
+    const apiResponse = await fetch(`${appurl}/data`);
+    return await apiResponse.json();
+  } catch (error) {
+    console.error('Error fetching local data:', error);
+    return [];
+  }
+}
 
+// get Google Api function to collect Data
+async function fetchGoogleData() {
 
-// Show Wordpress Dialog
-async function fetchDomainsAndShowCoDialog(calledFromDashBoard=false) {
-
-  // Clone the loader element, assuming dialogLoaderId is the ID of the loader in the dialog
-const clonedLoader = document.getElementById('loadingOverlay').cloneNode(true);
-clonedLoader.id = 'dialogLoader'; // Assign a unique ID for the cloned loader
-
-// Append the cloned loader to the dialog
-const popupCommonDialog = document.getElementById("popupCommonDialog"); // Replace with the actual ID of your dialog
-popupCommonDialog.appendChild(clonedLoader);
-
-// Show the dialog loader
-showLoader('dialogLoader');
-
-
- 
-    try {
-      // Step 1: Fetch data from the API endpoint
-      const apiResponse = await fetch(`${appurl}/data`);
-      const data = await apiResponse.json();
+  const constJSON = 
+  {
+      "action": "getListofProjectsDomains",
+      "username": "ASHFAQ",
+      "dataItems": [
+      {
+  "getData": false,
+  "uniqueData": true,
+  "columnPairs": [["BlogId", "url", "username", "password"]]
+      }
+      ]
+  }
   
-      // Populate the domain URL datalist
-      const domainurl = document.getElementById('domainurl');
-      const urlDataList = document.getElementById('urlDataList');
-      clearDatalist(urlDataList);
-  
+  try {
+    const googleApiResponse = await handleApiCall(
+      googleurl,
+      constJSON,
+      30000,
+      'Unique Project Name(s) and JobID(s) fetched successfully.',
+      'An error occurred while fetching Unique Project Name(s) and JobID(s) Data ',
+      true,
+      false
+    );
+
+    if (!googleApiResponse || !googleApiResponse.uniqueData || !googleApiResponse.uniqueData.BlogIds) {
+      return [];
+    }
+
+    const blogIds = googleApiResponse.uniqueData.BlogIds;
+    const blogObjects = blogIds.map(blog => {
+      return {
+        id: blog[0],      // Assuming BlogId is at index 0 in the array
+        url: blog[1],     // Assuming URL is at index 1 in the array
+        username: blog[2], // Assuming username is at index 2 in the array
+        password: blog[3], // Assuming password is at index 3 in the array
+      };
+    });
+
+    return blogObjects;
+  } catch (error) {
+    console.error('Error fetching and processing Google API data:', error);
+    return [];
+  }
+}
+
+
+async function populateWordpressDialog() {
+
+  let data;
+
+  try {
+    if (!webAppGitHub) {
+      data = await fetchLocalData();
+    } else {
+      data = await fetchGoogleData();
+    }
+
+    // Populate the domain URL datalist
+    const domainurl = document.getElementById('domainurl');
+    const urlDataList = document.getElementById('urlDataList');
+    clearDatalist(urlDataList);
+
+
       // Populate the domain URL datalist with all URLs from data
       data.forEach(item => {
         const option = document.createElement('option');
@@ -210,7 +259,68 @@ showLoader('dialogLoader');
         }
       }
       
-   
+
+   hideLoader();
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    // Hide the dialog loader
+   hideLoader();
+  }
+}
+
+
+// Show Wordpress Dialog
+async function fetchDomainsAndShowCoDialog(calledFromDashBoard=false) {
+
+  // Clone the loader element, assuming dialogLoaderId is the ID of the loader in the dialog
+
+defaultLoaderId='dialogLoader';
+
+toggleLoader(defaultLoaderId, popupCommonDialog)
+
+// Show the dialog loader
+showLoader();
+ 
+    try {
+
+      // // Step 1: Fetch data from the API endpoint
+      // const apiResponse = await fetch(`${appurl}/data`);
+      // const data = await apiResponse.json();
+  
+      // // Populate the domain URL datalist
+      // const domainurl = document.getElementById('domainurl');
+      // const urlDataList = document.getElementById('urlDataList');
+      // clearDatalist(urlDataList);
+  
+      // // Populate the domain URL datalist with all URLs from data
+      // data.forEach(item => {
+      //   const option = document.createElement('option');
+      //   option.value = item.url;
+      //   urlDataList.appendChild(option);
+      // });
+  
+      // // Add event listener to update other input fields based on selected URL
+      // domainurl.addEventListener('input', updateInputFields);
+  
+      // function updateInputFields() {
+      //   const selectedUrl = domainurl.value;
+      //   const selectedData = data.find(item => item.url === selectedUrl);
+  
+      //   if (selectedData) {
+      //     domaiusername.value = selectedData.username;
+      //     domaipassword.value = selectedData.password;
+      //     domaiBlogId.value = selectedData.id;
+  
+         
+      //   } else {
+      //     // Clear the input fields if no match is found
+      //     domaiusername.value = '';
+      //     domaipassword.value = '';
+      //     domaiBlogId.value = '';
+      //   }
+      // }
+      
+      populateWordpressDialog()
 
     btngetPopData.setAttribute("data-tooltip", "Selet Options");
   
@@ -243,7 +353,7 @@ selectActionToPerform.addEventListener("change", updateActionToPerform);
  }          
  
           // Hide the dialog loader
-hideLoader('dialogLoader');
+hideLoader();
  
 
 //  dialogconfrimDialog.style.display = 'none'
@@ -252,7 +362,7 @@ hideLoader('dialogLoader');
     } catch (error) {
       console.error('Error fetching data:', error);
       // Hide the dialog loader
-    hideLoader('dialogLoader');
+    hideLoader();
     }
 
 
@@ -261,7 +371,7 @@ hideLoader('dialogLoader');
 // Get Data by Selected Action parameter
 async function getProjectData() {
 
-  showLoader('dialogLoader');
+  showLoader();
 
  let fetchSelectedActionData = selectPopupActions.value;
 
@@ -297,8 +407,8 @@ const fetchSelectedActionContent = selectedOption.textContent;
 
   if (blogData.length ===0) {
 
-    createToast('WordpressToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', 'Local Data has been fetched from Database for Selected Action: ' + fetchSelectedActionContent);
-    hideLoader('dialogLoader');
+    createToast('WordpressToastDiv', 'warning', 'fa-solid fa-exclamation-triangle', 'Warning', 'There is not Valid Data present in Local Database');
+   hideLoader();
     return
 
     }
@@ -342,13 +452,13 @@ if (fetchSelectedActionData === 'getProjectsData') {
     // Create a table or perform actions based on the fetchSelectedActionData
 
     createTableFromData(returnedTableData, true, tableID, false, 4);  // Add checkboxes and use dashboard elements
-    hideLoader('dialogLoader');
+   hideLoader();
   } else {
     // Handle cases where no data was fetched or an error occurred
     
     createToast('WordpressToastDiv', 'warning', 'fa-solid fa-exclamation-triangle', 'Warning', 'There is not Valid Data present in Local Database');
     console.error(`There is not Valid Data present in Local Database: ${fetchSelectedActionContent}`);
-    hideLoader('dialogLoader');
+   hideLoader();
   }
 
 }
@@ -370,7 +480,7 @@ if (!domain || !username || !password) {
   return; 
 }
 
-showLoader('dialogLoader');
+showLoader();
 const fetchActions = selectPopupActions.value
 
 console.log("Selected Action to perform: "+ fetchActions)
@@ -419,7 +529,7 @@ const mediaStatusQueryParam = `status=inherit,trash&per_page=${perPage}`; // Def
  }
 
  if (!apiEndpoint) {
-  hideLoader('dialogLoader');
+ hideLoader();
    console.error('Invalid Wordpress API Endpoint:', fetchActions);
    createToast('WordpressToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'Not a Valid Wordpress Api Endpoint for Selected Action: ' + fetchActions);
    return;
@@ -435,7 +545,7 @@ const mediaStatusQueryParam = `status=inherit,trash&per_page=${perPage}`; // Def
     });
 
     if (!response.ok) {
-      hideLoader('dialogLoader');
+     hideLoader();
       createToast('WordpressToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'There is an error while fetching data from WordPress Server');
       console.error(`Failed to fetch ${fetchActions} data. Status: ${response.status}`);
       return
@@ -454,7 +564,7 @@ const mediaStatusQueryParam = `status=inherit,trash&per_page=${perPage}`; // Def
 if (DataFetchedFormAPI.length > 0) {
 
   createTableFromData(DataFetchedFormAPI, true ,tableID, false, 1);  // Add checkboxes and use dashboard elements
-  hideLoader('dialogLoader');
+ hideLoader();
 
 createToast('WordpressToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', 'Wordpress Data has been fetched from selected <br> Domain:  ' + domain);
 console.log("Wordpress Data Table:")
@@ -465,11 +575,11 @@ console.table(DataFetchedFormAPI)
   
   createToast('WordpressToastDiv', 'warning', 'fa-solid fa-exclamation-triangle', 'Warning', 'Wordpress Data has not returned any Data or Valid Data selected <br>Domain: ' + domain);   
   console.error(`No data fetched for action: ${fetchActions}`);
-  hideLoader('dialogLoader');
+ hideLoader();
 }
   } catch (error) {
     
-    hideLoader('dialogLoader');
+   hideLoader();
     createToast('WordpressToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', 'WordPress Data has been fetched from the selected <br> Domain:  ' + domain);
     console.error(`Error fetching ${fetchActions} data:`, error);
   }
@@ -510,7 +620,7 @@ console.log("Selected Action: " + actionsToPerform)
    return
   }
 
-  showLoader('dialogLoader');
+  showLoader();
 
     switch (selectedAction) {
 
@@ -546,7 +656,7 @@ console.log("Selected Action: " + actionsToPerform)
       createToast('WordpressToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'Invalid Selected action: ' + fetchSelectedActionContent);
       console.log('Invalid action:', fetchSelectedActionData);
       console.log("Selected Action to Get Data Text Content: " + fetchSelectedActionContent);
-      hideLoader('dialogLoader');
+     hideLoader();
       return;
     }
  
@@ -554,62 +664,119 @@ console.log("Selected Action: " + actionsToPerform)
 
 
 // Update Project Settings
-async function UpdateProjectSettings(isUpdateOnlyBlogIds, isRunProjectRequired) {
+// async function UpdateProjectSettings(isUpdateOnlyBlogIds, isRunProjectRequired) {
   
-  //  Perform Action Values
-const selectedAction  = selectActionToPerform.value
-console.log ("Selected Action to Perform is :" + selectedAction)
+//   //  Perform Action Values
+// const selectedAction  = selectActionToPerform.value
+// console.log ("Selected Action to Perform is :" + selectedAction)
 
 
-try {
-    // Bulk Update the Result update.
-    showLoader('dialogLoader');
-  const results = await bulkUpdateDatatoSEO(cellValuesArray, isUpdateOnlyBlogIds);
+// try {
+//     // Bulk Update the Result update.
+//     showLoader();
+//   const results = await bulkUpdateDatatoSEO(cellValuesArray, isUpdateOnlyBlogIds);
  
-  console.log(results);
+//   console.log(results);
 
-  // Initialize an object to store the values to update
-  const ValuestoUpdateToTable = {
-    creatorId: [],
-    postDate: [],
-    newBlogId: [],
-    newUrl: []
-  };
+//   // Initialize an object to store the values to update
+//   const ValuestoUpdateToTable = {
+//     creatorId: [],
+//     postDate: [],
+//     newBlogId: [],
+//     newUrl: []
+//   };
 
 
-  for (const result of results) {
-    if (result.success) {
-      // Find the corresponding data in cellValuesArray
-      const index = cellValuesArray.findIndex(data => data[0] === result.creatorId);
-      if (index !== -1) {
-        ValuestoUpdateToTable.creatorId.push(cellValuesArray[index][0]);
-        ValuestoUpdateToTable.postDate.push(posttodayDateInput.value);
-        ValuestoUpdateToTable.newBlogId.push(cellValuesArray[index][2]);
-        ValuestoUpdateToTable.newUrl.push(cellValuesArray[index][3]);
-      }
+//   for (const result of results) {
+//     if (result.success) {
+//       // Find the corresponding data in cellValuesArray
+//       const index = cellValuesArray.findIndex(data => data[0] === result.creatorId);
+//       if (index !== -1) {
+//         ValuestoUpdateToTable.creatorId.push(cellValuesArray[index][0]);
+//         ValuestoUpdateToTable.postDate.push(posttodayDateInput.value);
+//         ValuestoUpdateToTable.newBlogId.push(cellValuesArray[index][2]);
+//         ValuestoUpdateToTable.newUrl.push(cellValuesArray[index][3]);
+//       }
+//     }
+//   }
+
+
+//   if (ValuestoUpdateToTable.creatorId.length > 0) {
+//     updateAndHighlightRows(tableID, ValuestoUpdateToTable, false);
+//     updateAndHighlightRows('main', ValuestoUpdateToTable, [6, 7, 8]);
+//   }
+
+//   if (isRunProjectRequired) {
+
+//      runSelectedProjectSEO(ValuestoUpdateToTable.creatorId, true);
+
+//   }
+
+
+//   } catch (error) {
+//    hideLoader();
+//     // Handle any errors that occur during the process
+//     console.error(`Error updating settings: ${error}`);
+//   }
+
+// }
+
+async function UpdateProjectSettings(isUpdateOnlyBlogIds, isRunProjectRequired) {
+  // Perform Action Values
+  const selectedAction = selectActionToPerform.value;
+  console.log("Selected Action to Perform is: " + selectedAction);
+
+  try {
+    showLoader();
+    const results = await bulkUpdateDatatoSEO(cellValuesArray, isUpdateOnlyBlogIds);
+
+    console.log(results);
+
+ 
+    // Extract creatorId values from results
+const creatorIds = results.map(result => result.creatorId);
+
+// Highlight rows in the 'main' table based on creatorId values
+highlightRowsInTable(tableID, 1, creatorIds);
+
+    if (isRunProjectRequired) {
+      runSelectedProjectSEO(ValuestoUpdateToTable.creatorId, true);
     }
-  }
-
-
-  if (ValuestoUpdateToTable.creatorId.length > 0) {
-    updateAndHighlightRows(tableId, ValuestoUpdateToTable, false);
-    updateAndHighlightRows('main', ValuestoUpdateToTable, [6, 7, 8]);
-  }
-
-  if (isRunProjectRequired) {
-
-     runSelectedProjectSEO(ValuestoUpdateToTable.creatorId, true);
-
-  }
-
-
   } catch (error) {
-    hideLoader('dialogLoader');
+    hideLoader();
     // Handle any errors that occur during the process
     console.error(`Error updating settings: ${error}`);
   }
-
 }
+
+
+
+function highlightRowsInTable(tableId, columnIndex, targetValues) {
+
+  try {
+  const table = document.getElementById(tableId);
+  const rows = table.getElementsByTagName('tr');
+
+  for (let i = 1; i < rows.length; i++) { // Start from index 1 to skip the header row
+    const cells = rows[i].getElementsByTagName('td');
+    if (columnIndex < cells.length) {
+      const cellValue = cells[columnIndex].textContent.trim();
+      if (targetValues.includes(cellValue)) {
+        // Highlight the row
+        rows[i].classList.add('highlighted-row');
+      }
+    }
+    // Remove the highlight after a delay
+    setTimeout(() => {
+      rows[i].classList.remove('highlighted-row');
+    }, 3000);
+  }
+
+} catch (error) {
+console.error('Error updating and highlighting rows:', error);
+}
+}
+
 
   // Function to Run Selected Projects
 async function runCreatorProjectInBatch(projectArrayToRun) {
@@ -756,7 +923,7 @@ async function deleteWordpressData(PostIdsToDelete) {
           createToast('WordpressToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', `Failed to delete ID ${postId}.`);
       }
   }
- hideLoader('dialogLoader');
+hideLoader();
   // Remove values from array after delete.
   cellValuesArray = [];
 }
@@ -887,13 +1054,13 @@ function cleanData(data) {
 }
 
 // // Function to handle the "Select All" checkbox and individual checkboxes
-function handleCheckboxes(tableId, selectAllCheckboxId, cellsToCapture) {
+function handleCheckboxes(tableID, selectAllCheckboxId, cellsToCapture) {
 
   //  Perform Action Values
 const selectedAction  = selectActionToPerform.value
 console.log ("Selected Action to Perform is :" + selectedAction)
 
-  const table = document.getElementById(tableId);
+  const table = document.getElementById(tableID);
   const selectAllCheckbox = document.getElementById(selectAllCheckboxId);
   const checkboxes = table.querySelectorAll('tbody input[type="checkbox"]');
   const updateCellValueArrayFunctions = [];
@@ -979,7 +1146,7 @@ function updateCellValueArray(checkbox) {
 
 
 // Re-Arrange Data in required format.
-function AllProjectData(originalData) {
+function AllProjectData(blogData) {
   const rearrangedKeys = [
     "ProjectID",
     "PostUploaderId",
@@ -993,7 +1160,7 @@ function AllProjectData(originalData) {
   ];
 
   // Create a new array with the keys rearranged for each record
-  const rearrangedDataArray = originalData.map((project) => {
+  const rearrangedDataArray = blogData.map((project) => {
     const rearrangedRecord = {};
     for (const key of rearrangedKeys) {
       if (project.hasOwnProperty(key)) {
@@ -1011,12 +1178,12 @@ function AllProjectData(originalData) {
 
 
 // Function to Find Matched Projects
-function getMatchedData(originalData) {
+function getMatchedData(blogData) {
 
   try {
     const matchedObjects = [];
 
-    originalData.forEach((project) => {
+    blogData.forEach((project) => {
       const { ProjectID, PostUploaderId, ProjectName, PostUploaderName, url, BlogId, ProjectCreatorStatus, PostUploaderStatus  } = project
       // Check if the projectName is found in the URL or if the URL matches the expected pattern
       if (url.includes(ProjectName) || ProjectName.includes(url)) {
@@ -1046,13 +1213,13 @@ return matchedObjects;
 }
 
 // Function to Find Unmatched Projects Data
-function getUnmatchedProjects(originalData) {
+function getUnmatchedProjects(blogData) {
 
   try {
 
     const unMatchedObjects = [];
 
-    originalData.forEach((project) => {
+    blogData.forEach((project) => {
       const { ProjectID, PostUploaderId, ProjectName, PostUploaderName, url, BlogId, ProjectCreatorStatus, PostUploaderStatus  } = project
       // Check if the projectName is found in the URL or if the URL matches the expected pattern
       if (url.includes(ProjectName) || ProjectName.includes(url)) {
@@ -1085,10 +1252,10 @@ return unMatchedObjects;
   
 }
   
-function getUpdatedProjectData(originalData) {
+function getUpdatedProjectData(blogData) {
   try {
       const blogUrlList = [];
-      originalData.forEach((project) => {
+      blogData.forEach((project) => {
           blogUrlList.push({
               BlogId: project.BlogId,
               url: project.url
@@ -1098,7 +1265,7 @@ function getUpdatedProjectData(originalData) {
       console.log("List of Blog URL and Blog IDs:", blogUrlList);
 
       // Collect unmatched Object from getUnmatchedProjects function.
-      const unmatchedProjects = getUnmatchedProjects(originalData);
+      const unmatchedProjects = getUnmatchedProjects(blogData);
 
       const newUpdatedObjects = [];
 

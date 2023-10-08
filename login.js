@@ -1,5 +1,15 @@
-// const cronjob = require('node-cron');
+let webAppGitHub=true;
 
+if (!webAppGitHub) {
+const { v4: uuidv4 } = require('uuid');
+const fs = require('fs');
+const path = require('path');
+
+}
+
+const seourl ='http://localhost:8008'
+const seoProjectsUrl = `${seourl}/project`
+const appurl ='http://localhost:3000'
 
 // Variable for Update Info if Shown
 let isUpdateDomainInfo=true;
@@ -8,7 +18,7 @@ let isLoggedIn=false;
 
 // SyncCalled from Auto AddData
 // convert Web app to Local App =false
-let isWebApp=true;
+let isWebApp;
 // Allow GOOGLE SERVER API CALL WHEN ADDING UPDATING /DELETING DATA
 
 let GAPIRequired;
@@ -52,10 +62,7 @@ let confirmDialogUse = false;
 let LoggedUsername ;
 let LoggedFullName;
 
-// const seourl ='http://localhost:8008'
-// const seoProjectsUrl = `${seourl}/project`
 
-// const appurl ='http://localhost:3000'
 
 // Google App Script URL for Web App and Make Local Request.
 // const googleurl ='https://script.google.com/macros/s/AKfycbxgyT3rHw0zc7xeF_HWP3fxiy9VjaBcwzE18b6eA7HzFejEvCQEJewrJSzDFkeaUa4m/exec'
@@ -332,7 +339,19 @@ const dialogProjectsDialog = document.getElementById('ProjectsDialog');
     const SEOStatusInput = document.getElementById('SEOStatus');
 
 
+
     const DialogdomainInfoAdd = document.getElementById('DialogdomainInfo');
+
+    const DomaindialogTitle = document.getElementById('DomaindialogTitle');
+    
+    const domainInfoIdInput = document.getElementById('blogInfoId');
+    const domainUserNameInput = document.getElementById('blogInfoUserName');
+    const domainPasswordInput = document.getElementById('blogInfoPassword');
+    const domainUrlInput = document.getElementById('blogInfoUrl');
+    const domainGroupInput = document.getElementById('blogInfoGroup');
+
+    const btnupdateDomainDialog = document.getElementById('btnupdateDomainDialog');
+    const btnnewDomainDialog = document.getElementById('btnnewDomainDialog');
 
 
        // Hide Project Add Blog Toggle
@@ -448,122 +467,169 @@ const togglewebAppCheckBox = document.getElementById('webAppCheckBox');
 const lablecheckLableWeb = document.getElementById('checkLableWeb');
 
 
-
-
 // const tablepopupCommonData = document.getElementById('popupCommonTable');
 
 dialogPopupCommonDialog.style.display = 'none';
+  // Function Load Application Setting if Local App
+async function getAppSettings() {
+let success =false;
+  try {
+    // Retrieve the file content from the API
+  const response = await fetch(`${appurl}/AppSettings`, {
+   method: 'GET',
+   headers: {
+     'Content-Type': 'application/json'
+   }
+  });
+  
+  if (response.ok) {
+  
+   const data = await response.json();
+  
+  console.log("Application Data")
+  console.table(data)
+  
+  // Populate the input elements with the retrieved values
+  // convert Web app to Local App =false
+ isWebApp = data.checkWebApp;
 
-// async function getAppSettings() {
-// let success =false;
-//   try {
-//     // Retrieve the file content from the API
-//   const response = await fetch(`${appurl}/AppSettings`, {
-//    method: 'GET',
-//    headers: {
-//      'Content-Type': 'application/json'
-//    }
-//   });
-  
-//   if (response.ok) {
-  
-//    const data = await response.json();
-  
-//   console.log("Application Data")
-//   console.table(data)
-  
-//   // Populate the input elements with the retrieved values
-//   // convert Web app to Local App =false
-//  isWebApp = data.checkWebApp;
-
-//  // To show Local Data and dont load Tables
-//   testing = data.checkTesting;
+ // To show Local Data and dont load Tables
+  testing = data.checkTesting;
  
-//   // Allow GOOGLE SERVER API CALL WHEN ADDING UPDATING /DELETING DATA
-//  GAPIRequired = data.checkUseGAPI;
+  // Allow GOOGLE SERVER API CALL WHEN ADDING UPDATING /DELETING DATA
+ GAPIRequired = data.checkUseGAPI;
  
-//  SyncGoogle = data.checkSyncGoogle;
+ SyncGoogle = data.checkSyncGoogle;
  
-//  // Use Temp BlogData not SEO Data
-//  UseLocalDataForTable = data.checkUseLocalData;
+ // Use Temp BlogData not SEO Data
+ UseLocalDataForTable = data.checkUseLocalData;
  
-//    // For Showing Test Buttons
-//  showtestButtons = data.checkShowTestButtons;
+   // For Showing Test Buttons
+ showtestButtons = data.checkShowTestButtons;
  
-//  // Write Logges in console or in Log File
-//  iswriteLogs = data.checkWriteLogs;
+ // Write Logges in console or in Log File
+ iswriteLogs = data.checkWriteLogs;
 
 
-//   valprojectStatusInMilliseconds = parseInt(data.projectStatusInterval) * 60000;
+  valprojectStatusInMilliseconds = parseInt(data.projectStatusInterval) * 60000;
   
 
-//   console.log("valprojectStatusInterval:", valprojectStatusInMilliseconds, "milliseconds");
+  console.log("valprojectStatusInterval:", valprojectStatusInMilliseconds, "milliseconds");
 
   
-//   return success=true;
+  return success=true;
   
-//   }
+  }
   
-//    } catch (error) {
-//      console.error('Error retrieving Application settings:', error);
-//     //  createToast('SettingsToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'Error retrieving App settings from Local Server: ' + error);
-//      hideLoader();
-//      return success=false;
-//    }
+   } catch (error) {
+     console.error('Error retrieving Application settings:', error);
+    //  createToast('SettingsToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'Error retrieving App settings from Local Server: ' + error);
+     hideLoader();
+     return success=false;
+   }
   
-//   }
+  }
+
+    //Check the Server
+async function LocalServerSEO() {
+ 
+  // Show Login     
+let success=false;
+
+ showLoader();
+
+ try {
+   const response = await fetch(`${seourl}/test`, {
+     method: 'GET'
+   });
+
+   const data = await response.json();
+
+   console.log(data)
+
+   if (data.success)  {
 
 
-  let checkAppSetting;
+ hideLoader();
+ 
+ createToast('bodyToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', 'SEO Server is Running.');
+ txttopTitle.textContent="SEO Content Machine Desktop App (Connected)"
+    
+ return success=true;
+ }
 
+ } catch (error) {
+   loginPanel.style.display = 'none';
+     console.error(error)
+     createToast('bodyToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'error', 'SEO Content Machine is not Running on this Machine. '+error);
+     txttopTitle.textContent="SEO Content Machine Desktop App (Disconnected)"
+     hideLoader();
+  
+ }
+
+ return 
+}
+
+  let checkAppSetting=false;
   let RunningLocalServer =false
+
 //Load things on Page Loads when Showing Login Panel
   window.onload = async () => {
 
-   // checkAppSetting = getAppSettings()
-  hideLoader();
-    // try {
+    isWebApp =true;  
+    // Set variable for GitHUb WebApp
+    if (!webAppGitHub) { 
 
+    isWebApp =false;  
+
+    try {
+      // Load Application Setting if Local App
+      checkAppSetting = getAppSettings()
       // Call the LocalServerSEO function
-      // RunningLocalServer = await LocalServerSEO();
+      RunningLocalServer = await LocalServerSEO();
 
-    // } catch (error) {
+    } catch (error) {
 
-    //   console.error('Error calling LocalServerSEO:', error);
-    // }
+      console.error('Error calling LocalServerSEO:', error);
+    }
 
   // Auto Web App 
+  
+}
+   if (RunningLocalServer) {
 
+    txttopTitle.textContent="SEO Content Machine Desktop App"
 
-   // if (RunningLocalServer) {
+   if (checkAppSetting) {
 
-//     txttopTitle.textContent="SEO Content Machine Desktop App"
+    DivApplicationtoWebAppCheck.style.display = 'flex';
 
-//    if (checkAppSetting) {
+    togglewebAppCheckBox.removeEventListener('change', LoadAsWebApp);
 
-//     DivApplicationtoWebAppCheck.style.display = 'flex';
+    togglewebAppCheckBox.addEventListener('change', LoadAsWebApp);
 
-//     togglewebAppCheckBox.removeEventListener('change', LoadAsWebApp);
+    btnShowAppSetting.style.display = 'flex';
 
-//     togglewebAppCheckBox.addEventListener('change', LoadAsWebApp);
+  }
+} else {
+  btnShowAppSetting.style.display = 'none';
+  DivApplicationtoWebAppCheck.style.display = 'none';
+}  
 
-//     btnShowAppSetting.style.display = 'flex';
+  // Load Local App
+    if (!isWebApp) {
+      togglewebAppCheckBox.checked = false
+      lablecheckLableWeb.textContent="Destkop App"
+      userIcon_Name.style.display = 'none';
+      siderbar_Table.style.display = 'flex';
+      loginPanel.style.display = 'none';
+      showAdminPanel();
+      isLoggedIn=true
 
-//   }
+      callCronJob(isLoggedIn, RunningLocalServer)
 
-// // Load Local App
-//     if (!isWebApp) {
-//       togglewebAppCheckBox.checked = false
-//       lablecheckLableWeb.textContent="Destkop App"
-//       userIcon_Name.style.display = 'none';
-//       siderbar_Table.style.display = 'flex';
-//       loginPanel.style.display = 'none';
-//       showAdminPanel();
-//       isLoggedIn=true
+    } else {
 
-//       callCronJob(isLoggedIn, RunningLocalServer)
-
-//     } else {
       togglewebAppCheckBox.checked = true
       lablecheckLableWeb.textContent="Web App"
       txttopTitle.textContent="SEO Content Machine Web App"
@@ -571,7 +637,7 @@ dialogPopupCommonDialog.style.display = 'none';
       siderbar_Table.style.display = 'none';
       isLoggedIn=false
      
-    // }
+    }
 
      // Show Panel without use of SEO
      if (testing || UseLocalDataForTable) {
@@ -585,53 +651,10 @@ dialogPopupCommonDialog.style.display = 'none';
       showAdminPanel();
      } 
     
-    } else {
-      btnShowAppSetting.style.display = 'none';
-      DivApplicationtoWebAppCheck.style.display = 'none';
-    }  
-  }
-
-
-
-//   //Check the Server
-// async function LocalServerSEO() {
+    } 
  
-//    // Show Login     
-// let success=false;
+ 
 
-//   showLoader();
-
-//   try {
-//     const response = await fetch(`${seourl}/test`, {
-//       method: 'GET'
-//     });
-
-//     const data = await response.json();
-
-//     console.log(data)
-
-//     if (data.success)  {
-
-
-//   hideLoader();
-  
-//   createToast('bodyToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', 'SEO Server is Running.');
-//   txttopTitle.textContent="SEO Content Machine Desktop App (Connected)"
-     
-//   return success=true;
-//   }
-
-//   } catch (error) {
-//     loginPanel.style.display = 'none';
-//       console.error(error)
-//       createToast('bodyToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'error', 'SEO Content Machine is not Running on this Machine. '+error);
-//       txttopTitle.textContent="SEO Content Machine Desktop App (Disconnected)"
-//       hideLoader();
-   
-//   }
-
-//   return 
-// }
 
 // Event Listeners for Input Fields and Submit Buttons 
 
@@ -887,183 +910,183 @@ function formatName(name) {
 
 // Loggs
 
-// async function callCronJob(isLoggedIn, RunningLocalServer) {
+async function callCronJob(isLoggedIn, RunningLocalServer) {
 
-//  let appSettingData; 
-//   try {
-// if (isLoggedIn &&  RunningLocalServer) {
-// console.log("Called from Cron Job  is Logged: " + isLoggedIn)
-//   // Retrieve the file content from the API
-// const response = await fetch(`${appurl}/AppSettings`, {
-//  method: 'GET',
-//  headers: {
-//    'Content-Type': 'application/json'
-//  }
-// });
+  const cronjob = require('node-cron');
 
-// if (response.ok) {
+ let appSettingData; 
+  try {
+if (isLoggedIn &&  RunningLocalServer) {
+console.log("Called from Cron Job  is Logged: " + isLoggedIn)
+  // Retrieve the file content from the API
+const response = await fetch(`${appurl}/AppSettings`, {
+ method: 'GET',
+ headers: {
+   'Content-Type': 'application/json'
+ }
+});
 
-//   appSettingData = await response.json();
+if (response.ok) {
 
-// console.log("Application Data")
-// console.table(appSettingData)
-// }
-// // Populate the input elements with the retrieved values
+  appSettingData = await response.json();
+
+console.log("Application Data")
+console.table(appSettingData)
+}
+// Populate the input elements with the retrieved values
    
-// function myScheduledTask() {
-//   console.log(`This Test is Running every ${appSettingData.montiroingInterval} using Schedular`);
-// }
+function myScheduledTask() {
+  console.log(`This Test is Running every ${appSettingData.montiroingInterval} using Schedular`);
+}
 
 
-// // Ensure valmontiroingIntervalMinutes is defined and a valid number
-// if (!appSettingData.checkWebApp) {
-//   // Schedule a task to run every valmontiroingIntervalMinutes minutes
+// Ensure valmontiroingIntervalMinutes is defined and a valid number
+if (!appSettingData.checkWebApp) {
+  // Schedule a task to run every valmontiroingIntervalMinutes minutes
   
-//   cronjob.schedule(`*/${appSettingData.montiroingInterval} * * * *`, () => {
+  cronjob.schedule(`*/${appSettingData.montiroingInterval} * * * *`, () => {
 
-//     try {
-//     myScheduledTask();
+    try {
+    myScheduledTask();
 
-//     if (!appSettingData.checkWebApp) {
+    if (!appSettingData.checkWebApp) {
 
-//       console.log(`This Monitoring of  Running and Waiting Projects check after every ${appSettingData.montiroingInterval} using Schedular`);
-//       startMonitoringProjects();
+      console.log(`This Monitoring of  Running and Waiting Projects check after every ${appSettingData.montiroingInterval} using Schedular`);
+      startMonitoringProjects();
   
-//     }
+    }
 
-//   } catch (error) {
-//     console.error('An Error occured in sechuling the cron:', error);
-//   }
+  } catch (error) {
+    console.error('An Error occured in sechuling the cron:', error);
+  }
 
-//   });
-// } 
+  });
+} 
 
-// if (appSettingData.checkSyncGoogle) {
-// // Make Google Syn Call Every Set Timer
-// cronjob.schedule(`*/${appSettingData.GAPISyncTime} * * * *`, () => {
-//   try {
-//       console.log(`This Google Sync API Call run after every ${appSettingData.GAPISyncTime} using Schedular`);
+if (appSettingData.checkSyncGoogle) {
+// Make Google Syn Call Every Set Timer
+cronjob.schedule(`*/${appSettingData.GAPISyncTime} * * * *`, () => {
+  try {
+      console.log(`This Google Sync API Call run after every ${appSettingData.GAPISyncTime} using Schedular`);
    
-//       getProjectsfromGAPI();
+      getProjectsfromGAPI();
 
-//   } catch (error) {
-//     console.error('An Error occured in sechuling the cron:', error);
-//   }
-// });
-// }
+  } catch (error) {
+    console.error('An Error occured in sechuling the cron:', error);
+  }
+});
+}
 
-// if (appSettingData.checkWriteLogs) {
-// // Clear Logs
-// cronjob.schedule(`*/${appSettingData.logClearTimer} * * * *`, () => {
-//   try {
+if (appSettingData.checkWriteLogs) {
+// Clear Logs
+cronjob.schedule(`*/${appSettingData.logClearTimer} * * * *`, () => {
+  try {
 
-//        //  Write Logs in the File.
-//     //  Call the function to clear the log file when the application starts
-//     console.log(`This Clear old Loggs  after every ${appSettingData.logClearTimer} using Schedular`);
+       //  Write Logs in the File.
+    //  Call the function to clear the log file when the application starts
+    console.log(`This Clear old Loggs  after every ${appSettingData.logClearTimer} using Schedular`);
    
-//     clearLogFile();
+    clearLogFile();
 
 
-//   } catch (error) {
-//     console.error('An Error occured in sechuling the cron for Clear Log:', error);
-//   }
-// });
-// }
-// }
-//   } catch(error) {
+  } catch (error) {
+    console.error('An Error occured in sechuling the cron for Clear Log:', error);
+  }
+});
+}
+}
+  } catch(error) {
     
-//     console.error('An Error occured in sechuling the cron Jobs:', error);
-//   }
-// }
+    console.error('An Error occured in sechuling the cron Jobs:', error);
+  }
+}
 
-// function ensureLogDirectoryExists(logDirectory) {
-//   const fs = require('fs');
-//     const path = require('path');
-//   if (!fs.existsSync(logDirectory)) {
-//     fs.mkdirSync(logDirectory, { recursive: true }, (err) => {
-//       if (err) {
-//         console.error('Error creating log directory:', err);
-//       }
-//     });
-//   }
-// }
-
-
-//   // Clear the log file when the application starts
-// function clearLogFile() {
-//   const fs = require('fs');
-//     const path = require('path');
-
-//   const logDirectory = 'logs';
-//   const logPath = path.join(logDirectory, 'app.log');
-
-//   ensureLogDirectoryExists(logDirectory);
-
-//   fs.writeFileSync(logPath, ''); // This will clear the log file
-// }
+function ensureLogDirectoryExists(logDirectory) {
+  const fs = require('fs');
+    const path = require('path');
+  if (!fs.existsSync(logDirectory)) {
+    fs.mkdirSync(logDirectory, { recursive: true }, (err) => {
+      if (err) {
+        console.error('Error creating log directory:', err);
+      }
+    });
+  }
+}
 
 
-//   function getCurrentTimestamp() {
-//     return new Date().toLocaleString(); // Use locale-specific date and time format
-//   }
+  // Clear the log file when the application starts
+function clearLogFile() {
+  const fs = require('fs');
+    const path = require('path');
+
+  const logDirectory = 'logs';
+  const logPath = path.join(logDirectory, 'app.log');
+
+  ensureLogDirectoryExists(logDirectory);
+
+  fs.writeFileSync(logPath, ''); // This will clear the log file
+}
+
+
+  function getCurrentTimestamp() {
+    return new Date().toLocaleString(); // Use locale-specific date and time format
+  }
   
-//   function writeToLog(message) {
-//      const fs = require('fs');
-//     const path = require('path');
-//     const { app } = require('electron'); // Import the app object from Electron
-//        const logDirectory = 'logs';
-//        const maxLogEntries = 10000; // Set the maximum number of log entries
+  function writeToLog(message) {
+     const fs = require('fs');
+    const path = require('path');
+    const { app } = require('electron'); // Import the app object from Electron
+       const logDirectory = 'logs';
+       const maxLogEntries = 10000; // Set the maximum number of log entries
 
-//     const logPath = path.join(logDirectory, 'app.log');
+    const logPath = path.join(logDirectory, 'app.log');
   
-//     ensureLogDirectoryExists(logDirectory);
+    ensureLogDirectoryExists(logDirectory);
 
-//     const timestamp = getCurrentTimestamp();
-//     const formattedMessage = `[${timestamp}] ${message}\n`;
+    const timestamp = getCurrentTimestamp();
+    const formattedMessage = `[${timestamp}] ${message}\n`;
   
-//     fs.appendFile(logPath, formattedMessage, (err) => {
-//       if (err) {
-//         console.error('Error writing to log file:', err);
-//       }
-//     });
+    fs.appendFile(logPath, formattedMessage, (err) => {
+      if (err) {
+        console.error('Error writing to log file:', err);
+      }
+    });
   
-//     // Check if the log file exists and its size
-//     fs.stat(logPath, (err, stats) => {
-//       if (!err && stats.size > maxLogEntries * 1024) {
-//         // If the log file exceeds the maximum size (in kilobytes), truncate it
-//         fs.truncate(logPath, 0, (err) => {
-//           if (err) {
-//             console.error('Error truncating log file:', err);
-//           }
-//         });
-//       }
-//     });
+    // Check if the log file exists and its size
+    fs.stat(logPath, (err, stats) => {
+      if (!err && stats.size > maxLogEntries * 1024) {
+        // If the log file exceeds the maximum size (in kilobytes), truncate it
+        fs.truncate(logPath, 0, (err) => {
+          if (err) {
+            console.error('Error truncating log file:', err);
+          }
+        });
+      }
+    });
 
 
-//   }
+  }
   
-
     
-//   function customLogger(...args) {
-//     args.forEach((logArg) => {
-//       writeToLog(JSON.stringify(logArg, null, 2).replace(/\n/g, '\n\t'));
-//     });
-//   }
+  function customLogger(...args) {
+    args.forEach((logArg) => {
+      writeToLog(JSON.stringify(logArg, null, 2).replace(/\n/g, '\n\t'));
+    });
+  }
 
 
-
-//   if (showtestButtons) {
-//     btChecktest.style.display = 'flex';
-//     btnuploadedImages.style.display = 'flex';
+  if (showtestButtons) {
+    btChecktest.style.display = 'flex';
+    btnuploadedImages.style.display = 'flex';
    
-//   } else {
-//     btChecktest.style.display = 'none';
-//     btnuploadedImages.style.display = 'none';
+  } else {
+    btChecktest.style.display = 'none';
+    btnuploadedImages.style.display = 'none';
   
-//   }
+  }
 
-//   if (iswriteLogs) {
-//     console.log = customLogger;
-//     console.table = customLogger; 
+  if (iswriteLogs) {
+    console.log = customLogger;
+    console.table = customLogger; 
  
-//   }
+  }

@@ -1,9 +1,5 @@
 // Functions for get GOogle Sheet New Data and updated DATA
 
-const fs = require('fs');
-const path = require('path');
-
-
 let tableData;
 //Check the Server -WORKING
 async function testServer() {
@@ -317,6 +313,8 @@ async function LocalReadJsonFile() {
   
       // createTableFromData(tableData, false ,'main', 'mainTableBody', true);  // Add checkboxes and use dashboard elements
 
+
+      tableData = formattedData;
 
       console.table(tableData);
 
@@ -1371,14 +1369,14 @@ async function deleteJSOApi(blogId) {
     });
     const isDeleteBlogID = await response.json();
 
-      console.table(isDeleteBlogID);
+  console.log('BlogID Deleted  successfully');
 
-     return isDeleteBlogID.success;
+  return isDeleteBlogID.success;
 
   }  catch(error) {
-    createToast('bodyToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while deleting JSON Data Error: '+ error );
-    hideLoader();
-     
+  
+    console.error('Error while deleting the Selected BlogID:', error);
+   
     }
 
 }
@@ -1420,8 +1418,6 @@ async function deleteJSOApi(blogId) {
 
       if (GAPIRequired && isSyncCall) {
 
-     
-
           const jsonReturn = {
            BlogId: newBlogID,
            username: JSONData.username,
@@ -1431,7 +1427,7 @@ async function deleteJSOApi(blogId) {
           }
  
            // Update the Created Project Data back to Google Server from Local App.
-        updateSelectedProjectDataGAPI(JSONData.SheetID, jsonGAPIData, false , calledfromSyncFunction) 
+        updateSelectedProjectDataGAPI(JSONData.SheetID, jsonReturn, false , calledfromSyncFunction) 
    
 
           // updateSelectedProjectDataGAPI(JSONData.SheetID, jsonReturn, false)
@@ -1517,8 +1513,6 @@ if (!calledfromSyncFunction) {
    hideLoader();
 
   }
-
- 
 
 //call Google Api to Update Data on Google Server
 
@@ -1729,6 +1723,9 @@ async function bulkUpdateDatatoSEO(dataArray, onlyUpdateBlogIs = false) {
           });
 
           if (resPoster.ok) {
+
+           
+
             console.log("Post Uploader Part updated successfully.");
             result.success = true;
             result.message = "Post Uploader Part updated successfully.";
@@ -1774,13 +1771,17 @@ async function bulkUpdateDatatoSEO(dataArray, onlyUpdateBlogIs = false) {
   
       }
 
+      createToast('WordpressToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', `Successfully updated to SEO ID ${creatorId}.`);
 
       results.push(result);
     }
+    
   } catch (error) {
     console.error('Error while performing Bulk Update to Data :', error);
     return creatorId;
   }
+
+ 
 
   return results;
 }
@@ -1788,65 +1789,142 @@ async function bulkUpdateDatatoSEO(dataArray, onlyUpdateBlogIs = false) {
 
 // Function to hightLight update Rows
 // Function to highlight and optionally update rows
-function updateAndHighlightRows(tableId, dataArray, cellIndexesToUpdate, shouldUpdate) {
-  const table = document.getElementById(tableId);
-  const rows = table.getElementsByTagName('tr');
+// function updateAndHighlightRows(tableId, dataArray, cellIndexesToUpdate, shouldUpdate) {
+//   const table = document.getElementById(tableId);
+//   const rows = table.getElementsByTagName('tr');
 
-  for (const data of dataArray) {
-    const [creatorId, newBlogId, postDate, newUrl] = data;
+//   for (const data of dataArray) {
+//     const [creatorId, newBlogId, postDate, newUrl] = data;
 
-    // Identify rows to highlight and update them
-    for (let i = 1; i < rows.length; i++) { // Start from index 1 to skip the header row
-      const cells = rows[i].getElementsByTagName('td');
-      if (columnIndex < cells.length) {
-        const cellValue = cells[columnIndex].textContent.trim();
-        if (targetValues.includes(cellValue)) {
-          // Highlight the row
-          rows[i].classList.add('highlighted-row');
+//     // Identify rows to highlight and update them
+//     for (let i = 1; i < rows.length; i++) { // Start from index 1 to skip the header row
+//       const cells = rows[i].getElementsByTagName('td');
+//       if (columnIndex < cells.length) {
+//         const cellValue = cells[columnIndex].textContent.trim();
+//         if (targetValues.includes(cellValue)) {
+//           // Highlight the row
+//           rows[i].classList.add('highlighted-row');
 
-          // Update cell values if shouldUpdate is true
-          if (shouldUpdate) {
-            for (const index of cellIndexesToUpdate) {
-              if (index < cells.length) {
-                switch (index) {
-                  case 0:
-                    // Update the creatorId cell
-                    cells[index].textContent = creatorId;
-                    break;
-                  case 1:
-                    // Update the newBlogId cell
-                    cells[index].textContent = newBlogId;
-                    break;
-                  case 2:
-                    // Update the postDate cell
-                    cells[index].textContent = postDate;
-                    break;
-                  case 3:
-                    // Update the newUrl cell
-                    const link = cells[index].querySelector('a');
-                    if (link) {
-                      link.href = newUrl;
-                      link.textContent = newUrl;
-                    }
+//           // Update cell values if shouldUpdate is true
+//           if (shouldUpdate) {
+//             for (const index of cellIndexesToUpdate) {
+//               if (index < cells.length) {
+//                 switch (index) {
+//                   case 0:
+//                     // Update the creatorId cell
+//                     cells[index].textContent = creatorId;
+//                     break;
+//                   case 1:
+//                     // Update the newBlogId cell
+//                     cells[index].textContent = newBlogId;
+//                     break;
+//                   case 2:
+//                     // Update the postDate cell
+//                     cells[index].textContent = postDate;
+//                     break;
+//                   case 3:
+//                     // Update the newUrl cell
+//                     const link = cells[index].querySelector('a');
+//                     if (link) {
+//                       link.href = newUrl;
+//                       link.textContent = newUrl;
+//                     }
 
-                    break;
-                  // Add more cases for additional cell indexes as needed
-                }
-              }
-            }
+//                     break;
+//                   // Add more cases for additional cell indexes as needed
+//                 }
+//               }
+//             }
 
-          }
+//           }
 
-          // Remove the highlight after a delay
-          setTimeout(() => {
-            rows[i].classList.remove('highlighted-row');
-          }, 3000);
-        }
-      }
+//           // Remove the highlight after a delay
+//           setTimeout(() => {
+//             rows[i].classList.remove('highlighted-row');
+//           }, 3000);
+//         }
+//       }
+//     }
+//   }
+// }
+
+
+
+
+
+// Function to Update JSON Blog Data
+async function UpdateSelectedDomainInfo(domainBlogid, JSONData) {
+
+  try {
+
+    const blogIDURL = `${appurl}/data/${domainBlogid}`
+    
+    const bloJSONData = JSON.stringify({
+      username : JSONData.username,
+      password : JSONData.password, 
+      url : JSONData.url,
+      group : JSONData.group
+    });
+
+    console.log("Data from Blog Update Data ")
+    console.table(bloJSONData)
+
+    const ResJSON=  await fetch(blogIDURL, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: bloJSONData
+    });
+    
+    const data = await ResJSON.json()
+
+    console.table( data)
+
+    if (data.success) {
+
+      console.log("JSON Updated Successfuly Success: " + data.success)
+
+      return true
+    } else {
+
+      console.error('Error while updating Domain Info');
+
+      return false
+
     }
+  } catch (error) {
+
+    console.error('Error while updating Domain Info Data:', error);
+    return false; // Set success to false if there was an error
   }
 }
 
+// Function to get JSON Blog Data
+async function getSelectedDomainInfo(domainBlogid) {
 
+  try {
 
+    const blogIDURL = `${appurl}/data/${domainBlogid}`
+    
+    const ResJSON=  await fetch(blogIDURL, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    
+    const data = await ResJSON.json()
 
+    console.table( data)
+
+    console.log("JSON Retreived Successfuly")
+
+      return data
+  
+  } catch (error) {
+
+    console.error('Error while updating Domain Info Data:', error);
+    return false; // Set success to false if there was an error
+  }
+}

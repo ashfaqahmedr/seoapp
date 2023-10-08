@@ -198,6 +198,80 @@ async function fetchArticleCreatorGAPI() {
 
 }
 
+//Get Data from Selected Domain from Google
+async function getSelectedDomainDataGAPI(selectedRowId) {
+
+  console.log("Selected Row ID: " + selectedRowId)
+  const constJSON = {
+    action: "getProjects",
+    username: LoggedUsername,
+    dataItems: [
+      {
+        columntoFind: "SheetID",
+        valueToFind: selectedRowId,
+        columnsToReturn: [
+          "SheetID",
+          "BlogId",
+          "url",
+          "username",
+          "password",
+          "group",
+        ]
+      }
+    ]
+  };
+
+  const responseData = await handleApiCall(
+    googleurl,
+    constJSON,
+    30000,
+    'Domain Data  by Sheet ID: ' + selectedRowId + ' fetched successfully.',
+    'An error occurred while fetching Domain Data for Sheet ID : '+ selectedRowId ,  true, false
+  );
+
+
+  const jsonProcessedResp = {
+    id : responseData.data[0].BlogId,
+    ...responseData.data[0]
+  }
+
+  return jsonProcessedResp;
+  
+  }
+
+
+//Google Api to make Upadate selected Domain Request
+async function updateSelectedDomainDataGAPI(selectedRowId, jsonData) {
+  
+  const constJSON = {
+    action: 'updateProjectsData',
+    username: LoggedUsername,
+    dataItems: [
+      {
+      columntoFind: "SheetID",
+      valueToFind: selectedRowId,
+      ...jsonData, // Include the base setting data
+      BlogId: jsonData.id,
+      EditedBy : LoggedFullName
+    }
+  ]
+};
+
+console.log("Update Settings Log")
+console.table(constJSON)
+
+const isSuccess = await handleApiCall(
+  googleurl,
+  constJSON,
+  30000,
+  'Selected Domain Data has been Updated successfully.',
+  'An error occurred while Updating selected Domain data',  false, true
+);
+
+ return isSuccess
+   
+}
+
  //Function to show Project by Status  from Google Server
  async function fetchProjectByStatusGAPI(articleStatus) {
 
@@ -311,7 +385,6 @@ async function getSelectedProjectDataGAPI(selectedRowId) {
   console.table(dataToParse);
 
 
-
   const projectNames = responseData.uniqueData;
   console.log("get UniqueData Log")
   console.table(projectNames);
@@ -325,7 +398,6 @@ async function getSelectedProjectDataGAPI(selectedRowId) {
   // createTableFromData(dataToParse);
   
 }
-
 
 //Google Api to make Upadate selected Project Request
 async function updateSelectedProjectDataGAPI(selectedRowId, jsonData, isRunProjectRequired, isSyncCall=false) {
@@ -416,10 +488,10 @@ if (isSuccess) {
       dialogProjectsDialog.close()
       dialogProjectsDialog.style.display="none";
 
-
-
       // // Update data based on ProjectID
       const formattedDate = formatDate(jsonData.PostStartDate, true);
+
+      updateTableRowCount('main', 'recordCount')
 
       modifyTableData('update', {
         SheetID: selectedRowId,
@@ -504,7 +576,10 @@ const isSuccess = await handleApiCall(
 
     if (isSuccess) {
     // Make API Call to Update Projects Web API
-      updateSidebarCountsGAPI() 
+
+    updateStatusCounts()
+
+    updateTableRowCount('main', 'recordCount')
 
     // Add a new row at index 2 (third row)
     const table = document.getElementById('main');
@@ -526,25 +601,28 @@ const isSuccess = await handleApiCall(
     newRow.cells[1].textContent =formattedDate;
 
 
-    newRow.cells[3].textContent = articleProjectNameInput.value;
+    newRow.cells[3].textContent = jsonData.ProjectName;
 
     const statusSpan1 = document.createElement('span');
     statusSpan1.className = 'status-pill status-draft';
     statusSpan1.textContent = 'draft';
     newRow.cells[4].appendChild(statusSpan1);
 
-    newRow.cells[6].textContent = postJobNameInput.value;
+    newRow.cells[6].textContent = jsonData.PostUploaderName;
 
     const statusSpan2 = document.createElement('span');
     statusSpan2.className = 'status-pill status-draft';
     statusSpan2.textContent = 'draft';
     newRow.cells[7].appendChild(statusSpan2);
 
-    newRow.cells[8].textContent = postDateInput.value;
-    newRow.cells[9].textContent = BlogIdInput.value;
+    const currentDate1 = new Date(jsonData.PostStartDate);
 
+    const formattedDate1 = formatDate(currentDate1, false);
 
-    newRow.cells[10].textContent = blogUrlInput.value;
+    newRow.cells[8].textContent = formattedDate1;
+    newRow.cells[9].textContent = jsonData.BlogId;
+
+    newRow.cells[10].textContent = jsonData.url;
 
     const statusSpan3 = document.createElement('span');
     statusSpan3.className = 'status-pill status-'+SeoStatus;
@@ -554,20 +632,19 @@ const isSuccess = await handleApiCall(
     console.log('Article Creator Data has been saved!');
     dialogProjectsDialog.style.display="none";
     dialogProjectsDialog.close();
-
     
     modifyTableData('add', {
       SheetID: GAPISheetID,
       createdOn: formattedDate,
       ProjectID: '',
-      ProjectName: constJSON.ProjectName,
+      ProjectName: jsonData.ProjectName,
       ProjectCreatorStatus: 'draft',
       PostUploaderId: '',
-      PostUploaderName: constJSON.PostUploaderName,
+      PostUploaderName: jsonData.PostUploaderName,
       PostUploaderStatus: 'draft',
-      PostStartDate: formattedDate,
+      PostStartDate: formattedDate1,
       BlogId:'',
-      url:  constJSON.url,
+      url:  jsonData.url,
       SEOStatus:SeoStatus
     },'SheetID');
     
@@ -609,6 +686,8 @@ if (isSuccess) {
   }
       
 }
+
+
 
 // Function to Mark RUN or DELETE
 // Function to perform an action (run or delete)
@@ -692,6 +771,10 @@ if (action==='Run') {
 
 
   deleteRowsFromTableAndArray('main', 0, selectedRowId)
+
+
+  updateTableRowCount('main', 'recordCount')
+
   // Remove from Object
 modifyTableData('remove', { SheetID: selectedRowId }, 'SheetID');
 
@@ -710,8 +793,6 @@ modifyTableData('remove', { SheetID: selectedRowId }, 'SheetID');
     }
   
 }
-
-
 
 //Google Api to make A Update Current Project Status on Google Server  Request
 async function UpdateSelectedProjectStatusGAPI(IdToUpdate, projectType, currentStatus) {
@@ -923,7 +1004,6 @@ async function fetchUsersGAPI() {
 
 }
 
-
 //Function to show selected User Data from Google Server
 async function fetchSelectedUsersGAPI(selectedRowId) {
 
@@ -963,7 +1043,6 @@ async function fetchSelectedUsersGAPI(selectedRowId) {
   fillUserDataDialog(dataToParse)
 
 }
-
 
 //Function to Add User Data to Google Server
 async function addUsersDataGAPI(jsonData, isWebApp) {
@@ -1009,12 +1088,11 @@ if (isSuccess) {
   dialoguserDialog.close()
   dialoguserDialog.style.display="none";
 
-  createToast( 'bodyToastDiv', 'success', 'fa-solid fa-check', 'Success', 'User Data has been Added');
+  createToast( 'WordpressToastDiv', 'success', 'fa-solid fa-check', 'Success', 'User Data has been Added');
 
   }
 }
 }
-
 
 //Function to update User Data to Google Server
 async function updateSelectedUsersDataGAPI(selectedRowId, jsonData, isLocal) {
@@ -1066,6 +1144,7 @@ async function updateSelectedUsersDataGAPI(selectedRowId, jsonData, isLocal) {
   
 }
 
+
 //Function to update User Data to Google Server
 async function deleteSelectedUsersDataGAPI(selectedRowId, isLocal=true) {
 
@@ -1113,6 +1192,7 @@ if (isSuccess) {
 
 
 }
+
 
 // Function to Get All data from GAPI
 async function getProjectsfromGAPI() {

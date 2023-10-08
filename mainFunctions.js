@@ -82,6 +82,10 @@ const toggleNotificationPanel = () => {
  // Function to Show User Dialog GOOGLE SERVER
  async function showProjSettDialog() {
 
+defaultLoaderId='dialogLoader';
+
+toggleLoader(defaultLoaderId, "popupCommonDialog")
+
 showLoader();
 
 
@@ -121,6 +125,7 @@ showLoader();
  
   AppSettingDialog.style.display = 'flex';
   AppSettingDialog.showModal();
+
   hideLoader();
 
    }
@@ -178,7 +183,7 @@ showLoader();
  async function UpdateAppSettings() {
 
   try {
-
+showLoader()
  const  settingJSONData = {
 
       "checkWebApp": checkWebApp.checked,
@@ -371,9 +376,6 @@ let columnToSort;
    
 
     searchInputID= 'searchInput'
-
-
-
   
     recordCountElement = 'recordCount'
 
@@ -757,6 +759,7 @@ function showLoader(loaderId=defaultLoaderId) {
   const loader = document.getElementById(loaderId);
   if (loader) {
     loader.style.display = 'block';
+
   }
 
 }
@@ -890,6 +893,37 @@ function updateMenuItems(apiCall, contextmenu) {
       addItem.onclick = createnewJobID;
       break;
 
+      case 'jsonData':
+      
+        // Hide for Web App as not Enabled for Now
+        if (isWebApp) {
+          addItem.style.display = 'none';
+          deleteItem.style.display = 'none';
+        } else {
+
+          addItem.style.display = 'flex';
+          addItem.querySelector('span').textContent = 'Add Domain Data';
+          addItem.onclick = OpenAddDomainDialog;
+          addItem.querySelector('i').className = 'fas fa-globe';
+
+          deleteItem.querySelector('span').textContent = 'Delete Domain Data';
+          deleteItem.querySelector('i').className = 'fas fa-trash';
+          deleteItem.onclick = deleteDomainInfo;
+
+        }
+       
+
+        runItem.style.display = 'none';
+        // runItem.querySelector('span').textContent = 'Run Selected Project';
+  
+        editItem.querySelector('span').textContent = 'Edit Domain Data';
+        editItem.querySelector('i').className = 'far fa-edit';
+        editItem.onclick = populateDomainInfo;
+       
+        // runItem.onclick = runProjectById;
+       
+        break;
+
     // Add cases for other API calls
 
     default:
@@ -900,6 +934,13 @@ function updateMenuItems(apiCall, contextmenu) {
 
 
 async function fetchAndPopulateDialog() {
+
+  defaultLoaderId='dialogLoader';
+
+  toggleLoader(defaultLoaderId, dialogProjectsDialog)
+
+// Show the dialog loader
+showLoader();
 
   clearDialog(dialogProjectsDialog);
  
@@ -977,6 +1018,10 @@ async function runProjectById() {
  
  // Function to Show User Dialog GOOGLE SERVER
 function showAddUserDialog() {
+
+defaultLoaderId='dialogLoader';
+
+toggleLoader(defaultLoaderId, "popupCommonDialog")
 
 showLoader();
 

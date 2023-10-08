@@ -27,7 +27,7 @@ function createToast(toastDivId, type, icon, title, text) {
 //Get All Project Data Api calls  both Local and Googler Server
 async function getAllProjectsDataDashBoard() {
   apiCalltoMake = 'ProjectsData';
-  popupCommonDialogHeader.innerText = "Showing All Project(s) Data";
+  popupCommonDialogHeader.textContent = "Showing All Project(s) Data";
 
   // Show Animation
   showLoader();
@@ -240,7 +240,7 @@ function modifyTableData(action, newData, keyField) {
   //Function to show Aricle Creator Projects Api calls  both Local and Googler Server
   async function fetchArticleCreator() {
   
-    popupCommonDialogHeader.innerText="Showing Article Creator Project(s) Data"
+    popupCommonDialogHeader.textContent="Showing Article Creator Project(s) Data"
      // Show Animation
      showLoader();
   
@@ -261,7 +261,7 @@ function modifyTableData(action, newData, keyField) {
 async function fetchPostUploader() {
 
 
-  popupCommonDialogHeader.innerText="Showing Post Uploader Project(s) Data"
+  popupCommonDialogHeader.textContent="Showing Post Uploader Project(s) Data"
      // Show Animation
      showLoader();
 
@@ -279,10 +279,13 @@ async function fetchPostUploader() {
 
 }
  
+
 //Function to show Json File Api calls  both Local and Googler Server
 async function ReadJsonFile() {
 
-  popupCommonDialogHeader.innerText="Showing JSON Data"
+  apiCalltoMake = 'jsonData';
+
+  popupCommonDialogHeader.textContent="Showing All Domain(s) Data"
 
   // Show Animation
   showLoader();
@@ -292,20 +295,39 @@ async function ReadJsonFile() {
     // Make Google API Call
     fetchJSONGAPI();
 
-
   } else {
     // Make LOCAL API Call
     LocalReadJsonFile();
-    
   
   }
    
 }
 
+// Get Domain Data
+async function getDomainData() {
+
+  // Show Animation
+  showLoader();
+
+  if (isWebApp) {
+
+    // Make Google API Call
+    fetchSelectedDomainGAPI();
+
+  } else {
+    // Make LOCAL API Call
+    fetchSelectedIDJSONSEO();
+  
+  }
+   
+}
+
+//
+
 // Function to show Article Creator Projects
 async function fetchArticleCreatorbyStatus(articleStatus) {
 
- popupCommonDialogHeader.innerText="Showing All Project(s) Data"
+ popupCommonDialogHeader.textContent="Showing All Project(s) Data"
   // Show Animation
   showLoader();
 
@@ -471,29 +493,312 @@ function handleAddNewBlogInfoChange() {
   }
 }
 
-
+// Add New Domain Dialog Open
 function OpenAddDomainDialog() {
 
-  showLoader()
+  defaultLoaderId='dialogLoader';
+
+  toggleLoader(defaultLoaderId, DialogdomainInfoAdd)
+
+// Show the dialog loader
+showLoader();
+
   clearDialog(DialogdomainInfoAdd);
-  DialogdomainInfoAdd.style.display = 'flex';
+
+
+  btnnewDomainDialog.style.display = 'flex'
+
+  btnupdateDomainDialog.style.display = 'none'
+
+
   DialogdomainInfoAdd.showModal();
+  DialogdomainInfoAdd.style.display = 'flex';
+
+
  hideLoader();
 
 
- const blogUrlInput = document.getElementById('blogInfoUrl');
+ DomaindialogTitle.textContent='Add New Domain Info'
 
- blogUrlInput.addEventListener('change', UpdateblogUrlInput);
-
- function UpdateblogUrlInput () {
-
-    const value = this.value;
-    blogUrlInput.value = `https://${value}`;
-
- }
-
+ domainUrlInput.removeEventListener('change', UpdatedomainUrlInput);
+ domainUrlInput.addEventListener('change', UpdatedomainUrlInput);
 
 }
+
+// Function to Populate Domain Dialog with Data
+async function populateDomainInfo() {
+
+  defaultLoaderId='dialogLoader';
+
+  toggleLoader(defaultLoaderId, DialogdomainInfoAdd)
+
+// Show the dialog loader
+showLoader();
+
+
+  try {
+
+
+
+  let dataToParse;
+
+  if (!isWebApp) {
+
+    dataToParse = await getSelectedDomainInfo(selectedRowId);
+   
+  } else {
+    
+    dataToParse = await getSelectedDomainDataGAPI(selectedRowId);
+
+    
+  }
+
+  console.log("get Selected Project Log")
+  console.table(dataToParse);
+
+
+  domainUrlInput.removeEventListener('change', UpdatedomainUrlInput);
+  domainUrlInput.addEventListener('change', UpdatedomainUrlInput);
+ 
+
+  clearDialog(DialogdomainInfoAdd);
+
+  DomaindialogTitle.textContent='Showing Selected Domain Information of  blogID: [' + selectedRowId + ']'
+
+
+  // Populate Project Data
+  domainInfoIdInput.value = dataToParse.id;
+  domainUserNameInput.value = dataToParse.username;
+  domainPasswordInput.value = dataToParse.password;
+  domainUrlInput.value = dataToParse.url;
+  domainGroupInput.value = dataToParse.group;
+
+
+
+    // Hide Project Add Blog Toggle
+ btnnewDomainDialog.style.display = 'none'
+
+btnupdateDomainDialog.style.display = 'flex'
+
+
+ // Hide Project Add Blog Toggle
+ btnnewDomainDialog.style.display = 'none'
+
+
+ DialogdomainInfoAdd.showModal();
+ DialogdomainInfoAdd.style.display = 'flex';
+
+ 
+ hideLoader();
+
+ createToast('DialogdomainInfotDiv', 'success', 'fa-solid fa-check', 'Success', 'Domain Data retreived Successfuly');
+  
+} catch (error) {
+
+hideLoader();
+
+createToast('DialogdomainInfotDiv', 'warning', 'fa-solid fa-exclamation-triangle', 'Warning', 'There is some error while Retreiving the Data');
+  
+}  
+  
+}
+
+// Function to add event to url Input 
+function UpdatedomainUrlInput () {
+ 
+  const value = this.value;
+  domainUrlInput.value = `https://${value}`;
+
+}
+
+// Function to Populate Domain Dialog with Data
+async function updateDomainInfo () {
+
+  try {
+
+let response;
+
+const isValid = validateRequiredFields(DialogdomainInfoAdd);
+  
+if (isValid) {
+
+const JSONData = {
+
+      // Populate Project Data
+      username: domainUserNameInput.value,
+      password: domainPasswordInput.value,
+      url: domainUrlInput.value,
+      group: domainGroupInput.value
+}
+// Show the dialog loader
+showLoader();
+
+
+  if (!isWebApp) {
+
+    response = await UpdateSelectedDomainInfo(selectedRowId, JSONData);
+  
+  } else {
+
+    response = await updateSelectedDomainDataGAPI(selectedRowId, JSONData);
+    
+  }
+
+  if (response) {
+
+    hideLoader();
+
+    createToast('DialogdomainInfotDiv', 'success', 'fa-solid fa-check', 'Success', 'Domain Data updated Successfuly');
+    
+    DialogdomainInfoAdd.close();
+    DialogdomainInfoAdd.style.display = 'none';
+
+  }  else {
+    hideLoader();
+
+    createToast('DialogdomainInfotDiv', 'warning', 'fa-solid fa-exclamation-triangle', 'Warning', 'There is some error while updating the Data');
+    
+  } 
+}
+ else{
+  
+  createToast('DialogdomainInfotDiv', 'warning', 'fa-solid fa-exclamation-triangle', 'Warning', 'Highlighted Input Value is missing or not Valid');
+
+}
+
+} catch (error) {
+
+hideLoader();
+
+createToast('DialogdomainInfotDiv', 'warning', 'fa-solid fa-exclamation-triangle', 'Warning', 'There is some error while updating the Data');
+  
+}  
+  
+}
+
+// Delete Domain data
+async function deleteDomainInfo () {
+
+  try {
+
+    let response;
+    
+    // Show the dialog loader
+    showLoader('dialogLoader');
+    
+      if (!isWebApp) {
+       
+        response = await  deleteJSOApi(selectedRowId)
+      
+      } else {
+    
+        createToast('WordpressToastDiv', 'warning', 'fa-solid fa-exclamation-triangle', 'Warning', 'Delete Domain Info is not Available for Domain');
+        
+      }
+    
+      if (response) {
+    
+        hideLoader('dialogLoader');
+        createToast('WordpressToastDiv', 'success', 'fa-solid fa-check', 'Success', 'Domain Data Deleted Successfuly');
+  
+      }  else {
+        hideLoader('dialogLoader');
+
+        createToast('WordpressToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some error while deleting domain the Data');
+        
+      } 
+    
+    
+    } catch (error) {
+      
+      hideLoader('dialogLoader');
+      
+      createToast('WordpressToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some error while deleting domain the Data');
+          
+    }  
+
+}
+
+// Call function create New Domain
+async function callAddNewDomain(isSyncCall=false) {
+  // Call createJSONDomain function with the provided data
+  
+  if (!isSyncCall) {
+  
+    const isValid = validateRequiredFields(DialogdomainInfoAdd);
+  if (isValid) {
+  showLoader()
+  
+    const bloJSONData = {
+      username : domainUserNameInput.value,
+      password : domainPasswordInput.value,
+      url : domainUrlInput.value,
+      group : domainGroupInput.value
+  
+    };
+    
+      console.table(bloJSONData)
+    
+    const response3 = await createNewBlogID(bloJSONData)
+  
+    domainInfoIdInput.value = response3.blogID;
+  
+    domainUrlInput.value=bloJSONData.url;
+  
+    hideLoader()
+  
+    
+    createToast('DialogdomainInfotDiv', 'success', 'fa-solid fa-check', 'Success', 'New BlogId Created Succefully. ID: ' + response3.blogID);
+  
+  
+  }   else{
+  
+
+    
+    createToast('DialogdomainInfotDiv', 'warning', 'fa-solid fa-exclamation-triangle', 'Warning', 'Highlighted Input Value is missing or not Valid');
+  
+  }
+  }
+   else {
+  
+
+    // const response3 = await createNewBlogID(bloJSONData)
+    // blogInfoIdInput.value = response3.blogID;
+  
+  }
+  }
+
+  // Function to AddNewDomain in EditProject Dialog
+
+async function EditDialogAddDomain() {
+  // Call createJSONDomain function with the provided data
+  
+    try {
+
+    showLoader()
+    const bloJSONData = {
+      username : blogUserNameInput.value,
+      password : blogPasswordInput.value,
+      url : blogUrlInput.value,
+      group : blogGroupInput.value
+
+    };
+    const response3 = await createNewBlogID(bloJSONData)
+    BlogIdInput.value = response3.blogID;
+
+    hideLoader()
+
+  createToast('ProjectToastDiv', 'success', 'fa-solid fa-check', 'Success', 'New BlogId Created Succefully. ID: ' + response3.blogID);
+
+  }  catch(error) {
+
+  hideLoader()
+
+  createToast('ProjectToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'error', 'There is error while creating New Domain. error: '+error);
+    return
+  }
+  }
+ 
 
 // Add New Post Uploder Project in Edit Dialog
 async function EditDialogAddPostUploader() {
@@ -525,97 +830,15 @@ async function EditDialogAddPostUploader() {
   }
 
 
-// Function to AddNewDomain in EditProject Dialog
-
-async function EditDialogAddDomain() {
-  // Call createJSONDomain function with the provided data
-  
-    try {
-
-    showLoader()
-    const bloJSONData = {
-      username : blogUserNameInput.value,
-      password : blogPasswordInput.value,
-      url : blogUrlInput.value,
-      group : blogGroupInput.value
-
-    };
-    const response3 = await createNewBlogID(bloJSONData)
-    BlogIdInput.value = response3.blogID;
-
-    hideLoader()
-
-  createToast('ProjectToastDiv', 'success', 'fa-solid fa-check', 'Success', 'New BlogId Created Succefully. ID: ' + response3.blogID);
-
-  }  catch(error) {
-
-  hideLoader()
-
-  createToast('ProjectToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'error', 'There is error while creating New Domain. error: '+error);
-    return
-  }
-  }
- 
-// Call function create New Domain
-async function callAddNewDomain(isSyncCall=false) {
-// Call createJSONDomain function with the provided data
-
-if (!isSyncCall) {
-
-  const isValid = validateRequiredFields(DialogdomainInfoAdd);
-if (isValid) {
-showLoader()
-
-  const blogInfoIdInput = document.getElementById('blogInfoId');
-  const blogUserNameInput = document.getElementById('blogInfoUserName');
-  const blogPasswordInput = document.getElementById('blogInfoPassword');
-  const blogUrlInput = document.getElementById('blogInfoUrl');
-  const blogGroupInput = document.getElementById('blogInfoGroup');
-
-
-  const bloJSONData = {
-    username : blogUserNameInput.value,
-    password : blogPasswordInput.value,
-    url : blogUrlInput.value,
-    group : blogGroupInput.value
-
-  };
-  
-    console.table(bloJSONData)
-  
-  const response3 = await createNewBlogID(bloJSONData)
-
-  blogInfoIdInput.value = response3.blogID;
-
-  blogUrlInput.value=bloJSONData.url;
-
-  hideLoader()
-
-  createToast('DialogdomainInfotDiv', 'success', 'fa-solid fa-check', 'Success', 'New BlogId Created Succefully. ID: ' + response3.blogID);
-
-
-}   else{
-
-  createToast('DialogdomainInfotDiv', 'warning', 'fa-solid fa-exclamation-triangle', 'Warning', 'Highlighted Input Value is missing or not Valid');
-
-}
-} else {
-
-  const response3 = await createNewBlogID(bloJSONData)
-  blogInfoIdInput.value = response3.blogID;
-
-  if (GAPICommandsForSEOServer) {
-
-
-  }
-
-}
-}
-
-
 async function populateInputsFromUniqueData(uniqueData, method) {
   // Clear old Values
 
+  defaultLoaderId='dialogLoader';
+
+  toggleLoader(defaultLoaderId, dialogProjectsDialog)
+
+// Show the dialog loader
+showLoader();
   
   // Populate the Dialog for adding Data
   if (method.toUpperCase() === "ADDDATA") {
@@ -997,7 +1220,8 @@ function clearDatalist(datalist) {
 async function fetchUsers() {
 
   apiCalltoMake = 'usersData';
-  DataHeaders.innerText = "Showing Users(s) Data";
+
+  popupCommonDialogHeader.textContent = "Showing All Users(s) Data";
 
    // Show Animation
    showLoader();
@@ -1164,6 +1388,12 @@ function openSettingDialog() {
  
 function fillCustomSettingDialogValues(data) {
 
+  defaultLoaderId='dialogLoader';
+
+  toggleLoader(defaultLoaderId, customSettingDialog)
+
+// Show the dialog loader
+showLoader();
 
   //  clear the Inputs before loading the dialog 
 clearDialog(customSettingDialog);
@@ -1228,7 +1458,9 @@ const formattedCurrentDate = currentDate.toISOString().split('T')[0];
 // Function to populate the dialog with retrieved settings data
 async function getandUpdateProjectSetting(METHOD) {
 
-  showLoader();
+
+// Show the dialog loader
+showLoader();
 
   let settingJSONData;
 
@@ -1297,6 +1529,14 @@ if (METHOD==="UPDATEDATA") {
 
 // Function to populate User Dialog with Data
 function fillUserDataDialog(data) {
+
+  defaultLoaderId='dialogLoader';
+
+  toggleLoader(defaultLoaderId, dialoguserDialog)
+
+// Show the dialog loader
+showLoader();
+  
   // Populate the input elements with the retrieved values
   //  clear the Inputs before loading the dialog 
 clearDialog(dialoguserDialog);
@@ -1406,13 +1646,43 @@ if (isWebApp) {
 
 // Function to close the dialog
 function closeDialog(dialogname) {
-  defaultLoaderId = 'loadingOverlay';
+
   const fileDialog = document.getElementById(dialogname);
+
+  if (defaultLoaderId !== 'loadingOverlay') {
+
+  const dialogLoader = document.getElementById(defaultLoaderId);
+
+  if (dialogLoader) {
+  dialogLoader.remove()
+}
+
+}
+
   fileDialog.style.display="none";
+
   fileDialog.close();
   
+  defaultLoaderId = 'loadingOverlay';
+
   hideLoader();
+
 // Event listeners
 }
 
 
+// Function add and Remove Loader
+function toggleLoader(loaderId, dialogId) {
+ 
+  const loader = document.getElementById(loaderId);
+  
+  if (loader) {
+    // dialog.removeChild(loader);
+    // If the loader doesn't exist, append a new loader with the specified ID
+    const clonedLoader = document.getElementById('loadingOverlay').cloneNode(true);
+    clonedLoader.id = loaderId; // Assign a unique ID for the cloned loader
+    dialogId.appendChild(clonedLoader);
+  } 
+
+
+}
