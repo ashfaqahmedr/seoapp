@@ -1010,8 +1010,7 @@ async function updateDataToApi(isRunProject) {
 // Function to run project by ID and show loader while running
 async function runProjectById() {
 
-
-  runPorojectSEO(selectedRowId);
+  runPorojectSEO(selectedRowId, true);
 
  }
 

@@ -97,6 +97,15 @@ console.log("Selected Action to Perfrom Text Content: " + fetchSelectedActionCon
   // Options for Perform Selected Action
   if (fetchSelectedActionData!== "")  {
 
+    if (isWebApp) {
+      // If isWebApp is true, disable specific options
+
+      selectActionToPerform.options[3].disabled = true; // Disable the "runPosterPrjoct" option
+      selectActionToPerform.options[4].disabled = true; // Disable the "UpdaProjectsData" option
+      selectActionToPerform.options[6].disabled = true; // Disable the "updateUnmatchedData" option
+      selectActionToPerform.options[7].disabled = true; // Disable the "updateRunUnmatchedData" option
+    }
+    
   if  (actionsToPerform === "UpdaProjectsData") {
       btnActionText.textContent = "Update Project(s) Data";
       btnSEOOperations.setAttribute("data-tooltip", "Update Project(s) Data");
@@ -116,7 +125,6 @@ console.log("Selected Action to Perfrom Text Content: " + fetchSelectedActionCon
       btnSEOOperations.setAttribute("data-tooltip", "Run Post Uploader Project(s)");
   
     
-
   } else if  (actionsToPerform === "deleteProject") {
     btnActionText.textContent = "delete Selected Prjeect(s)";
     btnSEOOperations.setAttribute("data-tooltip", "delete Selected Prjeect(s)");
@@ -126,7 +134,6 @@ console.log("Selected Action to Perfrom Text Content: " + fetchSelectedActionCon
       btnActionText.textContent = "delete Wordpress Data";
       btnSEOOperations.setAttribute("data-tooltip", "delete Wordpress Data");
       
-
 
     } else if  (actionsToPerform === "updateUnmatchedData") {
       btnActionText.textContent = "Update blogId(s) & Url(s)";
@@ -283,42 +290,6 @@ showLoader();
  
     try {
 
-      // // Step 1: Fetch data from the API endpoint
-      // const apiResponse = await fetch(`${appurl}/data`);
-      // const data = await apiResponse.json();
-  
-      // // Populate the domain URL datalist
-      // const domainurl = document.getElementById('domainurl');
-      // const urlDataList = document.getElementById('urlDataList');
-      // clearDatalist(urlDataList);
-  
-      // // Populate the domain URL datalist with all URLs from data
-      // data.forEach(item => {
-      //   const option = document.createElement('option');
-      //   option.value = item.url;
-      //   urlDataList.appendChild(option);
-      // });
-  
-      // // Add event listener to update other input fields based on selected URL
-      // domainurl.addEventListener('input', updateInputFields);
-  
-      // function updateInputFields() {
-      //   const selectedUrl = domainurl.value;
-      //   const selectedData = data.find(item => item.url === selectedUrl);
-  
-      //   if (selectedData) {
-      //     domaiusername.value = selectedData.username;
-      //     domaipassword.value = selectedData.password;
-      //     domaiBlogId.value = selectedData.id;
-  
-         
-      //   } else {
-      //     // Clear the input fields if no match is found
-      //     domaiusername.value = '';
-      //     domaipassword.value = '';
-      //     domaiBlogId.value = '';
-      //   }
-      // }
       
       populateWordpressDialog()
 
@@ -408,7 +379,8 @@ const fetchSelectedActionContent = selectedOption.textContent;
   if (blogData.length ===0) {
 
     createToast('WordpressToastDiv', 'warning', 'fa-solid fa-exclamation-triangle', 'Warning', 'There is not Valid Data present in Local Database');
-   hideLoader();
+ 
+    hideLoader();
     return
 
     }
@@ -664,63 +636,6 @@ console.log("Selected Action: " + actionsToPerform)
 
 
 // Update Project Settings
-// async function UpdateProjectSettings(isUpdateOnlyBlogIds, isRunProjectRequired) {
-  
-//   //  Perform Action Values
-// const selectedAction  = selectActionToPerform.value
-// console.log ("Selected Action to Perform is :" + selectedAction)
-
-
-// try {
-//     // Bulk Update the Result update.
-//     showLoader();
-//   const results = await bulkUpdateDatatoSEO(cellValuesArray, isUpdateOnlyBlogIds);
- 
-//   console.log(results);
-
-//   // Initialize an object to store the values to update
-//   const ValuestoUpdateToTable = {
-//     creatorId: [],
-//     postDate: [],
-//     newBlogId: [],
-//     newUrl: []
-//   };
-
-
-//   for (const result of results) {
-//     if (result.success) {
-//       // Find the corresponding data in cellValuesArray
-//       const index = cellValuesArray.findIndex(data => data[0] === result.creatorId);
-//       if (index !== -1) {
-//         ValuestoUpdateToTable.creatorId.push(cellValuesArray[index][0]);
-//         ValuestoUpdateToTable.postDate.push(posttodayDateInput.value);
-//         ValuestoUpdateToTable.newBlogId.push(cellValuesArray[index][2]);
-//         ValuestoUpdateToTable.newUrl.push(cellValuesArray[index][3]);
-//       }
-//     }
-//   }
-
-
-//   if (ValuestoUpdateToTable.creatorId.length > 0) {
-//     updateAndHighlightRows(tableID, ValuestoUpdateToTable, false);
-//     updateAndHighlightRows('main', ValuestoUpdateToTable, [6, 7, 8]);
-//   }
-
-//   if (isRunProjectRequired) {
-
-//      runSelectedProjectSEO(ValuestoUpdateToTable.creatorId, true);
-
-//   }
-
-
-//   } catch (error) {
-//    hideLoader();
-//     // Handle any errors that occur during the process
-//     console.error(`Error updating settings: ${error}`);
-//   }
-
-// }
-
 async function UpdateProjectSettings(isUpdateOnlyBlogIds, isRunProjectRequired) {
   // Perform Action Values
   const selectedAction = selectActionToPerform.value;
@@ -748,7 +663,6 @@ highlightRowsInTable(tableID, 1, creatorIds);
     console.error(`Error updating settings: ${error}`);
   }
 }
-
 
 
 function highlightRowsInTable(tableId, columnIndex, targetValues) {
@@ -789,7 +703,8 @@ async function runCreatorProjectInBatch(projectArrayToRun) {
     // Loop through the selected IDs and RUN each Project
     for (const prjoectID of projectArrayToRun) {
       // Call Local function to run a project no confimation required
-      runSelectedProjectSEO(prjoectID, false);
+      runProjectMain(prjoectID)
+
     
       }
   
@@ -833,19 +748,17 @@ async function runPosterProjectInBatch(PosterprojectIDsToRun) {
     // Call Local function to delete a project no confimation required
     deleteProjectDatafromSEO(postId)
   
-  
+
     deleteRowsFromTableAndArray(tableID, 1, postId, blogData)
   
     }   
 
   }
 
-
 }
 
 // Function to delete data based on the selected action
 async function deleteWordpressData(PostIdsToDelete) {
-
 
   let fetchSelectedActionData = selectPopupActions.value;
 

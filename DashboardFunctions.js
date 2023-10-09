@@ -1269,19 +1269,19 @@ hideLoader()
   }
   
 //Run Selected Project on Local Server or check its current status
-async function runPorojectSEO(selectedRowId) {
+async function runProjectMain(selectedRowId, cofirmation=false) {
 
   if (isWebApp) {
 
     //  Function to Mark Project for RUN
     showLoader()
     // Set to true if user confirmation is required
-    performAction(selectedRowId, "Run", false);
+    performAction(selectedRowId, "Run", cofirmation);
  
     
  } else {
 // Call Local function to run a project
-runSelectedProjectSEO(selectedRowId,);
+runSelectedProjectSEO(selectedRowId, cofirmation);
 
 }
 

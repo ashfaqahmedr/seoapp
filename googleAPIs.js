@@ -577,9 +577,7 @@ const isSuccess = await handleApiCall(
     if (isSuccess) {
     // Make API Call to Update Projects Web API
 
-    updateStatusCounts()
 
-    updateTableRowCount('main', 'recordCount')
 
     // Add a new row at index 2 (third row)
     const table = document.getElementById('main');
@@ -649,6 +647,11 @@ const isSuccess = await handleApiCall(
     },'SheetID');
     
     }
+
+    // Update side Counts and Update Total Counts
+    updateStatusCounts()
+    updateTableRowCount('main', 'recordCount')
+
 
     createToast('bodyToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', 'Project Data has been Created!');
 

@@ -1,4 +1,4 @@
-let webAppGitHub=true;
+let webAppGitHub=false;
 
 if (!webAppGitHub) {
 const { v4: uuidv4 } = require('uuid');
@@ -849,10 +849,9 @@ async function loginUser() {
         userIconElement.classList.add('fas', 'fa-crown');
         btngetUsers.style.display = 'flex';
         btnAddNewUser.style.display = 'flex';
-         if (!webAppGitHub) { 
+        if (!webAppGitHub) { 
         btnShowAppSetting.style.display = 'flex';
       }
-
         break;
       case 'Admin':
         userIconElement.classList.add('fas', 'fa-briefcase');
@@ -914,11 +913,12 @@ function formatName(name) {
 
 async function callCronJob(isLoggedIn, RunningLocalServer) {
 
-  const cronjob = require('node-cron');
-
  let appSettingData; 
+
   try {
 if (isLoggedIn &&  RunningLocalServer) {
+  const cronjob = require('node-cron');
+
 console.log("Called from Cron Job  is Logged: " + isLoggedIn)
   // Retrieve the file content from the API
 const response = await fetch(`${appurl}/AppSettings`, {
