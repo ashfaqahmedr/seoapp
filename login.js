@@ -7,6 +7,7 @@ const path = require('path');
 
 }
 
+
 const seourl ='http://localhost:8008'
 const seoProjectsUrl = `${seourl}/project`
 const appurl ='http://localhost:3000'
@@ -89,6 +90,11 @@ const spanfullName = document.getElementById('fullName');
 const spanuserName = document.getElementById('userName');
 const spanuserType = document.getElementById('UserType');
 const userIconElement = document.getElementById('userIcon');
+
+const btnlogoutButton = document.getElementById('logoutButton');
+const txtlogoutText = document.getElementById('logoutText');
+txtlogoutText.textContent='Re Load'
+btnlogoutButton.setAttribute("data-tooltip", "Re Load");
 
 const userIcon_Name  = document.getElementById('userIcon_Name');
 
@@ -204,6 +210,16 @@ const UserDialogSeoStatus = document.getElementById('userDialogSeoStatus');
 
 // Loader Elements
 const dialogpopupContainer = document.getElementById('popupContainer');
+
+
+// Close button event handler
+const btnclearNotification = document.getElementById('btnclearNot');
+const tblNotification = document.getElementById('notificationTableBody');
+btnclearNotification.addEventListener('click', () => {
+  tblNotification.innerHTML = '';
+  toggleNotificationPanel();
+});
+
 const dialogloadingOverlay = document.getElementById('loadingOverlay');
 
 
@@ -277,7 +293,7 @@ const dialogProjectsDialog = document.getElementById('ProjectsDialog');
       const cnspostUploaderSection = document.getElementById("postUploaderSection");
 
     
-      const addNewPosterID = document.getElementById("addNewPosterID");
+      const btnaddNewPosterID = document.getElementById("addNewPosterID");
 
 
       const DivProjectPosterrID = document.getElementById('DivProjectPosterrID')
@@ -517,6 +533,23 @@ let success =false;
   console.log("valprojectStatusInterval:", valprojectStatusInMilliseconds, "milliseconds");
 
   
+  if (showtestButtons) {
+    btChecktest.style.display = 'flex';
+    btnuploadedImages.style.display = 'flex';
+   
+  } else {
+    btChecktest.style.display = 'none';
+    btnuploadedImages.style.display = 'none';
+  
+  }
+
+  if (iswriteLogs) {
+    console.log = customLogger;
+    console.table = customLogger; 
+ 
+  }
+
+
   return success=true;
   
   }
@@ -524,7 +557,7 @@ let success =false;
    } catch (error) {
      console.error('Error retrieving Application settings:', error);
     //  createToast('SettingsToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'Error retrieving App settings from Local Server: ' + error);
-     hideLoader();
+      hideLoader(defaultLoaderId);
      return success=false;
    }
   
@@ -536,7 +569,7 @@ async function LocalServerSEO() {
   // Show Login     
 let success=false;
 
- showLoader();
+  showLoader(defaultLoaderId);
 
  try {
    const response = await fetch(`${seourl}/test`, {
@@ -550,7 +583,7 @@ let success=false;
    if (data.success)  {
 
 
- hideLoader();
+  hideLoader(defaultLoaderId);
  
  createToast('bodyToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', 'SEO Server is Running.');
  txttopTitle.textContent="SEO Content Machine Desktop App (Connected)"
@@ -563,7 +596,7 @@ let success=false;
      console.error(error)
      createToast('bodyToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'error', 'SEO Content Machine is not Running on this Machine. '+error);
      txttopTitle.textContent="SEO Content Machine Desktop App (Disconnected)"
-     hideLoader();
+      hideLoader(defaultLoaderId);
   
  }
 
@@ -689,7 +722,7 @@ window.addEventListener('load', function () {
 
 // Function to Handle API Calls for Local and WebApp
 // async function handleApiCall(url, requestData, timeoutMilliseconds, successMessage, errorMessage, showSuccessMessage = true, showDataUpdateRepsonse = false) {
-//   showLoader(); // Show loader before making the API call
+//    showLoader(defaultLoaderId); // Show loader before making the API call
 
 //   try {
 //     const response = await Promise.race([
@@ -705,7 +738,7 @@ window.addEventListener('load', function () {
 
 //       console.log("API Response from Handle APi Call ");
 //       console.table(data);
-//       hideLoader(); // Hide loader after the API call, whether it succeeds or fails
+//        hideLoader(defaultLoaderId); // Hide loader after the API call, whether it succeeds or fails
 //       if (showDataUpdateRepsonse && Array.isArray(data) && data.length > 0) {
 //         const firstItem = data[0];
 //         const success = firstItem.success;
@@ -733,7 +766,7 @@ window.addEventListener('load', function () {
 //       throw new Error('API call failed with status: ' + response.status);
 //     }
 //   } catch (error) {
-//     hideLoader(); // Hide loader in case of an error
+//      hideLoader(defaultLoaderId); // Hide loader in case of an error
 //     createToast('bodyToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', errorMessage + ' ' + error.message);
 //     throw new Error(error.message);
 //   }
@@ -741,7 +774,8 @@ window.addEventListener('load', function () {
 
 // // Refactored handleApiCall function
 async function handleApiCall(url, requestData, timeoutMilliseconds, successMessage, errorMessage, showSuccessMessage = true, showDataUpdateResponse = false) {
-  showLoader(); // Show loader before making the API call
+   
+  showLoader(defaultLoaderId); // Show loader before making the API call
 
   try {
     const response = await Promise.race([
@@ -752,7 +786,7 @@ async function handleApiCall(url, requestData, timeoutMilliseconds, successMessa
       new Promise((resolve) => setTimeout(resolve, timeoutMilliseconds)),
     ]);
 
-    hideLoader(); // Hide loader after the API call, whether it succeeds or fails
+     hideLoader(defaultLoaderId); // Hide loader after the API call, whether it succeeds or fails
 
     if (response.status === 200) {
       const data = await response.json();
@@ -872,6 +906,10 @@ async function loginUser() {
     userIcon_Name.style.display = 'flex';
     siderbar_Table.style.display = 'flex';
     loginPanel.style.display = 'none';
+
+    txtlogoutText.textContent='Log Out'
+    btnlogoutButton.setAttribute("data-tooltip", "Log Out");
+
     isLoggedIn=true
     showAdminPanel();
     callCronJob(isLoggedIn, RunningLocalServer)
@@ -1076,19 +1114,3 @@ function clearLogFile() {
     });
   }
 
-
-  if (showtestButtons) {
-    btChecktest.style.display = 'flex';
-    btnuploadedImages.style.display = 'flex';
-   
-  } else {
-    btChecktest.style.display = 'none';
-    btnuploadedImages.style.display = 'none';
-  
-  }
-
-  if (iswriteLogs) {
-    console.log = customLogger;
-    console.table = customLogger; 
- 
-  }

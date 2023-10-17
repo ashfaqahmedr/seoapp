@@ -97,15 +97,7 @@ console.log("Selected Action to Perfrom Text Content: " + fetchSelectedActionCon
   // Options for Perform Selected Action
   if (fetchSelectedActionData!== "")  {
 
-    if (isWebApp) {
-      // If isWebApp is true, disable specific options
-
-      selectActionToPerform.options[3].disabled = true; // Disable the "runPosterPrjoct" option
-      selectActionToPerform.options[4].disabled = true; // Disable the "UpdaProjectsData" option
-      selectActionToPerform.options[6].disabled = true; // Disable the "updateUnmatchedData" option
-      selectActionToPerform.options[7].disabled = true; // Disable the "updateRunUnmatchedData" option
-    }
-    
+  
   if  (actionsToPerform === "UpdaProjectsData") {
       btnActionText.textContent = "Update Project(s) Data";
       btnSEOOperations.setAttribute("data-tooltip", "Update Project(s) Data");
@@ -154,8 +146,8 @@ console.log("Selected Action to Perfrom Text Content: " + fetchSelectedActionCon
 
     }  else {
 
-      customSettingDialog.style.display = 'none';
-      customSettingDialog.close();
+      closeDialog('customSettingDialog')
+
     }
   }  
 
@@ -220,15 +212,33 @@ async function fetchGoogleData() {
   }
 }
 
-
+// Populate Options for 
 async function populateWordpressDialog() {
 
   let data;
 
   try {
-    if (!webAppGitHub) {
+    if (!webAppGitHub || !isWebApp) {
+      
+        // If isWebApp is true, disable specific options
+  
+        selectActionToPerform.options[3].disabled = false; // Enable the "runPosterPrjoct" option
+        selectActionToPerform.options[4].disabled = false; // Enable the "UpdaProjectsData" option
+        selectActionToPerform.options[6].disabled = false; // Enable the "updateUnmatchedData" option
+        selectActionToPerform.options[7].disabled = false; // Enable the "updateRunUnmatchedData" option
+    
+
       data = await fetchLocalData();
-    } else {
+    } 
+    if (webAppGitHub || isWebApp) {
+
+        // If isWebApp is true, disable specific options
+  
+        selectActionToPerform.options[3].disabled = true; // Disable the "runPosterPrjoct" option
+        selectActionToPerform.options[4].disabled = true; // Disable the "UpdaProjectsData" option
+        selectActionToPerform.options[6].disabled = true; // Disable the "updateUnmatchedData" option
+        selectActionToPerform.options[7].disabled = true; // Disable the "updateRunUnmatchedData" option
+      
       data = await fetchGoogleData();
     }
 
@@ -267,14 +277,13 @@ async function populateWordpressDialog() {
       }
       
 
-   hideLoader();
+    hideLoader(defaultLoaderId);
   } catch (error) {
     console.error('Error fetching data:', error);
     // Hide the dialog loader
-   hideLoader();
+    hideLoader(defaultLoaderId);
   }
 }
-
 
 // Show Wordpress Dialog
 async function fetchDomainsAndShowCoDialog(calledFromDashBoard=false) {
@@ -283,10 +292,10 @@ async function fetchDomainsAndShowCoDialog(calledFromDashBoard=false) {
 
 defaultLoaderId='dialogLoader';
 
-toggleLoader(defaultLoaderId, popupCommonDialog)
+createLoader(defaultLoaderId, popupCommonDialog)
 
 // Show the dialog loader
-showLoader();
+ showLoader(defaultLoaderId);
  
     try {
 
@@ -324,16 +333,13 @@ selectActionToPerform.addEventListener("change", updateActionToPerform);
  }          
  
           // Hide the dialog loader
-hideLoader();
+ hideLoader(defaultLoaderId);
  
-
-//  dialogconfrimDialog.style.display = 'none'
-//  dialogconfrimDialog.close();
  
     } catch (error) {
       console.error('Error fetching data:', error);
       // Hide the dialog loader
-    hideLoader();
+     hideLoader(defaultLoaderId);
     }
 
 
@@ -342,7 +348,7 @@ hideLoader();
 // Get Data by Selected Action parameter
 async function getProjectData() {
 
-  showLoader();
+   showLoader(defaultLoaderId);
 
  let fetchSelectedActionData = selectPopupActions.value;
 
@@ -380,7 +386,7 @@ const fetchSelectedActionContent = selectedOption.textContent;
 
     createToast('WordpressToastDiv', 'warning', 'fa-solid fa-exclamation-triangle', 'Warning', 'There is not Valid Data present in Local Database');
  
-    hideLoader();
+     hideLoader(defaultLoaderId);
     return
 
     }
@@ -424,18 +430,18 @@ if (fetchSelectedActionData === 'getProjectsData') {
     // Create a table or perform actions based on the fetchSelectedActionData
 
     createTableFromData(returnedTableData, true, tableID, false, 4);  // Add checkboxes and use dashboard elements
-   hideLoader();
+    hideLoader(defaultLoaderId);
   } else {
     // Handle cases where no data was fetched or an error occurred
     
     createToast('WordpressToastDiv', 'warning', 'fa-solid fa-exclamation-triangle', 'Warning', 'There is not Valid Data present in Local Database');
     console.error(`There is not Valid Data present in Local Database: ${fetchSelectedActionContent}`);
-   hideLoader();
+    hideLoader(defaultLoaderId);
   }
 
 }
 
-
+// WORKING BUT NOT ALL PAGES FETCHED
 // Function to get Wordpress Data
 async function fetchWordPressData() {
 
@@ -452,7 +458,7 @@ if (!domain || !username || !password) {
   return; 
 }
 
-showLoader();
+ showLoader(defaultLoaderId);
 const fetchActions = selectPopupActions.value
 
 console.log("Selected Action to perform: "+ fetchActions)
@@ -476,20 +482,20 @@ const mediaStatusQueryParam = `status=inherit,trash&per_page=${perPage}`; // Def
  switch (fetchActions) {
    case 'getPostData':
      popupCommonDialogHeader.textContent="Showing Wordpress fetched Post(s) Data "
-     apiEndpoint = `wp-json/wp/v2/posts?${statusQueryParam}`;
+     apiEndpoint = `wp-json/wp/v2/posts?orderby=id&order=desc&${statusQueryParam}`;
      break;
    case 'getMediaData':
      popupCommonDialogHeader.textContent="Showing Wordpress Media Data "
-     apiEndpoint = `wp-json/wp/v2/media?${mediaStatusQueryParam}`;
+     apiEndpoint = `wp-json/wp/v2/media?orderby=id&order=desc&${mediaStatusQueryParam}`;
      break;
   
    case 'getPagesData':
      popupCommonDialogHeader.textContent="Showing Wordpress Pages Data "
-     apiEndpoint = `wp-json/wp/v2/pages?${statusQueryParam}`;
+     apiEndpoint = `wp-json/wp/v2/pages?orderby=id&order=desc&${statusQueryParam}`;
      break;
    case 'getcatagoriesData':
      popupCommonDialogHeader.textContent="Showing Wordpress categories Data"
-     apiEndpoint =  `wp-json/wp/v2/categories?${statusQueryParam}`;
+     apiEndpoint =  `wp-json/wp/v2/categories?orderby=id&order=desc&${statusQueryParam}`;
      break;
    default:
      console.error('Invalid action:', fetchActions);
@@ -501,7 +507,7 @@ const mediaStatusQueryParam = `status=inherit,trash&per_page=${perPage}`; // Def
  }
 
  if (!apiEndpoint) {
- hideLoader();
+  hideLoader(defaultLoaderId);
    console.error('Invalid Wordpress API Endpoint:', fetchActions);
    createToast('WordpressToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'Not a Valid Wordpress Api Endpoint for Selected Action: ' + fetchActions);
    return;
@@ -517,7 +523,7 @@ const mediaStatusQueryParam = `status=inherit,trash&per_page=${perPage}`; // Def
     });
 
     if (!response.ok) {
-     hideLoader();
+      hideLoader(defaultLoaderId);
       createToast('WordpressToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'There is an error while fetching data from WordPress Server');
       console.error(`Failed to fetch ${fetchActions} data. Status: ${response.status}`);
       return
@@ -536,7 +542,7 @@ const mediaStatusQueryParam = `status=inherit,trash&per_page=${perPage}`; // Def
 if (DataFetchedFormAPI.length > 0) {
 
   createTableFromData(DataFetchedFormAPI, true ,tableID, false, 1);  // Add checkboxes and use dashboard elements
- hideLoader();
+  hideLoader(defaultLoaderId);
 
 createToast('WordpressToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', 'Wordpress Data has been fetched from selected <br> Domain:  ' + domain);
 console.log("Wordpress Data Table:")
@@ -547,15 +553,289 @@ console.table(DataFetchedFormAPI)
   
   createToast('WordpressToastDiv', 'warning', 'fa-solid fa-exclamation-triangle', 'Warning', 'Wordpress Data has not returned any Data or Valid Data selected <br>Domain: ' + domain);   
   console.error(`No data fetched for action: ${fetchActions}`);
- hideLoader();
+  hideLoader(defaultLoaderId);
 }
   } catch (error) {
     
-   hideLoader();
+    hideLoader(defaultLoaderId);
     createToast('WordpressToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', 'WordPress Data has been fetched from the selected <br> Domain:  ' + domain);
     console.error(`Error fetching ${fetchActions} data:`, error);
   }
 }
+
+// Function to fetch WordPress Data
+// Function to fetch WordPress Data
+// async function fetchWordPressData() {
+
+//   const keyToColumnMapping = {
+//     id: 'id',
+//     date: 'date',
+//     title: 'title.rendered',
+//     status: 'status',
+//     type: 'type',
+//     media_type: 'media_type',
+//     media_details: 'media_details.file',
+//     guid: 'guid.rendered',
+//     link:"link",
+//     name: "name",
+//     slug: "slug",
+
+//   };
+//   const domain = domainurl.value;
+//   const username = domaiusername.value;
+//   const password = domaipassword.value;
+
+//   // Check if valid credentials are provided
+//   if (!domain || !username || !password) {
+//     createToast('WordpressToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'Please provide domain, username, and password.');
+//     console.error('Invalid credentials. Please provide domain, username, and password.');
+//     return;
+//   }
+
+//    showLoader(defaultLoaderId);
+//   const fetchActions = selectPopupActions.value;
+
+//   console.log("Selected Action to perform: " + fetchActions)
+
+//   try {
+//     const perPage = 100;
+//     let page = 1; // Start with the first page
+
+//     let allWordPressData = []; // To store all fetched data
+
+//     let apiEndpoint;
+
+//     switch (fetchActions) {
+//       case 'getPostData':
+//         popupCommonDialogHeader.textContent = "Showing WordPress fetched Post(s) Data "
+//         apiEndpoint = `wp-json/wp/v2/posts?status=publish,draft,pending,future,private,inherit,trash&per_page=${perPage}&page=${page}`;
+//         break;
+//       case 'getMediaData':
+//         popupCommonDialogHeader.textContent = "Showing WordPress Media Data "
+//         apiEndpoint = `wp-json/wp/v2/media?status=inherit,trash&per_page=${perPage}&page=${page}`;
+//         break;
+//       case 'getPagesData':
+//         popupCommonDialogHeader.textContent = "Showing WordPress Pages Data "
+//         apiEndpoint = `wp-json/wp/v2/pages?status=publish,draft,pending,future,private,inherit,trash&per_page=${perPage}&page=${page}`;
+//         break;
+//       case 'getCategoriesData':
+//         popupCommonDialogHeader.textContent = "Showing WordPress Categories Data"
+//         apiEndpoint = `wp-json/wp/v2/categories?status=publish,draft,pending,future,private,inherit,trash&per_page=${perPage}&page=${page}`;
+//         break;
+//       default:
+//         console.error('Invalid action:', fetchActions);
+//         createToast('WordpressToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'Invalid selected WordPress Action: ' + fetchActions);
+//         return;
+//     }
+
+//     if (!apiEndpoint) {
+//        hideLoader(defaultLoaderId);
+//       console.error('Invalid WordPress API Endpoint:', fetchActions);
+//       createToast('WordpressToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'Not a Valid WordPress API Endpoint for Selected Action: ' + fetchActions);
+//       return;
+//     }
+
+//     const baseUrl = domain.endsWith('/') ? domain : domain + '/';
+
+//     while (true) {
+//       const response = await fetch(baseUrl + apiEndpoint, {
+//         headers: {
+//           Authorization: `Basic ${btoa(`${username}:${password}`)}`,
+//         },
+//       });
+
+//       if (!response.ok) {
+//          hideLoader(defaultLoaderId);
+//         createToast('WordpressToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'There is an error while fetching data from WordPress Server');
+//         console.error(`Failed to fetch ${fetchActions} data. Status: ${response.status}`);
+//         return;
+//       }
+
+//       const wordPressApiData = await response.json();
+
+//       if (wordPressApiData.length === 0) {
+//         // No more data to fetch, exit the loop
+//         break;
+//       }
+
+//       allWordPressData = allWordPressData.concat(wordPressApiData);
+
+//       // Increment the page number for the next request
+//       page++;
+
+//       // Update the API endpoint with the new page number
+//       apiEndpoint = `${apiEndpoint}&page=${page}`;
+//     }
+
+//     console.log("WordPress API Call unstructured Data: ")
+//     console.table(allWordPressData);
+
+//     const DataFetchedFromAPI = allWordPressData.map(item => {
+//       const mappedItem = {};
+//       for (const key in keyToColumnMapping) {
+//         const apiField = keyToColumnMapping[key];
+//         const apiValue = apiField.split('.').reduce((obj, field) => obj[field], item);
+//         mappedItem[key] = apiValue;
+//       }
+//       return mappedItem;
+//     });
+
+//     if (DataFetchedFromAPI.length > 0) {
+//       createTableFromData(DataFetchedFromAPI, true, tableID, false, 1); // Add checkboxes and use dashboard elements
+//        hideLoader(defaultLoaderId);
+
+//       createToast('WordpressToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', 'WordPress Data has been fetched from selected <br> Domain:  ' + domain);
+//       console.log("WordPress Data Table:")
+//       console.table(DataFetchedFromAPI);
+//     } else {
+//       createToast('WordpressToastDiv', 'warning', 'fa-solid fa-exclamation-triangle', 'Warning', 'WordPress Data has not returned any Data or Valid Data selected <br>Domain: ' + domain);
+//       console.error(`No data fetched for action: ${fetchActions}`);
+//        hideLoader(defaultLoaderId);
+//     }
+//   } catch (error) {
+
+//      hideLoader(defaultLoaderId);
+//     createToast('WordpressToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'Error fetching WordPress data: ' + error.message);
+//     console.error(`Error fetching ${fetchActions} data:`, error);
+//   }
+// }
+// async function fetchWordPressData() {
+//   const keyToColumnMapping = {
+//     id: 'id',
+//     date: 'date',
+//     title: 'title.rendered',
+//     status: 'status',
+//     type: 'type',
+//     media_type: 'media_type',
+//     media_details: 'media_details.file',
+//     guid: 'guid.rendered',
+//     link: 'link',
+//     name: 'name',
+//     slug: 'slug',
+//   };
+
+//   const domain = domainurl.value;
+//   const username = domaiusername.value;
+//   const password = domaipassword.value;
+
+//   // Check if valid credentials are provided
+//   if (!domain || !username || !password) {
+//     createToast('WordpressToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'Please provide domain, username, and password.');
+//     console.error('Invalid credentials. Please provide domain, username, and password.');
+//     return;
+//   }
+
+//    showLoader(defaultLoaderId);
+//   const fetchActions = selectPopupActions.value;
+
+//   console.log("Selected Action to perform: " + fetchActions);
+
+//   try {
+//     const perPage = 100;
+//     let page = 1; // Start with the first page
+
+//     let allWordPressData = []; // To store all fetched data
+
+//     let apiEndpoint;
+
+//     switch (fetchActions) {
+//       case 'getPostData':
+//         popupCommonDialogHeader.textContent = "Showing WordPress fetched Post(s) Data "
+//         apiEndpoint = `wp-json/wp/v2/posts?status=publish,draft,pending,future,private,inherit,trash&per_page=${perPage}&page=${page}`;
+//         break;
+//       case 'getMediaData':
+//         popupCommonDialogHeader.textContent = "Showing WordPress Media Data "
+//         apiEndpoint = `wp-json/wp/v2/media?status=inherit,trash&per_page=${perPage}&page=${page}`;
+//         break;
+//       case 'getPagesData':
+//         popupCommonDialogHeader.textContent = "Showing WordPress Pages Data "
+//         apiEndpoint = `wp-json/wp/v2/pages?status=publish,draft,pending,future,private,inherit,trash&per_page=${perPage}&page=${page}`;
+//         break;
+//       case 'getCategoriesData':
+//         popupCommonDialogHeader.textContent = "Showing WordPress Categories Data"
+//         apiEndpoint = `wp-json/wp/v2/categories?status=publish,draft,pending,future,private,inherit,trash&per_page=${perPage}&page=${page}`;
+//         break;
+//       default:
+//         console.error('Invalid action:', fetchActions);
+//         createToast('WordpressToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'Invalid selected WordPress Action: ' + fetchActions);
+//         return;
+//     }
+
+//     if (!apiEndpoint) {
+//        hideLoader(defaultLoaderId);
+//       console.error('Invalid WordPress API Endpoint:', fetchActions);
+//       createToast('WordpressToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'Not a Valid WordPress API Endpoint for Selected Action: ' + fetchActions);
+//       return;
+//     }
+
+//     const baseUrl = domain.endsWith('/') ? domain : domain + '/';
+
+//     while (true) {
+//       const response = await fetch(baseUrl + apiEndpoint, {
+//         headers: {
+//           Authorization: `Basic ${btoa(`${username}:${password}`)}`,
+//         },
+//       });
+
+//       if (!response.ok) {
+//          hideLoader(defaultLoaderId);
+//         createToast('WordpressToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'There is an error while fetching data from WordPress Server');
+//         console.error(`Failed to fetch ${fetchActions} data. Status: ${response.status}`);
+//         return;
+//       }
+
+//       const wordPressApiData = await response.json();
+
+//       if (wordPressApiData.length === 0) {
+//         // No more data to fetch, exit the loop
+//         break;
+//       }
+
+//       allWordPressData = allWordPressData.concat(wordPressApiData);
+
+//       // Increment the page number for the next request
+//       page++;
+
+//       // Update the API endpoint with the new page number
+//       // if (fetchActions !== 'getMediaData') {
+//       //   apiEndpoint = `${apiEndpoint}&page=${page}`;
+//       // }
+//     }
+
+//     console.log("WordPress API Call unstructured Data: ")
+//     console.table(allWordPressData);
+
+//     const DataFetchedFromAPI = allWordPressData.map(item => {
+//       const mappedItem = {};
+//       for (const key in keyToColumnMapping) {
+//         const apiField = keyToColumnMapping[key];
+//         const apiValue = apiField.split('.').reduce((obj, field) => obj[field], item);
+//         mappedItem[key] = apiValue;
+//       }
+//       return mappedItem;
+//     });
+
+//     if (DataFetchedFromAPI.length > 0) {
+//       createTableFromData(DataFetchedFromAPI, true, tableID, false, 1); // Add checkboxes and use dashboard elements
+//        hideLoader(defaultLoaderId);
+
+//       createToast('WordpressToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', 'WordPress Data has been fetched from selected <br> Domain:  ' + domain);
+//       console.log("WordPress Data Table:")
+//       console.table(DataFetchedFromAPI);
+//     } else {
+//       createToast('WordpressToastDiv', 'warning', 'fa-solid fa-exclamation-triangle', 'Warning', 'WordPress Data has not returned any Data or Valid Data selected <br>Domain: ' + domain);
+//       console.error(`No data fetched for action: ${fetchActions}`);
+//        hideLoader(defaultLoaderId);
+//     }
+//   } catch (error) {
+
+//      hideLoader(defaultLoaderId);
+//     createToast('WordpressToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'Error fetching WordPress data: ' + error.message);
+//     console.error(`Error fetching ${fetchActions} data:`, error);
+//   }
+// }
+
+
 
 // Function to perform actions based on selected action
 
@@ -592,7 +872,7 @@ console.log("Selected Action: " + actionsToPerform)
    return
   }
 
-  showLoader();
+   showLoader(defaultLoaderId);
 
     switch (selectedAction) {
 
@@ -628,7 +908,7 @@ console.log("Selected Action: " + actionsToPerform)
       createToast('WordpressToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'Invalid Selected action: ' + fetchSelectedActionContent);
       console.log('Invalid action:', fetchSelectedActionData);
       console.log("Selected Action to Get Data Text Content: " + fetchSelectedActionContent);
-     hideLoader();
+      hideLoader(defaultLoaderId);
       return;
     }
  
@@ -642,7 +922,7 @@ async function UpdateProjectSettings(isUpdateOnlyBlogIds, isRunProjectRequired) 
   console.log("Selected Action to Perform is: " + selectedAction);
 
   try {
-    showLoader();
+     showLoader(defaultLoaderId);
     const results = await bulkUpdateDatatoSEO(cellValuesArray, isUpdateOnlyBlogIds);
 
     console.log(results);
@@ -658,7 +938,7 @@ highlightRowsInTable(tableID, 1, creatorIds);
       runSelectedProjectSEO(ValuestoUpdateToTable.creatorId, true);
     }
   } catch (error) {
-    hideLoader();
+     hideLoader(defaultLoaderId);
     // Handle any errors that occur during the process
     console.error(`Error updating settings: ${error}`);
   }
@@ -703,14 +983,15 @@ async function runCreatorProjectInBatch(projectArrayToRun) {
     // Loop through the selected IDs and RUN each Project
     for (const prjoectID of projectArrayToRun) {
       // Call Local function to run a project no confimation required
-      runProjectMain(prjoectID)
 
+       runProjectMain(prjoectID)
     
       }
   
     }
 
-
+    highlightRowsInTable(tableID, 1, projectArrayToRun);
+ 
 }
 
 // Run Post Uploader Projects in batch.
@@ -748,7 +1029,6 @@ async function runPosterProjectInBatch(PosterprojectIDsToRun) {
     // Call Local function to delete a project no confimation required
     deleteProjectDatafromSEO(postId)
   
-
     deleteRowsFromTableAndArray(tableID, 1, postId, blogData)
   
     }   
@@ -836,7 +1116,7 @@ async function deleteWordpressData(PostIdsToDelete) {
           createToast('WordpressToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', `Failed to delete ID ${postId}.`);
       }
   }
-hideLoader();
+ hideLoader(defaultLoaderId);
   // Remove values from array after delete.
   cellValuesArray = [];
 }

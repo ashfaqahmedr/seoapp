@@ -15,7 +15,6 @@
   <link rel="stylesheet" href="dialogs.css">
   <link rel="stylesheet" href="tablecss.css">
   <link rel="stylesheet" href="responsive.css">
-  <link rel="stylesheet" href="runningPorojects.css">
   <link rel="stylesheet" href="contextLoader.css">
 
 </head>
@@ -31,7 +30,7 @@
   
   <div class="header-content" id="userHeader">
 
-    <button id="projectSettings" data-tooltip="App Config." class="New-Button" onclick="showProjSettDialog()">
+    <button id="projectSettings" title="App Config." data-tooltip="App Config." class="New-Button" onclick="showProjSettDialog()">
       <i class="fas fa-sliders-h"></i>
       <span class="text-hide">App Config.</span>
     </button>
@@ -51,11 +50,11 @@
       <span class="fullname text-hide" id="fullName"></span>
     </div>
   </div>
-    <span id="topTitle" class="sidebar-Header"></span>
+    <span id="topTitle" class="sidebar-Header">SEO Content Machine App</span>
  
-      <button id="logoutButton" data-tooltip="Log Out" class="New-Button" onclick="logout()" >
+      <button id="logoutButton" title="Log Out" data-tooltip="Log Out" class="New-Button" onclick="logout()" >
         <i class="fas fa-sign-out-alt"></i>
-        <span class="text-hide"> Log Out</span>
+        <span class="text-hide" id="logoutText">Log Out</span>
       </button>
       
   
@@ -83,7 +82,7 @@
         <div class="login-text">Login</div>
         <div class="input-box">
             <i class="fas fa-user"></i>
-           <input type="text" id="username" required autocomplete="off">
+           <input type="text" id="username" required autocomplete="off" autofocus>
             <label for="username">Username</label>
             
         </div>
@@ -301,7 +300,8 @@
          
           <button id="btntoggleNotification" class="New-Button" data-tooltip="Show Notification" onclick="toggleNotificationPanel()"> <i class="fa fa-eye"></i> <span class="text-hide" id="btnTogglenotiText">Show Notification</span></button>
 
-          <button id="Checktest" class="New-Button" data-tooltip="For Testing Functions" onclick="getProjectsfromGAPI()"> <i class="fas fa-star"></i> <span class="text-hide">Testing Functions</span></button>
+          <!-- <button id="Checktest" class="New-Button" data-tooltip="For Testing Functions" onclick="getProjectsfromGAPI()"> <i class="fas fa-star"></i> <span class="text-hide">Testing Functions</span></button> -->
+          <button id="Checktest" class="New-Button" data-tooltip="For Testing Functions" onclick="createNotificationList()"> <i class="fas fa-star"></i> <span class="text-hide">Testing Functions</span></button>
         
         
           <!-- <button id="Run-Buton" class="New-Button" onclick=" toggleNotificationPanel()"> <i class="fas fa-play"></i>  Running </button> -->
@@ -469,7 +469,6 @@
 
     <div class="subheading" >
        <span id="postuploader"></span>
-
 
        <div class="subsection" id="showeditPostName">
         <div class="toggle-button">
@@ -639,7 +638,7 @@
 
 
     <div class="dialogTitle"> <span id="dialogTitle"> Project Custom Settings </span>
-      <button class="New-Button"  data-tooltip="close" id="settingCancleButton" onclick="closeDialog('customSettingDialog')">
+      <button class="New-Button"  data-tooltip="close" id="cancelButton" onclick="closeDialog('customSettingDialog')">
         <i class="fas fa-window-close"></i>
       </button>
     </div>
@@ -1036,7 +1035,7 @@
 
   </dialog>
 
-  <div id="popupContainer">
+  <!-- <div id="popupContainer">
     <div class="project-popup" id="notificationTableTemplate">
       <div class="subsection">
       <h3 class="notification-title-container">List of Active Projects(s)</h3>
@@ -1056,7 +1055,21 @@
         </div>
       </div>
     </div>
+  </div> -->
+  <div id="popupContainer" class="project-popup">
+       <!-- Wordpress Manager -->
+       <div class="table_box">
+        <div class="notificationHeaders">
+         Active Projects(s)
+       
+          <button class="New-Button" data-tooltip="Clear Notification" id="btnclearNot"> <i class="fas fa-times" ></i> <span class="text-hide">Clear</span></button>           
+     
+        </div>
+          <div class="table__body">
+              <table id="notificationTableBody" class="SEOTable"> </table>   
+      </div >
   </div>
+</div>
 
 
   <!-- <button onclick="openDialog()"> Open Confirm Dialog
@@ -1184,15 +1197,15 @@
 
       <select id="selectedActionToPerform">
 
-      0  <option value="" selected disabled>Select Action Option</option>
-      1  <option value="runCreatorPrjoct">Run Creator Project</option>
-      2  <option value="deleteWordpressData">Delete WordPress Data</option>
-      3  <option value="runPosterPrjoct" disabled>Run Post Uploader</option>
+      <option value="" selected disabled>Select Action Option</option>
+      <option value="runCreatorPrjoct">Run Creator Project</option>
+      <option value="deleteWordpressData">Delete WordPress Data</option>
+      <option value="runPosterPrjoct" disabled>Run Post Uploader</option>
 
-      4  <option value="UpdaProjectsData">Update Projects Data</option>
-      5  <option value="deleteProject">Delete Projects</option>
-      6  <option value="updateUnmatchedData">Update Unmatch Projects BlogIDs</option>
-      7  <option value="updateRunUnmatchedData">Update & RunUnmatch Projects BlogIDs </option>
+      <option value="UpdaProjectsData">Update Projects Data</option>
+      <option value="deleteProject">Delete Projects</option>
+      <option value="updateUnmatchedData">Update Unmatch Projects BlogIDs</option>
+      <option value="updateRunUnmatchedData">Update & RunUnmatch Projects BlogIDs </option>
 
       </select>
 
@@ -1234,15 +1247,15 @@
 <script src="./DashboardFunctions.js"></script>
 <script src="./SeoLocalAPIs.js"></script>
 <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.17.2/dist/xlsx.full.min.js"></script>
+<!-- <script src="https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js"></script> -->
+
 <script src="./exportTable.js"></script>
 <script src="./wordPress.js"></script>
 <script src="./blogData.js"></script>
 <script src="./uploader.js"></script>
 <script src="./monitoringProjects.js"></script>
-
-
-
-
 
 <!-- <script src="./toastapp.js"></script> -->
 

@@ -1,8 +1,10 @@
 async function TestingFunctionsd() {
+  const fs = require('fs');
+const path = require('path');
 
-  const PostUploaderIDPassed = '651775085bab6b1fc8aaa40f';
+  const PostUploaderIDPassed = '6520195bcfbd4c094805d3f9';
 
-  const folderfilepath = "C:\\Users\\Hussaini Logistics\\AppData\\Roaming\\scm-next-plus\\content_cache\\651775085bab6b1fc8aaa40f\\articles"
+  const folderfilepath = "C:\\Users\\Hussaini Logistics\\AppData\\Roaming\\scm-next-plus\\content_cache\\6520195bcfbd4c094805d3f9\\articles"
   // const folderfilepath = ""
 
 
@@ -15,6 +17,8 @@ console.log("File Path Set to : "+ getfilePathResult)
 
 // Function to upload images
 async function uploadimagestoWordPress() {
+  const fs = require('fs');
+const path = require('path');
 
 
 const istextFileUpdated = main();
@@ -36,13 +40,15 @@ if(istextFileUpdated) {
 
 async function main() {
 
+  const fs = require('fs');
+const path = require('path');
 
   const siteUrl = 'https://0k7j.com';
 const username = 'admin37109';
 const password = 'v8rof4IstewRavoqahls';
 
 
-const newArticleCreatorID = '650fb3b02c477518dc2cf63a'; // Replace with the article creator ID
+const newArticleCreatorID = '6520195bcfbd4c094805d3f9'; // Replace with the article creator ID
 
 //  console.log('C:\Users\haier\AppData\Roaming\scm-next-plus\content_cache\650fb3b02c477518dc2cf63a\articles')
 
@@ -91,12 +97,18 @@ let stages;
  
     // Step 4: Log the final result
     console.log('Process completed.');
+
+    return true
   } catch (error) {
     console.error('Error: when procesing the from main Passed : STEPS ' + stages, error.message);
+    return false
   }
 }
 
 async function findImagesInTextFiles(textFilesDirectory, imagesDirectory) {
+
+  const fs = require('fs');
+const path = require('path');
 
 
   try {
@@ -135,6 +147,8 @@ async function findImagesInTextFiles(textFilesDirectory, imagesDirectory) {
 
 
 async function uploadImagesToWordPress(imagesDirectory, imageFileNames, siteUrl, username, password) {
+  const fs = require('fs');
+const path = require('path');
 
     
 createToast('bodyToastDiv', 'info', 'fa-solid fa-info-circle', 'Info', 'Images Started Uploading: '+ imagesDirectory);
@@ -192,6 +206,8 @@ try {
 
 // Batch Uploader Function
 async function uploadImagesToWordPressBatch(imagesDirectory, imageFileNames, siteUrl, username, password) {
+  const fs = require('fs');
+const path = require('path');
 
   try {
   const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64');
@@ -246,6 +262,8 @@ async function uploadImagesToWordPressBatch(imagesDirectory, imageFileNames, sit
 }
 
 async function updateTextFilesWithImageURLs(textFilesDirectory, outputFileName, uploadedImages) {
+  const fs = require('fs');
+const path = require('path');
 
   try{
   const matchingImageNames = [];
@@ -294,7 +312,9 @@ async function updateTextFilesWithImageURLs(textFilesDirectory, outputFileName, 
 
 
 async function uploadImagetoWordPressText(siteUrl, username, password, imagesDirectory, textFilesDirectory, isDeleteImages = false) {
- 
+  const fs = require('fs');
+  const path = require('path');
+  
 let success;
 
 const outputFileName = 'Uploaded Images Log.txt';

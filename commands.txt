@@ -62,43 +62,18 @@ pass: v8rof4IstewRavoqahls
 
 
 
+12-10-2023 ver 1.1.16
 
- {
- "jobName": "TEST",
-"articleUseCategoryInsert": true,
- "articleCountRequired": 10,
- "urlLimitResults": 25,
- "chainJobId": "650b156e320ccc3614560300",
- "articleUseImages": false,
- "articleJunkFilterFile": [
-			  ],
- "articleCategories": [
-       			"anonymous",
-       			"uncategorized",
-       			"misc",
-      		        "general",
-      		       "other"
-      		     ],
- "articleKeywordsFile": [
-          		  "cAT1",
-          		  "CAT2"
-       			 ], 
- 
- "imageInsert": {
-	     "InsertAtStartOfBody": false,
-              "ImageFormatString": "<img %float% src=\"%url%\" width=\"%width%\" alt=\"%alt%\"/>",
-	    "FrequencyFrom": 1,
-            "FrequencyTo": 1,
-	     "InsertType": "base64",
- 	     "UseBing": true,
-            "UseYoutube": true,
-            "UseCreativeCommons": false,
-            "UseUnsplash": false,
-            "UseBingCC": false,
-            "UsePixaBay": false,
-            "UsePexels": false
- }
-}
+Updated Notifications
+Updated Update Project Table through Functions
+Updated update TableData Function.
+
+
+12-10-2023 ver 1.1.17 Folders
+updated Auto create custom-settings.json
+updated Auto create  AppSettings.json
+
+
 
 
 

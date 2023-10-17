@@ -31,12 +31,13 @@ function ensureLogDirectoryExists(logDirectory) {
   }
 }
 
-
 // Construct file paths using the dynamic appDataDir
 const SEOfolderPath = path.join(appDataDir, 'content_cache');
 
-
 const filePath = path.join(appDataDir, 'blog-settings.json');
+
+ensureLogDirectoryExists(appDataDir)
+
 
 // blog-settings backup
 const hourlyBackupDir = path.join(appDataDir, 'Backups', 'hourly-backups');
@@ -84,8 +85,6 @@ async function createTimestampedBackup(filePath, backupDir) {
   }
 }
 
-
-
 // Middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -103,6 +102,9 @@ app.get('/SEOFolderPath', (req, res) => {
 // Custom Settings Section
 const settingDirectory = 'App Settings';
 const filePathsetting = path.join(settingDirectory, 'custom-settings.json');
+
+ensureLogDirectoryExists(settingDirectory)
+
 
 const initialData =   {
       "SheetID": "2d46b73e-7acf-455a-b71e-329372a4ecd2",
@@ -164,8 +166,6 @@ app.post('/custom-settings', async (req, res) => {
     res.status(500).json({ success: false, error: 'An error occurred while handling POST /custom-settings' });
   }
 });
-
-
 
 
 const filePathApplicationsetting = path.join(settingDirectory, 'AppSettings.json');
@@ -235,10 +235,6 @@ app.post('/AppSettings', async (req, res) => {
 
 
 
-
-
-
-
 // Helper function to generate a new ID
 function generateNewId(records) {
   const numericParts = records
@@ -251,7 +247,6 @@ function generateNewId(records) {
   const newId = 'blog' + String(newNumericPart).padStart(2, '0');
   return newId;
 }
-
 
 
 

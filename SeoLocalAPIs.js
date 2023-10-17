@@ -3,7 +3,7 @@
 let tableData;
 //Check the Server -WORKING
 async function testServer() {
-    showLoader();
+     showLoader(defaultLoaderId);
     try {
       const response = await fetch(`${seourl}/test`, {
         method: 'GET'
@@ -23,7 +23,7 @@ async function testServer() {
         console.error(error)
         createToast('bodyToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'error', 'Username or Password is invalid. error: '+error);
         loginHeader.textContent="SEO Content Machine Desktop App (DIsconnected)"
-        hideLoader();
+         hideLoader(defaultLoaderId);
      
     }
 }
@@ -166,17 +166,15 @@ try{
 
     // Display the data as a table
     console.table(tableData);
-    // Create Table
-    hideLoader()
-
-
+   
     createTableFromData(tableData, false ,'main', true);  // Add checkboxes and use dashboard elements
-    
+     // Create Table
+     hideLoader(defaultLoaderId)
     
     // createTableFromData(tableData, true, 'popupCommonTable', false, 1);
 
 } catch (error) {
-  hideLoader()
+   hideLoader(defaultLoaderId)
     console.error('Error:', error);
   }
 }
@@ -186,7 +184,7 @@ try{
   async function LocalCreatorProjects() {
    
     // Show Animation
-    showLoader();
+     showLoader(defaultLoaderId);
   
     // Task 1: Fetch all projects and store the required keys in an object
     fetch(`${seourl}/all-projects?type=article%20creator`)
@@ -217,7 +215,7 @@ try{
         createTableFromData(tableData, true, 'popupCommonTable', false, 1);
 
         fetchDomainsAndShowCoDialog(true);
-
+        hideLoader(defaultLoaderId);
 
         // return formattedData;
 
@@ -230,7 +228,7 @@ try{
       let title = 'Error';
       let text = 'An error occurred while fetching projects.';
       createToast('bodyToastDiv', type, icon, title, text);
-      hideLoader();
+       hideLoader(defaultLoaderId);
       });
 
 
@@ -242,7 +240,7 @@ try{
   async function LocalPostUploaderProjects() {
 
       // Show Animation
-      showLoader();
+       showLoader(defaultLoaderId);
     
        // Task 1: Fetch all projects and store the required keys in an object
        fetch(`${seourl}/all-projects?type=post%20uploader`)
@@ -271,7 +269,8 @@ try{
 
         createTableFromData(tableData, true, 'popupCommonTable', false, 1);
         fetchDomainsAndShowCoDialog(true);
-     
+      // Create Table
+      hideLoader(defaultLoaderId)
 
       
       })
@@ -283,7 +282,7 @@ try{
             let title = 'Error';
             let text = 'An error occurred while fetching projects.';
             createToast('bodyToastDiv', type, icon, title, text);
-            hideLoader();
+             hideLoader(defaultLoaderId);
       });
   }
   //Function to show Json File
@@ -291,7 +290,8 @@ async function LocalReadJsonFile() {
 
   
   // Show Animation
-  showLoader();
+  showLoader(defaultLoaderId);
+
   try {
     const response = await fetch(`${appurl}/data`);
     const data = await response.json();
@@ -321,6 +321,7 @@ async function LocalReadJsonFile() {
       createTableFromData(tableData, true, 'popupCommonTable', false, 1);
       fetchDomainsAndShowCoDialog(true);
 
+      hideLoader(defaultLoaderId);
       // Task 6: Generate the table based on the final formattedData object
     //  return formattedData;
 
@@ -334,14 +335,14 @@ async function LocalReadJsonFile() {
       let text = 'An error occurred while fetching projects.';
       createToast('bodyToastDiv', type, icon, title, text);
   
-      hideLoader();
+       hideLoader(defaultLoaderId);
     }
   }
   
   // Function to show  Projects by status
 async function LocalProjectsbyStatus(articleStatus) {
   // Show Animation
-  showLoader();
+   showLoader(defaultLoaderId);
 
   // Task 1: Fetch all projects and store the required keys in an object
   fetch(`${seourl}/all-projects?status=${articleStatus}`)
@@ -390,7 +391,7 @@ async function LocalProjectsbyStatus(articleStatus) {
          createToast('bodyToastDiv', type, icon, title, text);
        })
        .finally(() => {
-         hideLoader();
+          hideLoader(defaultLoaderId);
        });
    }
 
@@ -531,6 +532,8 @@ async function LocalProjectsbyStatus(articleStatus) {
       blogsetID = data.BlogId;
   
     } catch (error) {
+       
+      hideLoader(defaultLoaderId);
       console.error('Error while Fetching Data from  Post Uploader Project:', error);
     }
   
@@ -547,6 +550,8 @@ try {
       data.group = data3.group;
   
     } catch (error) {
+       
+  hideLoader(defaultLoaderId);
       console.error('Error while Fetching Data from  Local API.:', error);
     }
   
@@ -565,7 +570,7 @@ try {
 
     } catch (error) {
       console.error('Error fetching Project Data:', error);
-      hideLoader()
+       hideLoader(defaultLoaderId)
       }
   
   }
@@ -573,9 +578,7 @@ try {
 
 // Function to Update Data on SEO and Make Google API call to update Same of Google Server
   async function updateDatatoSEO(selectedRowId, chainJobId, id,  JSONData, isRunProjectRequired = false, calledfromSyncFunction = false) {
-    showLoader()
   
-
     let settingdata;
     
     let isupdatedDatatoSEO =false;
@@ -599,7 +602,7 @@ try {
     
       } catch (error) {
         console.error('Error while Fetching Custom Settings:', error);
-        hideLoader()
+        hideLoader(defaultLoaderId)
         success = false; // Set success to false if there was an error
       }
   try {    
@@ -659,10 +662,11 @@ try {
 
     }  else {
       isupdatedDatatoSEO=false;
-      hideLoader()
+      hideLoader(defaultLoaderId)
       console.error("Error in updating data of Article Creator Project");
     }
   } catch (error) {
+    hideLoader(defaultLoaderId)
     console.error("Error in updating data of Article Creator Project" , error);
   }
 
@@ -677,6 +681,7 @@ const folderpath = await getArticleCreatorPath(selectedRowId);
  isupdatedDatatoSEO=true;
 
 } catch (error) {
+  hideLoader(defaultLoaderId)
   console.error("Error occured while get Folder Path " , error);
 }
 
@@ -721,7 +726,7 @@ const PosterjsonData = JSON.stringify({
    
   }  else {
     isupdatedDatatoSEO=false;
-    hideLoader()
+    hideLoader(defaultLoaderId)
     console.error("Error in updating Post Upload Data Project: ");
 
   }
@@ -766,14 +771,14 @@ const PosterjsonData = JSON.stringify({
       } else {
 
         isupdatedDatatoSEO=data.success;
-        hideLoader()
+         hideLoader(defaultLoaderId)
         console.log("JSON Updated Successfuly Success: " + isupdatedDatatoSEO)
    
       }
 
     } catch (error) {
       console.error('Error while updating Domain Info Data:', error);
-      hideLoader()
+       hideLoader(defaultLoaderId)
       success = false; // Set success to false if there was an error
     }
 
@@ -786,51 +791,28 @@ const PosterjsonData = JSON.stringify({
 
    if (isupdatedDatatoSEO && !calledfromSyncFunction) {
 
-    hideLoader();
+     hideLoader(defaultLoaderId);
+
     // Try to hide when not called from AutoSync Function
-    dialogProjectsDialog.close();
-    dialogProjectsDialog.style.display="none";
+
+    
+    closeDialog('ProjectsDialog')
 
     createToast('bodyToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', " ID: "+ selectedRowId + ' Updated Successfully ');
  
-    // Assuming you have the row index stored in selectedRowIndex
-       const table = document.getElementById('main');
-       const row = table.rows[selectedRowIndex];
-         
-       const formattedDate = formatDate(JSONData.PostStartDate, false);
-
-
-       if (row) {
-
-     
-         row.cells[1].textContent = articleProjectNameInput.value;
-
-         row.cells[3].textContent = JSONData.PostUploaderId;
-         
-         row.cells[4].textContent = postJobNameInput.value;
-          
-         row.cells[6].textContent = formattedDate;
-
-         row.cells[7].textContent = JSONData.BlogId;
-
-
-         const link = row.cells[8].querySelector('a');
-
-         if (link) {
-           // Update the link's href attribute and text content
-           link.href = JSONData.url;
-           link.textContent = JSONData.url;
-         }
-
-       }
-
-
+    
+  // Update Table with Data
+   const celIndexesToUpdate = [1, 3, 4, 6, 7, 8]
+   const formattedDate = formatDate(JSONData.PostStartDate, false);
+  //  Values to Update
+  const valuesToUpdate= [JSONData.ProjectName, JSONData.PostUploaderId, JSONData.PostUploaderName, formattedDate, JSONData.BlogId, JSONData.url]
+    updateRowCellsByValue('main', 0, selectedRowId, celIndexesToUpdate, valuesToUpdate)
 
       //  Update tableData Object
        modifyTableData('update', {
         ProjectID: selectedRowId,
         ProjectName: JSONData.ProjectName,
-        PostUploaderId:JSONData.chainJobId,
+        PostUploaderId:JSONData.PostUploaderId,
         PostUploaderName: JSONData.PostUploaderName,
         PostStartDate: formattedDate,
         BlogId: JSONData.BlogId,
@@ -872,7 +854,7 @@ const PosterjsonData = JSON.stringify({
   isupdatedDatatoSEO=false;
   createToast('bodyToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'error', 'There is error while Updating data to Local & SEO Api: ' + error);
    console.error('Error while updating JSON API  data:', error);
-   hideLoader()
+    hideLoader(defaultLoaderId)
  }
 
 }
@@ -911,7 +893,7 @@ const PosterjsonData = JSON.stringify({
    } catch (error) {
     createToast('ProjectToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'error', 'There is error while retreiving Custom Settings: ' + error);
      console.error('Error while updating JSON API  data:', error);
-     hideLoader()
+      hideLoader(defaultLoaderId)
    }
 
    try {
@@ -933,7 +915,7 @@ const PosterjsonData = JSON.stringify({
 
         createToast('ProjectToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'error', 'There is error while Creating New Article Creator Project: ' + error);
          console.error('There is error while Creating New Article Creator Project:', error);
-         hideLoader()
+          hideLoader(defaultLoaderId)
        }
 
 try {       
@@ -949,7 +931,7 @@ try {
 
       createToast('ProjectToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'error', 'There is error while Creating New Post Uploader Project: ' + error);
        console.error('There is error while Creating New Post Uploader Project: ', error);
-       hideLoader()
+        hideLoader(defaultLoaderId)
      }
 
       // Step 3: Create new Blog and BLogID from LOCAL Host and Update data
@@ -987,7 +969,7 @@ try {
 
           createToast('ProjectToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'error', 'There is error while Creating New BlogID  for Domain: ' + error);
           console.error('There is error while Creating New BlogID  for Domain: ', error);
-          hideLoader()
+           hideLoader(defaultLoaderId)
         }
 
     } else {
@@ -1085,7 +1067,7 @@ try {
 
       createToast('ProjectToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'error', 'There is error while Posting Article Creator or Post Uploader Data to SEO: ' + error);
        console.error('There is error while Posting Article Creator or Post Uploader Data to SEO:', error);
-       hideLoader()
+        hideLoader(defaultLoaderId)
      }    
       // Step 6: Update the newBlogID using POST Method
 
@@ -1095,7 +1077,7 @@ try {
 
 
           // alert('New Article Creator ID: ' + newArticleCreatorID + ' New Post Uploader ID: ' + newPostUploaderID + ' New Blog ID: ' + newBlogID);
-      hideLoader();
+       hideLoader(defaultLoaderId);
 
       createToast('bodyToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', 'New Article Creator Project with ID:' + newArticleCreatorID + '<br> has been created,  New Post Uploader with ID: ' + newPostUploaderID + '<br> has been created, New Blog with ID: ' + newBlogID + ' has been created!');
 
@@ -1136,7 +1118,7 @@ try {
     
             // Add the Created Project Data back to Google Server from Local App.
 
-            createSelectedProjectDataGAPI (jsonGAPIData, false, isDuplicated, calledfromSyncFunction )
+            createSelectedProjectDataGAPI(jsonGAPIData, false, isDuplicated, calledfromSyncFunction )
                  
           }
 
@@ -1213,7 +1195,7 @@ try {
           // Update Rows Count
       updateTableRowCount('main', 'recordCount')
 
-      hideLoader();
+       hideLoader(defaultLoaderId);
 
       
     }
@@ -1221,15 +1203,13 @@ try {
     // Try to hide when not called from AutoSync Function
 if (!calledfromSyncFunction) {
   console.log('Article Creator Data has been saved!');
-  dialogProjectsDialog.close();
-  dialogProjectsDialog.style.display="none";
+  closeDialog('ProjectsDialog')
   }
-
-
 
 } 
 
 catch (error) {
+  hideLoader(defaultLoaderId);
 console.error('Error retrieving settings:', error);
 createToast('ProjectToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'There is error while fetching data from SEO Server: ' + error);
         
@@ -1237,13 +1217,12 @@ createToast('ProjectToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error
 }
 
 
-
 //Delete Selected Project From Local Server and Make Google API call and Make Google API call to Delete Same of Google Server
 async function deleteProjectDatafromSEO(selectedRowId, isSyncCall =false, sheetID=false) {
 
 
-    if (!isSyncCall) {
-  showLoader()
+  if (!isSyncCall) {
+   showLoader(defaultLoaderId)
     }
 
 
@@ -1260,8 +1239,6 @@ async function deleteProjectDatafromSEO(selectedRowId, isSyncCall =false, sheetI
 
     console.log("Creator Project ID: "+ selectedRowId +"Post Uploader ID: "+ Postjobids)
 
-   
-
     // Step 3: Delete selected RowId of Creator
     const isArticleDeleted =  await deleteSeoProjects(selectedRowId)
 
@@ -1274,7 +1251,7 @@ async function deleteProjectDatafromSEO(selectedRowId, isSyncCall =false, sheetI
     console.log("Post Uploader ID: "+ Postjobids +"Is Deleted: "+isPostDeleted)
 
     // // Step 5: Delete blogIds
-    // const isJobIDDeleted = await deleteJSOApi(blogsetID);
+    // const isJobIDDeleted = await deleteSelectedDomainInfo(blogsetID);
 
     // console.log("Blog ID: "+ blogsetID +"Is Deleted: "+ isJobIDDeleted)
 
@@ -1293,7 +1270,9 @@ async function deleteProjectDatafromSEO(selectedRowId, isSyncCall =false, sheetI
        deleteRowsFromTableAndArray('main', 0, selectedRowId)
 
        // // Remove data from tableData object  based on ProjectID
-          modifyTableData('remove', { ProjectID: selectedRowId }, 'ProjectID');
+      modifyTableData('remove', { ProjectID: selectedRowId }, 'ProjectID');
+
+      hideLoader(defaultLoaderId);
 
   if  (isSyncCall) {
 
@@ -1316,7 +1295,7 @@ createToast('bodyToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', 'S
 
 
   if (!isSyncCall) {
-     hideLoader();
+      hideLoader(defaultLoaderId);
   
       }
 
@@ -1325,7 +1304,7 @@ createToast('bodyToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', 'S
      
     if (!isSyncCall) {
 
-      hideLoader();
+       hideLoader(defaultLoaderId);
    
       console.error('Error while deleting Poject ID:' + selectedRowId, error);
       createToast('bodyToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'There is some Error while deleting Project from SEO Server <br>error: '+ error + " Project ID: " + selectedRowId);
@@ -1360,28 +1339,6 @@ async function deleteSeoProjects(deleteid) {
 }
 
 
-//Sub function for Delete deleteProjectDatafromSEO  Selected ID  from JSON file on Local Server
-async function deleteJSOApi(blogId) {
-
-  try {
-    const response = await fetch(`${appurl}/data/${blogId}`, {
-      method: 'DELETE'
-    });
-    const isDeleteBlogID = await response.json();
-
-  console.log('BlogID Deleted  successfully');
-
-  return isDeleteBlogID.success;
-
-  }  catch(error) {
-  
-    console.error('Error while deleting the Selected BlogID:', error);
-   
-    }
-
-}
-
-
   // Function to create array field input
   function parseCommaSeparatedString(inputString) {
     return inputString.split(',').map(item => item.trim());
@@ -1410,7 +1367,7 @@ async function deleteJSOApi(blogId) {
       const data = await response.json();
       const newBlogID = data.id;
       console.log('New Blog ID:', newBlogID);
-  
+      hideLoader(defaultLoaderId);
       createToast('bodyToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', 'New Blog with ID: ' + newBlogID + ' has been created!');
 
 
@@ -1451,7 +1408,107 @@ async function deleteJSOApi(blogId) {
       };
     }
   }
+
+  // Function to get JSON Blog Data
+async function getSelectedDomainInfo(domainBlogid) {
+
+  try {
+
+    const blogIDURL = `${appurl}/data/${domainBlogid}`
+    
+    const ResJSON=  await fetch(blogIDURL, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    
+    const data = await ResJSON.json()
+
+    console.table( data)
+
+    console.log("JSON Retreived Successfuly")
+
+      return data
   
+  } catch (error) {
+
+    console.error('Error while updating Domain Info Data:', error);
+    return false; // Set success to false if there was an error
+  }
+}
+
+  
+  // Function to Update JSON Blog Data
+async function UpdateSelectedDomainInfo(domainBlogid, JSONData) {
+
+  try {
+
+    const blogIDURL = `${appurl}/data/${domainBlogid}`
+    
+    const bloJSONData = JSON.stringify({
+      username : JSONData.username,
+      password : JSONData.password, 
+      url : JSONData.url,
+      group : JSONData.group
+    });
+
+    console.log("Data from Blog Update Data ")
+    console.table(bloJSONData)
+
+    const ResJSON=  await fetch(blogIDURL, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: bloJSONData
+    });
+    
+    const data = await ResJSON.json()
+
+    console.table( data)
+
+    if (data.success) {
+
+      console.log("JSON Updated Successfuly Success: " + data.success)
+
+      return true
+    } else {
+
+      console.error('Error while updating Domain Info');
+
+      return false
+
+    }
+  } catch (error) {
+
+    console.error('Error while updating Domain Info Data:', error);
+    return false; // Set success to false if there was an error
+  }
+}
+
+
+//Sub function for Delete deleteProjectDatafromSEO  Selected ID  from JSON file on Local Server
+async function deleteSelectedDomainInfo(blogId) {
+
+  try {
+    const response = await fetch(`${appurl}/data/${blogId}`, {
+      method: 'DELETE'
+    });
+    const isDeleteBlogID = await response.json();
+
+  console.log('BlogID Deleted  successfully');
+
+  return isDeleteBlogID.success;
+
+  }  catch(error) {
+  
+    console.error('Error while deleting the Selected BlogID:', error);
+   
+    }
+
+}
+
 //Sub function to GET Project Settings from JSON file on Local Server
 async function getProjectSettingsLocal() {
 
@@ -1459,7 +1516,6 @@ async function getProjectSettingsLocal() {
   sheetIDInput.style.display='none';
   
   seoStatusInput.style.display='none';
-
 
 
   try {
@@ -1481,12 +1537,13 @@ async function getProjectSettingsLocal() {
    
    createToast('SettingsToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', 'Settings has been loaded!');
 
+   hideLoader(defaultLoaderId);
  }
 
    } catch (error) {
      console.error('Error retrieving settings:', error);
      createToast('SettingsToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'Error retrieving settings from Local Server: ' + error);
-     hideLoader();
+     hideLoader(defaultLoaderId);
    }
 }
 
@@ -1505,12 +1562,16 @@ async function updateProjectSettingsLocal(settingJSONData, calledfromSyncFunctio
 
  if (response.ok) {
 
+
       // Try to hide when not called from AutoSync Function
 if (!calledfromSyncFunction) {
+
+  hideLoader(defaultLoaderId);
+
+  closeDialog('customSettingDialog')
+
   createToast('bodyToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', 'Settings has been loaded!');
-  customSettingDialog.close()
-   customSettingDialog.style.display="none";
-   hideLoader();
+
 
   }
 
@@ -1523,20 +1584,21 @@ if (!calledfromSyncFunction) {
 
  }
 
+ hideLoader(defaultLoaderId);
+
  return true
 
    } catch (error) {
      console.error('Error retrieving settings:', error);
      createToast('bodyToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'Error retrieving settings from Local Server: ' + error);
-     hideLoader();
+      hideLoader(defaultLoaderId)
    }
    
 }
 
+
 // Function to collect Unique Data
 async function populateDialogWithUniqueDataSEO(method) {
-
-  showLoader()
 
   if (method.toUpperCase() === "GETDATA") {
 
@@ -1606,16 +1668,18 @@ console.table(projectNames);
 
 // Populate input elements i the dialog with the options obtained from the API response
 
+hideLoader(defaultLoaderId)
  populateInputsFromUniqueData(projectNames, method);
 
   } catch (error) {
     console.error("Error processing data:", error);
-    hideLoader()
+     hideLoader(defaultLoaderId)
   }
 
   // Populate Dialog without Unique List
 }  else {
 
+  hideLoader(defaultLoaderId)
   populateInputsFromUniqueData(false, method);
 
 }
@@ -1627,6 +1691,9 @@ async function bulkUpdateDatatoSEO(dataArray, onlyUpdateBlogIs = false) {
   const results = [];
 
   try {
+
+    const celIndexesToUpdate = [6, 7, 8]
+
     for (const data of dataArray) {
       const [creatorId, posterId, newBlogId, newUrl] = data;
       const result = { creatorId, success: false, message: '' };
@@ -1670,6 +1737,7 @@ async function bulkUpdateDatatoSEO(dataArray, onlyUpdateBlogIs = false) {
           });
 
           if (resCreator.ok) {
+
             console.log('Creator Project Part updated successfully.');
             result.success = true;
             result.message = 'Creator Project Part updated successfully.';
@@ -1724,7 +1792,12 @@ async function bulkUpdateDatatoSEO(dataArray, onlyUpdateBlogIs = false) {
 
           if (resPoster.ok) {
 
-           
+            const formattedDate = formatDate(posttodayDateInput.value, false);
+            
+            //  Values to Update
+            const valuesToUpdate = [formattedDate, newBlogId, newUrl]
+          
+             updateRowCellsByValue('main', 0, creatorId, celIndexesToUpdate, valuesToUpdate)
 
             console.log("Post Uploader Part updated successfully.");
             result.success = true;
@@ -1745,6 +1818,8 @@ async function bulkUpdateDatatoSEO(dataArray, onlyUpdateBlogIs = false) {
        
 
         let MainjsonData;
+        const formattedDate = formatDate(posttodayDateInput.value, false);
+       
        
        const commonData = {
           PostStartDate: formattedDate,
@@ -1787,144 +1862,3 @@ async function bulkUpdateDatatoSEO(dataArray, onlyUpdateBlogIs = false) {
 }
 
 
-// Function to hightLight update Rows
-// Function to highlight and optionally update rows
-// function updateAndHighlightRows(tableId, dataArray, cellIndexesToUpdate, shouldUpdate) {
-//   const table = document.getElementById(tableId);
-//   const rows = table.getElementsByTagName('tr');
-
-//   for (const data of dataArray) {
-//     const [creatorId, newBlogId, postDate, newUrl] = data;
-
-//     // Identify rows to highlight and update them
-//     for (let i = 1; i < rows.length; i++) { // Start from index 1 to skip the header row
-//       const cells = rows[i].getElementsByTagName('td');
-//       if (columnIndex < cells.length) {
-//         const cellValue = cells[columnIndex].textContent.trim();
-//         if (targetValues.includes(cellValue)) {
-//           // Highlight the row
-//           rows[i].classList.add('highlighted-row');
-
-//           // Update cell values if shouldUpdate is true
-//           if (shouldUpdate) {
-//             for (const index of cellIndexesToUpdate) {
-//               if (index < cells.length) {
-//                 switch (index) {
-//                   case 0:
-//                     // Update the creatorId cell
-//                     cells[index].textContent = creatorId;
-//                     break;
-//                   case 1:
-//                     // Update the newBlogId cell
-//                     cells[index].textContent = newBlogId;
-//                     break;
-//                   case 2:
-//                     // Update the postDate cell
-//                     cells[index].textContent = postDate;
-//                     break;
-//                   case 3:
-//                     // Update the newUrl cell
-//                     const link = cells[index].querySelector('a');
-//                     if (link) {
-//                       link.href = newUrl;
-//                       link.textContent = newUrl;
-//                     }
-
-//                     break;
-//                   // Add more cases for additional cell indexes as needed
-//                 }
-//               }
-//             }
-
-//           }
-
-//           // Remove the highlight after a delay
-//           setTimeout(() => {
-//             rows[i].classList.remove('highlighted-row');
-//           }, 3000);
-//         }
-//       }
-//     }
-//   }
-// }
-
-
-
-
-
-// Function to Update JSON Blog Data
-async function UpdateSelectedDomainInfo(domainBlogid, JSONData) {
-
-  try {
-
-    const blogIDURL = `${appurl}/data/${domainBlogid}`
-    
-    const bloJSONData = JSON.stringify({
-      username : JSONData.username,
-      password : JSONData.password, 
-      url : JSONData.url,
-      group : JSONData.group
-    });
-
-    console.log("Data from Blog Update Data ")
-    console.table(bloJSONData)
-
-    const ResJSON=  await fetch(blogIDURL, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: bloJSONData
-    });
-    
-    const data = await ResJSON.json()
-
-    console.table( data)
-
-    if (data.success) {
-
-      console.log("JSON Updated Successfuly Success: " + data.success)
-
-      return true
-    } else {
-
-      console.error('Error while updating Domain Info');
-
-      return false
-
-    }
-  } catch (error) {
-
-    console.error('Error while updating Domain Info Data:', error);
-    return false; // Set success to false if there was an error
-  }
-}
-
-// Function to get JSON Blog Data
-async function getSelectedDomainInfo(domainBlogid) {
-
-  try {
-
-    const blogIDURL = `${appurl}/data/${domainBlogid}`
-    
-    const ResJSON=  await fetch(blogIDURL, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    });
-    
-    const data = await ResJSON.json()
-
-    console.table( data)
-
-    console.log("JSON Retreived Successfuly")
-
-      return data
-  
-  } catch (error) {
-
-    console.error('Error while updating Domain Info Data:', error);
-    return false; // Set success to false if there was an error
-  }
-}

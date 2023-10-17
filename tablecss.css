@@ -15,6 +15,8 @@
   overflow: hidden;
 }
 
+ 
+
 .table_box .table__header {
   height: 25px;
   display: flex;
@@ -177,10 +179,65 @@ font-weight: 1000;
 
 
 
+  /* CSS for the notification panel */
+  .project-popup {
+  
+    position: fixed;
+    background-color: #80dbf1fd;
+    border: 2px solid #444;
+    padding: 5px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    z-index: 9999;
+    box-shadow: 4px 0px 4px 4px rgba(238, 34, 34, 0.548);
+    right: 10px;
+    bottom: 10px;
+    width: 40dvw;
+    height: auto;
+    max-height: 80dvh;
+    overflow: hidden;
+    font-size: 14px; /* Adjust the font size as needed */
+  }
+  
+    
 
+.notificationHeaders {
+  border-radius: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 5px;
+  justify-content: space-around;
+  align-items: stretch;
+  flex-direction: row;
+  display: flex;
+  font-weight: bold;
+  text-align: left;
+  background-color: #ccc;
+  color: #000;
+  border-bottom: 1px solid rgb(253, 9, 62);
+  position: sticky;
+  color: var(--color-white);
+  background-color: var(--color-default);
+  z-index: 9999;
+  }
+
+
+  #btnclearNot {
+    position:fixed;
+    right: 10px;
+    font-size: 20px;
+  background-color: transparent !important;
+  color: rgb(250, 72, 72) !important;
+  padding: 2px 2px 2px 2px !important;
+  z-index: 1000;
+
+  }
+
+.highlighted-row {
+  background-color: rgb(46, 114, 46) !important;
+}
 
 .table__body {
-  
   padding-top: 0px;
   padding-bottom: 1px;
   padding-left: 3px;

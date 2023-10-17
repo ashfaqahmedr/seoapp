@@ -390,8 +390,9 @@ async function getSelectedProjectDataGAPI(selectedRowId) {
   console.table(projectNames);
 
   // Fill Options for the Project Name, Post Project and Blog ID
-  populateInputsFromUniqueData(projectNames, "GETDATA");
 
+  populateInputsFromUniqueData(projectNames, "GETDATA");
+  hideLoader(defaultLoaderId)
     // Populate Project Data
     populateProjectData(dataToParse);
 
@@ -449,68 +450,34 @@ const isSuccess = await handleApiCall(
   'An error occurred while Updating selected Project data',  false, true
 );
 
-if (isSuccess) {
+if (isSuccess && !isSyncCall) {
 
-  // Assuming you have the row index stored in selectedRowIndex
 
-  const table = document.getElementById('main');
-  const row = table.rows[selectedRowIndex];
+  closeDialog('ProjectsDialog');
+  hideLoader(defaultLoaderId);
 
-    if (row) {
+  // // Update data based on ProjectID
+  const formattedDate = formatDate(jsonData.PostStartDate, true);
+  const celIndexesToUpdate = [3, 5, 6, 8, 9, 10, 11]
+ //  Values to Update
+ const valuesToUpdate= [jsonData.ProjectName, jsonData.PostUploaderId, jsonData.PostUploaderName, formattedDate, jsonData.BlogId, jsonData.url, LocalSEOStatus]
 
-      row.cells[3].textContent = articleProjectNameInput.value;
+  updateRowCellsByValue('main', 0, selectedRowId, celIndexesToUpdate, valuesToUpdate)
+
+  // updateTableRowCount('main', 'recordCount')
   
-    // Update ProjectStatus span element
-    const projectStatusSpan = row.cells[4].querySelector('span.status-pill');
-    const cleanedProjectStatus = removeTrailingDots(ProjectStatusinput.value);
-    projectStatusSpan.textContent = ProjectStatusinput.value;
-    projectStatusSpan.className = 'status-pill'; // Remove all classes and set to 'status-pill'
-    projectStatusSpan.classList.add(`status-${cleanedProjectStatus.toLowerCase()}`);
-      row.cells[6].textContent = postJobNameInput.value;
-  
-    // Update PostUploaderStatus span element
-    const postUploaderStatusSpan = row.cells[7].querySelector('span.status-pill');
-    const cleanedPostUploaderStatus = removeTrailingDots(PostUploaderStatusInput.value);
-    postUploaderStatusSpan.textContent = PostUploaderStatusInput.value;
-    postUploaderStatusSpan.className = 'status-pill'; // Remove all classes and set to 'status-pill'
-    postUploaderStatusSpan.classList.add(`status-${cleanedPostUploaderStatus.toLowerCase()}`);
-  
-      row.cells[8].textContent = postDateInput.value;
-      row.cells[10].textContent = blogUrlInput.value;
+  modifyTableData('update', {
+    SheetID: selectedRowId,
+    ProjectName: jsonData.ProjectName,
+    PostUploaderId: jsonData.PostUploaderId,
+    PostUploaderName: jsonData.PostUploaderName,
+    PostStartDate: formattedDate,
+    BlogId: jsonData.BlogId,
+    url:  jsonData.url,
+    SEOStatus: LocalSEOStatus
+  },'SheetID');
 
-  
-      const seoStatusSpan = row.cells[11].querySelector('span.status-pill');
-      const cleanedSEOStatus = removeTrailingDots(LocalSEOStatus);
-      seoStatusSpan.textContent = LocalSEOStatus;
-      seoStatusSpan.className = 'status-pill'; // Remove all classes and set to 'status-pill'
-      seoStatusSpan.classList.add(`status-${cleanedSEOStatus.toLowerCase()}`);
-
-      dialogProjectsDialog.close()
-      dialogProjectsDialog.style.display="none";
-
-      // // Update data based on ProjectID
-      const formattedDate = formatDate(jsonData.PostStartDate, true);
-
-      updateTableRowCount('main', 'recordCount')
-
-      modifyTableData('update', {
-        SheetID: selectedRowId,
-        ProjectID: ProjectIDInput.value,
-        ProjectName: jsonData.ProjectName,
-        ProjectCreatorStatus: ProjectStatusinput.value,
-        PostUploaderId: jsonData.PostUploaderId,
-        PostUploaderName: jsonData.PostUploaderName,
-        PostUploaderStatus: PostUploaderStatusInput.value,
-        PostStartDate: formattedDate,
-        BlogId: jsonData.BlogId,
-        url:  jsonData.url,
-        SEOStatus: SEOStatusInput.value
-      },'SheetID');
-
-      createToast('bodyToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', 'Project Data has been Updated!');
-
-    
-  }
+  createToast('bodyToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', 'Project Data has been Updated!');
 }     
 }
 
@@ -574,7 +541,7 @@ const isSuccess = await handleApiCall(
   'An error occurred while Updating selected Project data',  false, true
 );
 
-    if (isSuccess) {
+    if (isSuccess && !isSyncCall) {
     // Make API Call to Update Projects Web API
 
 
@@ -628,8 +595,10 @@ const isSuccess = await handleApiCall(
     newRow.cells[11].appendChild(statusSpan3);
 
     console.log('Article Creator Data has been saved!');
-    dialogProjectsDialog.style.display="none";
-    dialogProjectsDialog.close();
+   
+    closeDialog('ProjectsDialog')
+
+    hideLoader(defaultLoaderId);
     
     modifyTableData('add', {
       SheetID: GAPISheetID,
@@ -774,7 +743,7 @@ if (action==='Run') {
 
 
   deleteRowsFromTableAndArray('main', 0, selectedRowId)
-
+  hideLoader(defaultLoaderId);
 
   updateTableRowCount('main', 'recordCount')
 
@@ -787,10 +756,13 @@ modifyTableData('remove', { SheetID: selectedRowId }, 'SheetID');
     } else {
 
       if (status === 'info') {
+        hideLoader(defaultLoaderId);
         // Show info toast for actions already set in SEOStatus
         createToast('ProjectToastDiv', 'info', 'fa-solid fa-info-circle', 'Info', `Info: ${status}<br>ID: ${sheetID}<br>Message: ${APImessage}`);
       } else {
         // Show error toast for other unsuccessful actions
+
+        hideLoader(defaultLoaderId);
         createToast('ProjectToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', `Error: ${isSuccess}<br>ID: ${sheetID}<br>Message: ${APImessage}`);
       }
     }
@@ -860,7 +832,6 @@ const success=  await handleApiCall(
   
   if (success) {
 
-
     modifyTableData('update', {
       SheetID: IdToUpdate,
       ProjectCreatorStatus: ProjectCreatorStatus,
@@ -898,6 +869,8 @@ async function getProjectSettingGAPI() {
    
     // Fill values from data to Dialog
     fillCustomSettingDialogValues(dataToParse);
+
+    hideLoader(defaultLoaderId);
   
 }
 
@@ -957,8 +930,10 @@ const isSuccess = await handleApiCall(
 );
 
 if (isSuccess && !GAPIRequired) {
-    customSettingDialog.close()
-    customSettingDialog.style.display="none";
+
+   closeDialog('customSettingDialog')
+   hideLoader(defaultLoaderId);
+
     createToast( 'SettingsToastDiv', 'success', 'fa-solid fa-check', 'Success', 'Custom Settings has been Saved to Google Server');
 
   }
@@ -1088,8 +1063,7 @@ if (isSuccess) {
   if  (isWebApp) {
   // In future Add Row to Table also
 
-  dialoguserDialog.close()
-  dialoguserDialog.style.display="none";
+  closeDialog('userDialog')
 
   createToast( 'WordpressToastDiv', 'success', 'fa-solid fa-check', 'Success', 'User Data has been Added');
 
@@ -1136,15 +1110,12 @@ async function updateSelectedUsersDataGAPI(selectedRowId, jsonData, isLocal) {
   
   if (isSuccess) {
   
-    dialoguserDialog.close()
-    dialoguserDialog.style.display="none";
- 
+    closeDialog('userDialog')
+    hideLoader(defaultLoaderId)
     createToast( 'bodyToastDiv', 'success', 'fa-solid fa-check', 'Success', 'User Data has been Updated');
 
     }
         
-  
-  
 }
 
 
@@ -1185,9 +1156,8 @@ const isSuccess = await handleApiCall(
 
 if (isSuccess) {
 
-  dialoguserDialog.close()
-  dialoguserDialog.style.display="none";
-  
+  closeDialog('userDialog')
+  hideLoader(defaultLoaderId)
   createToast( 'bodyToastDiv', 'success', 'fa-solid fa-check', 'Success', 'User Data has been Deleted');
    
   }

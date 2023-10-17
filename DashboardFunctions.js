@@ -30,7 +30,7 @@ async function getAllProjectsDataDashBoard() {
   popupCommonDialogHeader.textContent = "Showing All Project(s) Data";
 
   // Show Animation
-  showLoader();
+   showLoader(defaultLoaderId);
 
   if (isWebApp) {
 
@@ -104,8 +104,6 @@ function updateDashboardCounts(counts) {
 //Function to Get / add  /Update projects Data for both Local and Google Server
 async function fetchDataAndHandle(selectedRowId, method, isRunProjectRequired, isDuplicated) {
 
-
-  
   const JSOObbject = {
     ProjectName: articleProjectNameInput.value,
     ProjectKeyowrds: articleKeywordsFileInput.value,
@@ -143,8 +141,10 @@ console.log("Data for Update with Blog Data")
   }
 
   if (method.toUpperCase() === 'GETDATA') { 
-  
-  
+
+  showLoader(defaultLoaderId);
+  // Show the dialog loader
+
       if (isWebApp)  {
         // Make an API Call to Google Server.
       getSelectedProjectDataGAPI(selectedRowId);
@@ -163,13 +163,13 @@ console.log("Data for Update with Blog Data")
     // Validate required fields and check if they are all filled
 const isValid = validateRequiredFields(dialogProjectsDialog);
 
-if (isValid) {
-
-
-} else {
+if (!isValid) {
  createToast('ProjectToastDiv', 'info', 'fa-solid fa-info-circle', 'Info', 'Fill all required Inputs.');
  return
 }
+
+// Show Loader
+showLoader(defaultLoaderId)
 
       // Google JSON Data to  API Request to Make
   
@@ -237,12 +237,60 @@ function modifyTableData(action, newData, keyField) {
 }
 
 
+// Update Cell Values
+
+function updateRowCellsByValue(tableId, valueColumnIndex, valueToFind, cellIndexesToUpdate, newValues) {
+  const table = document.getElementById(tableId);
+  if (!table) {
+    console.error('Table not found:', tableId);
+    return;
+  }
+
+  // Iterate through rows to find the row with the matching value
+  for (let rowIndex = 0; rowIndex < table.rows.length; rowIndex++) {
+    const row = table.rows[rowIndex];
+    const cellValue = row.cells[valueColumnIndex].textContent.trim();
+
+    // Check if the cell value matches the valueToFind
+    if (cellValue === valueToFind) {
+      // Iterate through the specified cell indexes to update
+      cellIndexesToUpdate.forEach((cellIndex, i) => {
+        const cell = row.cells[cellIndex];
+        const newValue = newValues[i];
+
+        // Check if the cell contains a status-pill span element
+        const statusPill = cell.querySelector('span.status-pill');
+
+        if (statusPill) {
+          // Update the text content of the status-pill
+          statusPill.textContent = newValue;
+          // Remove existing classes and set the new class
+          statusPill.className = `status-pill status-${newValue.toLowerCase()}`;
+        } else {
+          // Check if the cell contains a link (anchor element)
+          const link = cell.querySelector('a');
+
+          if (link) {
+            // Update the link's href attribute and text content
+            link.href = newValue;
+            link.textContent = newValue;
+          } else {
+            // Update the cell's text content
+            cell.textContent = newValue;
+          }
+        }
+      });
+      break; // Stop searching after the first match
+    }
+  }
+}
+
   //Function to show Aricle Creator Projects Api calls  both Local and Googler Server
   async function fetchArticleCreator() {
   
     popupCommonDialogHeader.textContent="Showing Article Creator Project(s) Data"
      // Show Animation
-     showLoader();
+      showLoader(defaultLoaderId);
   
      if (isWebApp) {
   // Make Google Server API Call
@@ -263,7 +311,7 @@ async function fetchPostUploader() {
 
   popupCommonDialogHeader.textContent="Showing Post Uploader Project(s) Data"
      // Show Animation
-     showLoader();
+      showLoader(defaultLoaderId);
 
 
      if (isWebApp) {  
@@ -288,7 +336,7 @@ async function ReadJsonFile() {
   popupCommonDialogHeader.textContent="Showing All Domain(s) Data"
 
   // Show Animation
-  showLoader();
+   showLoader(defaultLoaderId);
 
   if (isWebApp) {
 
@@ -307,7 +355,7 @@ async function ReadJsonFile() {
 async function getDomainData() {
 
   // Show Animation
-  showLoader();
+   showLoader(defaultLoaderId);
 
   if (isWebApp) {
 
@@ -329,7 +377,7 @@ async function fetchArticleCreatorbyStatus(articleStatus) {
 
  popupCommonDialogHeader.textContent="Showing All Project(s) Data"
   // Show Animation
-  showLoader();
+   showLoader(defaultLoaderId);
 
   if (isWebApp) {
 //  Make Google Api Call 
@@ -345,7 +393,13 @@ fetchProjectByStatusGAPI(articleStatus);
 
 // Function to Populate Projects Input Fields from Data Web API
 function populateProjectData(data) {
+  hideLoader();
+    // Create Loader
+defaultLoaderId='dialogLoader';
+createLoader(defaultLoaderId, dialogProjectsDialog)
 
+  DialogTitle.textContent = `Project Details of ID: ${selectedRowId}`
+  
     cnsarticleCreatorTitle.textContent = `Article Creator Details of ID: ${data.ProjectID}`;
     ProjectIDInput.value = data.ProjectID;
     articleProjectNameInput.value = data.ProjectName;
@@ -407,6 +461,7 @@ const formattedCurrentDate = currentDate.toISOString().split('T')[0];
     // dialogProjectsDialog.style.display = "flex";
     // dialogProjectsDialog.showModal();
 
+  hideLoader(defaultLoaderId);
 
 }
 
@@ -498,10 +553,10 @@ function OpenAddDomainDialog() {
 
   defaultLoaderId='dialogLoader';
 
-  toggleLoader(defaultLoaderId, DialogdomainInfoAdd)
+  createLoader(defaultLoaderId, DialogdomainInfoAdd)
 
 // Show the dialog loader
-showLoader();
+ showLoader(defaultLoaderId);
 
   clearDialog(DialogdomainInfoAdd);
 
@@ -515,7 +570,7 @@ showLoader();
   DialogdomainInfoAdd.style.display = 'flex';
 
 
- hideLoader();
+  hideLoader(defaultLoaderId);
 
 
  DomaindialogTitle.textContent='Add New Domain Info'
@@ -530,15 +585,13 @@ async function populateDomainInfo() {
 
   defaultLoaderId='dialogLoader';
 
-  toggleLoader(defaultLoaderId, DialogdomainInfoAdd)
+  createLoader(defaultLoaderId, DialogdomainInfoAdd)
 
 // Show the dialog loader
-showLoader();
+ showLoader(defaultLoaderId);
 
 
   try {
-
-
 
   let dataToParse;
 
@@ -589,13 +642,13 @@ btnupdateDomainDialog.style.display = 'flex'
  DialogdomainInfoAdd.style.display = 'flex';
 
  
- hideLoader();
+  hideLoader(defaultLoaderId);
 
  createToast('DialogdomainInfotDiv', 'success', 'fa-solid fa-check', 'Success', 'Domain Data retreived Successfuly');
   
 } catch (error) {
 
-hideLoader();
+ hideLoader(defaultLoaderId);
 
 createToast('DialogdomainInfotDiv', 'warning', 'fa-solid fa-exclamation-triangle', 'Warning', 'There is some error while Retreiving the Data');
   
@@ -631,7 +684,7 @@ const JSONData = {
       group: domainGroupInput.value
 }
 // Show the dialog loader
-showLoader();
+ showLoader(defaultLoaderId);
 
 
   if (!isWebApp) {
@@ -646,15 +699,15 @@ showLoader();
 
   if (response) {
 
-    hideLoader();
+     hideLoader(defaultLoaderId);
 
     createToast('DialogdomainInfotDiv', 'success', 'fa-solid fa-check', 'Success', 'Domain Data updated Successfuly');
     
-    DialogdomainInfoAdd.close();
-    DialogdomainInfoAdd.style.display = 'none';
+    closeDialog('DialogdomainInfo')
+
 
   }  else {
-    hideLoader();
+     hideLoader(defaultLoaderId);
 
     createToast('DialogdomainInfotDiv', 'warning', 'fa-solid fa-exclamation-triangle', 'Warning', 'There is some error while updating the Data');
     
@@ -668,7 +721,7 @@ showLoader();
 
 } catch (error) {
 
-hideLoader();
+ hideLoader(defaultLoaderId);
 
 createToast('DialogdomainInfotDiv', 'warning', 'fa-solid fa-exclamation-triangle', 'Warning', 'There is some error while updating the Data');
   
@@ -688,7 +741,7 @@ async function deleteDomainInfo () {
     
       if (!isWebApp) {
        
-        response = await  deleteJSOApi(selectedRowId)
+        response = await  deleteSelectedDomainInfo(selectedRowId)
       
       } else {
     
@@ -727,7 +780,7 @@ async function callAddNewDomain(isSyncCall=false) {
   
     const isValid = validateRequiredFields(DialogdomainInfoAdd);
   if (isValid) {
-  showLoader()
+   showLoader(defaultLoaderId)
   
     const bloJSONData = {
       username : domainUserNameInput.value,
@@ -745,7 +798,7 @@ async function callAddNewDomain(isSyncCall=false) {
   
     domainUrlInput.value=bloJSONData.url;
   
-    hideLoader()
+     hideLoader(defaultLoaderId)
   
     
     createToast('DialogdomainInfotDiv', 'success', 'fa-solid fa-check', 'Success', 'New BlogId Created Succefully. ID: ' + response3.blogID);
@@ -775,7 +828,7 @@ async function EditDialogAddDomain() {
   
     try {
 
-    showLoader()
+     showLoader(defaultLoaderId)
     const bloJSONData = {
       username : blogUserNameInput.value,
       password : blogPasswordInput.value,
@@ -786,13 +839,13 @@ async function EditDialogAddDomain() {
     const response3 = await createNewBlogID(bloJSONData)
     BlogIdInput.value = response3.blogID;
 
-    hideLoader()
+     hideLoader(defaultLoaderId)
 
   createToast('ProjectToastDiv', 'success', 'fa-solid fa-check', 'Success', 'New BlogId Created Succefully. ID: ' + response3.blogID);
 
   }  catch(error) {
 
-  hideLoader()
+   hideLoader(defaultLoaderId)
 
   createToast('ProjectToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'error', 'There is error while creating New Domain. error: '+error);
     return
@@ -803,7 +856,7 @@ async function EditDialogAddDomain() {
 // Add New Post Uploder Project in Edit Dialog
 async function EditDialogAddPostUploader() {
   // Call createJSONDomain function with the provided data
-    showLoader()
+     showLoader(defaultLoaderId)
 
     try {       
       // Step 2: Create Post Uploader and Get Post ID.
@@ -817,13 +870,13 @@ async function EditDialogAddPostUploader() {
       createToast('ProjectToastDiv', 'success', 'fa-solid fa-check', 'Success', 'New Post Uploader Created Succefully. ID: ' + newPostUploaderID);
 
 
-      hideLoader()
+       hideLoader(defaultLoaderId)
   
     } catch (error) {
 
       createToast('ProjectToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'error', 'There is error while Creating New Post Uploader Project: ' + error);
        console.error('Error while creating Post Uploader Project:', error);
-       hideLoader()
+        hideLoader(defaultLoaderId)
      }
 
   
@@ -833,13 +886,7 @@ async function EditDialogAddPostUploader() {
 async function populateInputsFromUniqueData(uniqueData, method) {
   // Clear old Values
 
-  defaultLoaderId='dialogLoader';
 
-  toggleLoader(defaultLoaderId, dialogProjectsDialog)
-
-// Show the dialog loader
-showLoader();
-  
   // Populate the Dialog for adding Data
   if (method.toUpperCase() === "ADDDATA") {
    
@@ -945,7 +992,7 @@ const formattedCurrentDate = currentDate.toISOString().split('T')[0];
     secBloggroup.style.display = "flex";
 
     btnAddNewdomainInfo.style.display = 'none';
-    addNewPosterID.style.display = 'none';
+    btnaddNewPosterID.style.display = 'none';
 
     DivProjectPosterrID.style.display = 'none';
 
@@ -963,10 +1010,17 @@ const formattedCurrentDate = currentDate.toISOString().split('T')[0];
   // Populate the Dialog for getting existing Data
   else if (method.toUpperCase() === "GETDATA") {
 
-
+   
+    if (isWebApp || webAppGitHub) {
+    btnaddNewPosterID.style.display = 'none';
+    btnAddNewdomainInfo.style.display = 'none';
+   
+  } else {
+    btnaddNewPosterID.style.display = 'flex';
     btnAddNewdomainInfo.style.display = 'flex';
-    addNewPosterID.style.display = 'flex';
-
+   
+  }
+   
     postJobNameInput.setAttribute('required', 'required');
 
     PostUploaderId.setAttribute('required', 'required');
@@ -1195,10 +1249,12 @@ articleProjectNameInput.addEventListener('input', updateAllInputs);
   postJobNameInput.addEventListener('blur', removeTransition);
   blogUrlInput.addEventListener('blur', removeTransition);
   
+  hideLoader(defaultLoaderId);
+
   // Show the dialog after populating the data
   dialogProjectsDialog.style.display = "flex";
   dialogProjectsDialog.showModal();
-  hideLoader();
+
 }
  
 // // Function to clear options from a datalist
@@ -1224,7 +1280,7 @@ async function fetchUsers() {
   popupCommonDialogHeader.textContent = "Showing All Users(s) Data";
 
    // Show Animation
-   showLoader();
+    showLoader(defaultLoaderId);
   
    if (isWebApp) {
 // Make Google Server API Call
@@ -1236,7 +1292,7 @@ fetchUsersGAPI()
   //  Call Local  Data
 createToast('bodyToastDiv', 'info', 'fa-solid fa-info-circle', 'Info', 'Local API for Users currently not Available.');   
 // dashboardLink.classList.toggle('active');
-hideLoader()
+ hideLoader(defaultLoaderId)
 
   }
 
@@ -1251,13 +1307,13 @@ hideLoader()
     if (isWebApp) {
 
 //  Function to Mark Project for Delete
-    showLoader()
+     showLoader(defaultLoaderId)
     // Set to true if user confirmation is required
     performAction(selectedRowId, "Delete", false);
   
    } else {
 
-    showLoader()
+     showLoader(defaultLoaderId)
 
     //  SelectedId, from Syncing, SheetId if Synced
     deleteProjectDatafromSEO(selectedRowId, false, false)
@@ -1274,7 +1330,7 @@ async function runProjectMain(selectedRowId, cofirmation=false) {
   if (isWebApp) {
 
     //  Function to Mark Project for RUN
-    showLoader()
+     showLoader(defaultLoaderId)
     // Set to true if user confirmation is required
     performAction(selectedRowId, "Run", cofirmation);
  
@@ -1388,12 +1444,6 @@ function openSettingDialog() {
  
 function fillCustomSettingDialogValues(data) {
 
-  defaultLoaderId='dialogLoader';
-
-  toggleLoader(defaultLoaderId, customSettingDialog)
-
-// Show the dialog loader
-showLoader();
 
   //  clear the Inputs before loading the dialog 
 clearDialog(customSettingDialog);
@@ -1441,9 +1491,9 @@ const formattedCurrentDate = currentDate.toISOString().split('T')[0];
   btnupdateSettingbtn.style.display='flex';
   customSettingDialog.style.display = 'flex';
   customSettingDialog.showModal();
-  hideLoader();
+   hideLoader(defaultLoaderId);
 
-  createToast( 'SettingsToastDiv', 'success', 'fa-solid fa-check', 'Success', 'Custom Settings has been Loaded');
+  // createToast( 'SettingsToastDiv', 'success', 'fa-solid fa-check', 'Success', 'Custom Settings has been Loaded');
 
   
  }
@@ -1460,7 +1510,7 @@ async function getandUpdateProjectSetting(METHOD) {
 
 
 // Show the dialog loader
-showLoader();
+showLoader(defaultLoaderId);
 
   let settingJSONData;
 
@@ -1492,7 +1542,11 @@ showLoader();
 
   if (METHOD==="GETDATA") {
    
- 
+    defaultLoaderId='dialogLoader';
+
+    createLoader(defaultLoaderId, customSettingDialog)
+    showLoader(defaultLoaderId);
+
 if (isWebApp) {
 // Call Google Server Settingss
     getProjectSettingGAPI();
@@ -1530,12 +1584,8 @@ if (METHOD==="UPDATEDATA") {
 // Function to populate User Dialog with Data
 function fillUserDataDialog(data) {
 
-  defaultLoaderId='dialogLoader';
-
-  toggleLoader(defaultLoaderId, dialoguserDialog)
-
 // Show the dialog loader
-showLoader();
+ showLoader(defaultLoaderId);
   
   // Populate the input elements with the retrieved values
   //  clear the Inputs before loading the dialog 
@@ -1559,7 +1609,9 @@ clearDialog(dialoguserDialog);
 
 // Function to populate selected User Data from API Call
 async function getandAddUsers(METHOD, selectedUserId) {
-showLoader()
+
+ showLoader(defaultLoaderId)
+
   const jsonData = {
     FullName:  userFullInputInput.value,
     userName: usernameInputInput.value,
@@ -1573,6 +1625,12 @@ showLoader()
 
   if (METHOD==="GETUSERDATA") {
 
+  defaultLoaderId='dialogLoader';
+ createLoader(defaultLoaderId, dialoguserDialog)
+
+  // Show the dialog loader
+  showLoader(defaultLoaderId);
+
 // Call Google Server Settingss
 if (isWebApp) {
 
@@ -1583,12 +1641,15 @@ if (isWebApp) {
         //  Call Local  Data
       createToast('ProjectToastDiv', 'info', 'fa-solid fa-info-circle', 'Info', 'Local API for Users currently not Available.');   
       // dashboardLink.classList.toggle('active');
-      hideLoader()
+       hideLoader(defaultLoaderId)
     }
 
   }
 
   if (METHOD==="ADDUSERDATA") {
+
+    defaultLoaderId='dialogLoader';
+ createLoader(defaultLoaderId, dialogProjectsDialog)
 
     // Call Add User Google Server 
       if (isWebApp) {
@@ -1601,12 +1662,15 @@ if (isWebApp) {
               //  Call Local  Data
             createToast('bodyToastDiv', 'info', 'fa-solid fa-info-circle', 'Info', 'Local API for Users currently not Available.');   
             // dashboardLink.classList.toggle('active');
-            hideLoader()
+             hideLoader(defaultLoaderId)
           }
 
   }
 
   if (METHOD==="UPDATEUSERDATA") {
+
+      // Show the dialog loader
+  showLoader(defaultLoaderId);
 
       // Call Add User Google Server 
       if (isWebApp) {
@@ -1619,7 +1683,7 @@ if (isWebApp) {
               //  Call Local  Data
             createToast('UserToastDiv', 'info', 'fa-solid fa-info-circle', 'Info', 'Local API for Users currently not Available.');   
             // dashboardLink.classList.toggle('active');
-            hideLoader()
+             hideLoader(defaultLoaderId)
           }
 
   }
@@ -1638,51 +1702,8 @@ if (isWebApp) {
               //  Call Local  Data
             createToast('UserToastDiv', 'info', 'fa-solid fa-info-circle', 'Info', 'Local API for Users currently not Available.');   
             // dashboardLink.classList.toggle('active');
-            hideLoader()
+             hideLoader(defaultLoaderId)
           }  
   }
-
-}
-
-// Function to close the dialog
-function closeDialog(dialogname) {
-
-  const fileDialog = document.getElementById(dialogname);
-
-  if (defaultLoaderId !== 'loadingOverlay') {
-
-  const dialogLoader = document.getElementById(defaultLoaderId);
-
-  if (dialogLoader) {
-  dialogLoader.remove()
-}
-
-}
-
-  fileDialog.style.display="none";
-
-  fileDialog.close();
-  
-  defaultLoaderId = 'loadingOverlay';
-
-  hideLoader();
-
-// Event listeners
-}
-
-
-// Function add and Remove Loader
-function toggleLoader(loaderId, dialogId) {
- 
-  const loader = document.getElementById(loaderId);
-  
-  if (loader) {
-    // dialog.removeChild(loader);
-    // If the loader doesn't exist, append a new loader with the specified ID
-    const clonedLoader = document.getElementById('loadingOverlay').cloneNode(true);
-    clonedLoader.id = loaderId; // Assign a unique ID for the cloned loader
-    dialogId.appendChild(clonedLoader);
-  } 
-
 
 }

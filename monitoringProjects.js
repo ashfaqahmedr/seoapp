@@ -185,7 +185,7 @@ async function runSelectedProjectSEO(projectToRun, isConfrimComplete=true)  {
             name: articleCreatorName,
             type: articleCreatorType,
             status: 'waiting',
-            uploadImages: 'waiting'
+            imageStatus: 'waiting'
           });
   
           
@@ -268,7 +268,7 @@ async function runSelectedProjectSEO(projectToRun, isConfrimComplete=true)  {
                     name: postUploaderName,
                     type: postUploaderType,
                     status: 'waiting',
-                    uploadImages: 'waiting',
+                    imageStatus: 'waiting',
                   });
         
                   
@@ -331,7 +331,7 @@ async function runSelectedProjectSEO(projectToRun, isConfrimComplete=true)  {
                       name: articleCreatorName,
                       type: articleCreatorType,
                       status: 'waiting',
-                      uploadImages: 'waiting',
+                      imageStatus: 'waiting',
                     });
                     
                     createToast(
@@ -450,6 +450,9 @@ function addStatusUpdatedClass(rowtoFind) {
   }, 3000);
 }
 
+
+
+
 // Function to monitor a list of projects' status and update the watchlist and get list on Load and Also Add projects to be added
 const monitorProjects = async (projects) => {
   const statusArray = ['complete', 'failed', 'aborted', 'aborting...', ''];
@@ -458,7 +461,7 @@ const monitorProjects = async (projects) => {
     const { id: projectId, name: projectName, type: projectType } = projectData;
 
     let currentStatus;
-    let uploadImages = 'checking';
+    let imageStatus = 'checking';
 
     currentStatus = await currentProjectStatus(projectId);
 
@@ -478,7 +481,7 @@ const monitorProjects = async (projects) => {
 
       if (isProjectUploadImages) {
 
-        uploadImages = 'waiting';
+        imageStatus = 'waiting';
 
         postUploaderId = isProjectUploadImages.postUploaderId;
         console.table(isProjectUploadImages);
@@ -489,7 +492,7 @@ const monitorProjects = async (projects) => {
 
 
       } else {
-        uploadImages = 'NA';
+        imageStatus = 'NA';
         console.log("Project does not need to upload Images. Option is: " +  isProjectUploadImages.imageInsertType);
       }
 
@@ -524,11 +527,11 @@ const monitorProjects = async (projects) => {
       if (existingNotificationIndex !== -1) {
 
         notificationList[existingNotificationIndex].status = currentStatus;
-        notificationList[existingNotificationIndex].uploadImages = uploadImages;      
+        notificationList[existingNotificationIndex].imageStatus = imageStatus;      
  
       }
 
-      updateStatusAndApplyClasses(projectId, projectType, currentStatus, uploadImages);
+      updateStatusAndApplyClasses(projectId, projectType, currentStatus, imageStatus);
         
       console.log(`Project ID: ${projectId}, Project Name: ${projectName}, Project Type: ${projectType}, Status: ${currentStatus}`);
 
@@ -549,9 +552,9 @@ const monitorProjects = async (projects) => {
 
             currentStatus = 'aborted';
             if (isProjectUploadImages) {
-              uploadImages = 'failed';
+              imageStatus = 'failed';
             } else{
-              uploadImages = 'not-required';
+              imageStatus = 'not-required';
             }
 
           }
@@ -567,15 +570,15 @@ const monitorProjects = async (projects) => {
           projectWatchlist.splice(existingProjectIndex, 1);
 
           if (GAPIRequired) {
-            await UpdateSelectedProjectStatusGAPI(projectId, projectType, currentStatus, uploadImages);
+            await UpdateSelectedProjectStatusGAPI(projectId, projectType, currentStatus, imageStatus);
           }
   
           if (existingNotificationIndex !== -1) {
 
             notificationList[existingNotificationIndex].status = currentStatus;
-            notificationList[existingNotificationIndex].uploadImages = uploadImages;
+            notificationList[existingNotificationIndex].imageStatus = imageStatus;
     
-            updateStatusAndApplyClasses(projectId, projectType, currentStatus, uploadImages);
+            updateStatusAndApplyClasses(projectId, projectType, currentStatus, imageStatus);
             
             modifyTableData('update', {
               ProjectID: projectId,
@@ -635,21 +638,21 @@ const monitorProjects = async (projects) => {
 
             console.log("Images uploaded and return to main Function Success is  : "+ isImageUploaded)
 
-          uploadImages='complete';
+          imageStatus='complete';
 
           if (existingNotificationIndex !== -1) {
 
             notificationList[existingNotificationIndex].status = currentStatus;
-            notificationList[existingNotificationIndex].uploadImages = uploadImages;
+            notificationList[existingNotificationIndex].imageStatus = imageStatus;
   
-            updateStatusAndApplyClasses(projectId, projectType, currentStatus, uploadImages );
+            updateStatusAndApplyClasses(projectId, projectType, currentStatus, imageStatus );
             createNotification(notificationList);
           
           }
 
         // Call GAPI to Upload Images
           if (GAPIRequired) {
-          UpdateSelectedProjectStatusGAPI(projectId, projectType, currentStatus, uploadImages);
+          UpdateSelectedProjectStatusGAPI(projectId, projectType, currentStatus, imageStatus);
           }
        
             //Call Run Post Uploader Function from here.
@@ -684,7 +687,7 @@ let postUploaderStatus;
 let existingProjectIndex;
 let existingNotificationIndex;
 
- let uploadImages = 'na';
+ let imageStatus = 'na';
 
  postUploaderStatus = await currentProjectStatus(postUploaderId);
   
@@ -708,7 +711,7 @@ let existingNotificationIndex;
         name: postUploaderName,
         type: postUploaderType,
         status: postUploaderStatus,
-        uploadImages:uploadImages
+        imageStatus:imageStatus
       });
   
       notificationList.push({
@@ -716,7 +719,7 @@ let existingNotificationIndex;
         name: postUploaderName,
         type: postUploaderType,
         status: postUploaderStatus,
-        uploadImages: uploadImages
+        imageStatus: imageStatus
       });
       
    
@@ -724,7 +727,7 @@ let existingNotificationIndex;
 
     existingNotificationIndex = notificationList.findIndex((proj) => proj.id.trim() === postUploaderId);
 
-    updateStatusAndApplyClasses(postUploaderId, postUploaderType, postUploaderStatus, uploadImages);
+    updateStatusAndApplyClasses(postUploaderId, postUploaderType, postUploaderStatus, imageStatus);
 
      createNotification(notificationList);
 
@@ -742,9 +745,9 @@ let existingNotificationIndex;
             if (existingNotificationIndex !== -1) {
   
               notificationList[existingNotificationIndex].status = postUploaderStatus;
-              notificationList[existingNotificationIndex].uploadImages = uploadImages;
+              notificationList[existingNotificationIndex].imageStatus = imageStatus;
 
-              updateStatusAndApplyClasses(postUploaderId, postUploaderType, postUploaderStatus, uploadImages );
+              updateStatusAndApplyClasses(postUploaderId, postUploaderType, postUploaderStatus, imageStatus );
               createNotification(notificationList);
             }
   
@@ -759,7 +762,7 @@ let existingNotificationIndex;
               if (postUploaderStatus === 'aborting...') {
                 postUploaderStatus = 'aborted';
 
-                uploadImages = 'complete';
+                imageStatus = 'complete';
             
               }
   
@@ -781,9 +784,9 @@ let existingNotificationIndex;
   
                 if (existingNotificationIndex !== -1) {
                   notificationList[existingNotificationIndex].status = postUploaderStatus;
-                  notificationList[existingNotificationIndex].uploadImages = uploadImages;
+                  notificationList[existingNotificationIndex].imageStatus = imageStatus;
   
-                  updateStatusAndApplyClasses(postUploaderId, postUploaderType, postUploaderStatus, uploadImages );
+                  updateStatusAndApplyClasses(postUploaderId, postUploaderType, postUploaderStatus, imageStatus );
                  
                   modifyTableData('update', {
                     ProjectID: projectId,
@@ -1050,7 +1053,7 @@ const PosterjsonData = JSON.stringify({
       createNotification(projectsToAdd);
   
       // Monitor all projects (including new and existing projects)
-      await monitorProjects(projectsToAdd);
+      monitorProjects(projectsToAdd);
     }
   
     // If there are no running, waiting, or aborting projects, show a toast
@@ -1061,8 +1064,8 @@ const PosterjsonData = JSON.stringify({
   
   
   // Create Notification List for Projects by its Status and update the status value and css class
-
-  function createNotification(allProjectData) {
+function createNotification(allProjectData) {
+    
   const notificationTableBody = document.getElementById('notificationTableBody');
   const popupContainer = document.getElementById('popupContainer');
   toggleNotificationPanel();
@@ -1073,121 +1076,11 @@ const PosterjsonData = JSON.stringify({
     notificationTableBody.innerHTML = '';
     return;
   } else {
-    // Show the notification and update the table body with the new data
-    popupContainer.style.display = 'block';
-
-    const existingProjectIds = new Set(); // To store existing project IDs
-
-    // Clear the previous contents of the table body
-    notificationTableBody.innerHTML = '';
-
-    // Create table rows with project data
-    allProjectData.forEach((project) => {
-      if (!existingProjectIds.has(project.id)) {
-        // If the project ID is not in the set, add the row and store the project ID in the set
-        existingProjectIds.add(project.id);
-
-        const notificationRow = document.createElement('div');
-        notificationRow.classList.add('notification-row');
-
-        const idCell = document.createElement('div');
-        idCell.classList.add('data-cell');
-        idCell.textContent = project.id;
-        notificationRow.appendChild(idCell);
-
-        const nameCell = document.createElement('div');
-        nameCell.classList.add('data-cell');
-        nameCell.textContent = project.name;
-        notificationRow.appendChild(nameCell);
-
-        const typeCell = document.createElement('div');
-        typeCell.classList.add('data-cell');
-        typeCell.textContent = project.type;
-        notificationRow.appendChild(typeCell);
-
-        const statusCell = document.createElement('div');
-        statusCell.classList.add('data-cell');
-        statusCell.textContent = project.status;
-        notificationRow.appendChild(statusCell);
-
-        // Create a separate cell for "Images" value
-        const imageCell = document.createElement('div');
-        imageCell.classList.add('data-cell');
-        imageCell.textContent = project.uploadImages;
-        notificationRow.appendChild(imageCell);
-
-        // Append the row to the notificationTableBody
-        notificationTableBody.appendChild(notificationRow);
-      } else {
-        // If the project ID already exists in the set, update the status and "Images" values in the existing row
-        const existingRow = notificationTableBody.querySelector(
-          `.notification-row > .data-cell:first-child[data-value="${project.id}"]`
-        );
-        if (existingRow) {
-          existingRow.nextElementSibling.textContent = project.status;
-          // Update "Images" value in the existing row
-          existingRow.nextElementSibling.nextElementSibling.textContent = project.uploadImages;
-           // Instead of updating the "Images" value in the existing row, create a new cell for it
-            const imageCell = document.createElement('div');
-            imageCell.classList.add('data-cell');
-            imageCell.textContent = project.uploadImages;
-            
-            // Insert the new "Images" cell after the status cell
-            existingRow.parentNode.insertBefore(imageCell, existingRow.nextElementSibling);
-            
-        }
-      }
-    });
+  
+    createTableFromData(allProjectData, false ,'notificationTableBody', false);
+  
+    }
 
 
-    // Apply conditional formatting to cells based on their values
-    const rows = notificationTableBody.querySelectorAll('.notification-row');
-    rows.forEach((row) => {
-      const cells = row.querySelectorAll('.data-cell');
-      cells.forEach((cell) => {
-        const value = cell.textContent.trim().toLowerCase();
-
-        // Apply conditional formatting based on cell value
-        if (
-          value === 'draft' ||
-          value === 'waiting' ||
-          value === 'failed' ||
-          value === 'aborted' ||
-          value === 'complete' ||
-          value === 'running' ||
-          value === 'aborting...' ||
-          value === 'pending' ||
-          value === 'na'
-        ) {
-          // Clear the existing content of the cell
-          cell.innerHTML = '';
-
-          const statusSpan = document.createElement('span');
-          statusSpan.classList.add('status-pill');
-
-          // Remove trailing "..." from the status
-          const cleanedStatus = removeTrailingDots(value);
-
-          statusSpan.classList.add(`status-${cleanedStatus.toLowerCase()}`);
-          statusSpan.textContent = cleanedStatus;
-
-          // Append the status span to the cell
-          cell.appendChild(statusSpan);
-        }
-
-        // Apply border radius to cells
-        cell.style.borderRadius = '5px';
-      });
-    });
-  }
-
-  // Close button event handler
-  const closeBtn = document.querySelector('.close-btn');
-  closeBtn.addEventListener('click', () => {
-    notificationTableBody.innerHTML = '';
-    toggleNotificationPanel();
-  });
 }
-
-
 

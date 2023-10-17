@@ -84,9 +84,10 @@ const toggleNotificationPanel = () => {
 
 defaultLoaderId='dialogLoader';
 
-toggleLoader(defaultLoaderId, "popupCommonDialog")
+createLoader(defaultLoaderId, AppSettingDialog)
 
-showLoader();
+
+ showLoader(defaultLoaderId);
 
 
     try {
@@ -126,14 +127,14 @@ showLoader();
   AppSettingDialog.style.display = 'flex';
   AppSettingDialog.showModal();
 
-  hideLoader();
+  hideLoader(defaultLoaderId);
 
    }
   
      } catch (error) {
        console.error('Error retrieving settings:', error);
        createToast('SettingsToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'Error retrieving settings from Local Server: ' + error);
-       hideLoader();
+       hideLoader(defaultLoaderId);
      }
 
   
@@ -142,7 +143,7 @@ showLoader();
 
   async function LoadAsWebApp() {
 
-  showLoader();
+   showLoader(defaultLoaderId);
     try {
   
    const  settingJSONData = {
@@ -162,7 +163,7 @@ showLoader();
         // Try to hide when not called from AutoSync Function
   
     createToast('bodyToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', 'Application will be Loaded as Web App within 3 Seconds!');
-     hideLoader();
+     hideLoader(defaultLoaderId);
 
      // Reload Application after 3 Seconds.
      setTimeout(() => {
@@ -173,7 +174,7 @@ showLoader();
   } catch (error) {
     console.error('Error retrieving settings:', error);
     createToast('bodyToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'Error Error while Updating Application Settings to Server: ' + error);
-    hideLoader();
+    hideLoader(defaultLoaderId);
   }
   
    }  
@@ -183,7 +184,7 @@ showLoader();
  async function UpdateAppSettings() {
 
   try {
-showLoader()
+ showLoader(defaultLoaderId)
  const  settingJSONData = {
 
       "checkWebApp": checkWebApp.checked,
@@ -216,16 +217,15 @@ showLoader()
       // Try to hide when not called from AutoSync Function
 
   createToast('bodyToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', 'Application Settings has been Updated !');
-  AppSettingDialog.close()
-  AppSettingDialog.style.display="none";
+  closeDialog('AppSettingDialog')
 
-   hideLoader();
+   hideLoader(defaultLoaderId);
 
  }
 } catch (error) {
   console.error('Error retrieving settings:', error);
   createToast('bodyToastDiv', 'error', 'fa-solid fa-circle-exclamation', 'Error', 'Error Error while Updating Application Settings to Server: ' + error);
-  hideLoader();
+  hideLoader(defaultLoaderId);
 }
 
  }  
@@ -265,7 +265,7 @@ function createTableFromData(data, createCheckboxes, tableId, isDashBoardTable, 
   const table = document.getElementById(tableId);
 
   if (!data || typeof data !== 'object'  && !table)  {
-    hideLoader();
+    hideLoader(defaultLoaderId);
     console.error('Invalid data. Cannot create table.');
     // Call createToast function after error
     let type = 'error';
@@ -492,9 +492,9 @@ if (createCheckboxes) {
 
 }
   //Show Toast after table Loading
-  createToast('bodyToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', ' Data Fetched and Table creation completed successfully.');
+  // createToast('bodyToastDiv', 'success', 'fa-solid fa-circle-check', 'Success', ' Data Fetched and Table creation completed successfully.');
 
-  hideLoader();
+  hideLoader(defaultLoaderId);
 
 }
 
@@ -633,18 +633,6 @@ function isISODate(value) {
 }
 
 // // Function to format date to the specified format
-// function formatDate(dateString, isTimestamp) {
-//   const date = new Date(dateString);
-//   if (isTimestamp) {
-//     const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
-//     return date.toLocaleString('en-US', options);
-//   } else {
-//     const month = (date.getMonth() + 1).toString().padStart(2, '0');
-//     const day = date.getDate().toString().padStart(2, '0');
-//     const year = date.getFullYear();
-//     return `${month}-${day}-${year}`;
-//   }
-// }
 
 function formatDate(dateString, includeTime = false) {
   const date = new Date(dateString);
@@ -685,7 +673,7 @@ function applyConditionalFormatting(tableid) {
   }
 
   if (statusColumnIndices.length === 0) {
-    console.error('Status column not found in the header.');
+    console.log('Status column not found in the header.');
     return;
   }
 
@@ -724,7 +712,7 @@ function applyConditionalFormatting(tableid) {
   }
 }
 
-
+// Delete Table row based on values
 function deleteRowsFromTableAndArray(tableId, columnIndex, targetValues) {
   const table = document.getElementById(tableId);
   const rows = table.getElementsByTagName('tr');
@@ -751,90 +739,6 @@ function deleteRowsFromTableAndArray(tableId, columnIndex, targetValues) {
   }
   
 }
-
-//Loadoverlay Div
-// Function to show the loader
-function showLoader(loaderId=defaultLoaderId) {
-
-  const loader = document.getElementById(loaderId);
-  if (loader) {
-    loader.style.display = 'block';
-
-  }
-
-}
-
-// Function to hide the loader
-function hideLoader(loaderId=defaultLoaderId) {
-
-  const loader = document.getElementById(loaderId);
-
-  if (loader) {
-    loader.style.display = 'none';
-  }
-
-}
-
-
-//custom Right Click Menu
-
-function enableCustomContextMenu(tableSelector, menuSelector, cellIndex) {
-  const contextMenu = document.getElementById(menuSelector);
-  const table = document.querySelector(tableSelector);
-
-  table.addEventListener("contextmenu", e => {
-    const target = e.target;
-
-    if (target.tagName === "TD") {
-      e.preventDefault();
-
-      const row = target.parentNode;
-      selectedRowId = row.cells[cellIndex].textContent.trim(); // Get the cell value based on the provided cell index
-
-      selectedRowIndex = row.rowIndex;
-
-      console.log("First TD Text:", selectedRowId);
-      console.log("Row Index Number:", selectedRowIndex );
-
-      const mousePosX = e.pageX;
-      const mousePosY = e.pageY;
-      const menuWidth = contextMenu.offsetWidth;
-      const menuHeight = contextMenu.offsetHeight;
-
-      const windowWidth = window.innerWidth;
-      const windowHeight = window.innerHeight;
-
-      const maxMenuPosX = windowWidth - menuWidth;
-      const maxMenuPosY = windowHeight - menuHeight;
-
-      // Calculate submenu's position
-      let submenuPosX = mousePosX;
-      let submenuPosY = mousePosY;
-
-      // Check if the submenu goes beyond the right edge of the screen
-      if (submenuPosX + menuWidth > windowWidth) {
-        submenuPosX = maxMenuPosX;
-      }
-
-      // Check if the submenu goes beyond the bottom edge of the screen
-      if (submenuPosY + menuHeight > windowHeight) {
-        submenuPosY = maxMenuPosY;
-      }
-
-      contextMenu.style.left = `${submenuPosX}px`;
-      contextMenu.style.top = `${submenuPosY}px`;
-      contextMenu.style.visibility = "visible";
-
-    } else {
-      contextMenu.style.visibility = "hidden";
-    }
-  });
-
-  document.addEventListener("click", () => {
-    contextMenu.style.visibility = "hidden";
-  });
-}
-
 
 
 //Function to Show Project Data Dialog with selected Project ID
@@ -935,16 +839,9 @@ function updateMenuItems(apiCall, contextmenu) {
 
 async function fetchAndPopulateDialog() {
 
-  defaultLoaderId='dialogLoader';
-
-  toggleLoader(defaultLoaderId, dialogProjectsDialog)
-
-// Show the dialog loader
-showLoader();
-
   clearDialog(dialogProjectsDialog);
  
-     fetchDataAndHandle(selectedRowId, 'GETDATA'); // Make GET request
+  fetchDataAndHandle(selectedRowId, 'GETDATA'); // Make GET request
 
 
 }
@@ -971,6 +868,12 @@ if (isValid) {
 // Function to Show Add Project Dialog only
 function createnewJobID() {
  
+  defaultLoaderId='dialogLoader';
+  createLoader(defaultLoaderId, dialogProjectsDialog)
+ 
+   // Show the dialog loader
+   showLoader(defaultLoaderId); 
+
 if (isWebApp) {
 
 // Populate Create Project Dialog Project Name, Poster name and ID and JobiD and URL from Web Api. 
@@ -1020,9 +923,9 @@ function showAddUserDialog() {
 
 defaultLoaderId='dialogLoader';
 
-toggleLoader(defaultLoaderId, "popupCommonDialog")
+createLoader(defaultLoaderId, dialoguserDialog)
 
-showLoader();
+ showLoader(defaultLoaderId);
 
   btnaddUserInfo.style.display="none";
   btnudateUserInfo.style.display = 'none';
@@ -1045,7 +948,7 @@ showLoader();
   
     dialoguserDialog.showModal();
   
-    hideLoader();
+    hideLoader(defaultLoaderId);
   
   }
 
@@ -1177,6 +1080,129 @@ function removeAllEventListeners(elements, eventType, eventHandler) {
   });
 }
 
+//Loadoverlay Div
+// Function to show the loader
+function showLoader(loaderId=defaultLoaderId) {
+
+  const loader = document.getElementById(loaderId);
+  if (loader) {
+    loader.style.display = 'block';
+
+  }
+
+}
+
+// Function to hide the loader
+function hideLoader(loaderId=defaultLoaderId) {
+
+
+  const dialogLoader = document.getElementById(loaderId);
+
+  if (dialogLoader) {
+    dialogLoader.style.display = 'none';
+  }
+
+}
+
+
+
+// Function to close the dialog
+function closeDialog(dialogname) {
+
+  const fileDialog = document.getElementById(dialogname);
+
+  if (defaultLoaderId === 'loadingOverlay') {
+
+
+  } else {
+ 
+  const dialogLoader = document.getElementById(defaultLoaderId);
+
+  if (dialogLoader) {
+  dialogLoader.remove()
+}
+
+}
+
+  fileDialog.style.display="none";
+
+  fileDialog.close();
+  
+  defaultLoaderId = 'loadingOverlay';
+
+  hideLoader(defaultLoaderId)
+
+}
+
+
+// Function add and Remove Loader
+function createLoader(loaderId, dialogId) {
+
+    // If the loader doesn't exist, append a new loader with the specified ID
+    const clonedLoader = document.getElementById('loadingOverlay').cloneNode(true);
+    clonedLoader.id = loaderId; // Assign a unique ID for the cloned loader
+    dialogId.appendChild(clonedLoader);
+
+}
+
+//custom Right Click Menu
+
+function enableCustomContextMenu(tableSelector, menuSelector, cellIndex) {
+  const contextMenu = document.getElementById(menuSelector);
+  const table = document.querySelector(tableSelector);
+
+  table.addEventListener("contextmenu", e => {
+    const target = e.target;
+
+    if (target.tagName === "TD") {
+      e.preventDefault();
+
+      const row = target.parentNode;
+      selectedRowId = row.cells[cellIndex].textContent.trim(); // Get the cell value based on the provided cell index
+
+      selectedRowIndex = row.rowIndex;
+
+      console.log("First TD Text:", selectedRowId);
+      console.log("Row Index Number:", selectedRowIndex );
+
+      const mousePosX = e.pageX;
+      const mousePosY = e.pageY;
+      const menuWidth = contextMenu.offsetWidth;
+      const menuHeight = contextMenu.offsetHeight;
+
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+
+      const maxMenuPosX = windowWidth - menuWidth;
+      const maxMenuPosY = windowHeight - menuHeight;
+
+      // Calculate submenu's position
+      let submenuPosX = mousePosX;
+      let submenuPosY = mousePosY;
+
+      // Check if the submenu goes beyond the right edge of the screen
+      if (submenuPosX + menuWidth > windowWidth) {
+        submenuPosX = maxMenuPosX;
+      }
+
+      // Check if the submenu goes beyond the bottom edge of the screen
+      if (submenuPosY + menuHeight > windowHeight) {
+        submenuPosY = maxMenuPosY;
+      }
+
+      contextMenu.style.left = `${submenuPosX}px`;
+      contextMenu.style.top = `${submenuPosY}px`;
+      contextMenu.style.visibility = "visible";
+
+    } else {
+      contextMenu.style.visibility = "hidden";
+    }
+  });
+
+  document.addEventListener("click", () => {
+    contextMenu.style.visibility = "hidden";
+  });
+}
 
 
 
